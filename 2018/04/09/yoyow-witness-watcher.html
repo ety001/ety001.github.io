@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css"/>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=7.2.0" color="#222">
+
+
+  <link rel="manifest" href="/images/site.webmanifest">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml"/>
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: false,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="部署YOYOW见证人有几个月了，发现貌似没有人关注丢块的问题，我也没有找到有相关的开源软件可以去完成丢块自动下线的功能。像 Steem 社区有太多的类似程序了，python 的、nodejs 的，多的数不胜数。只能说 YOYOW 还是很年轻。 作为一个 YOYOW 的见证人，有义务去开发一款这样开源版本的工具。经过一晚上的折腾，基本功能已经是完成了。代码库在 这里。这个工具是基于docker进行部">
+<meta name="keywords" content="教程,区块链">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YOYOW见证人监控程序部署教程（docker版）">
+<meta property="og:url" content="https://akawa.ink/2018/04/09/yoyow-witness-watcher.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="部署YOYOW见证人有几个月了，发现貌似没有人关注丢块的问题，我也没有找到有相关的开源软件可以去完成丢块自动下线的功能。像 Steem 社区有太多的类似程序了，python 的、nodejs 的，多的数不胜数。只能说 YOYOW 还是很年轻。 作为一个 YOYOW 的见证人，有义务去开发一款这样开源版本的工具。经过一晚上的折腾，基本功能已经是完成了。代码库在 这里。这个工具是基于docker进行部">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://steemitimages.com/DQmZF3sQtGZo54dNxNHgcyvtXb8JitUJv7azLtL1gAyH3Rr/y1.png">
+<meta property="og:image" content="https://steemitimages.com/DQmayhuefPERpPxwx2kjtnpJ5KxgFxZ8k6wm8U2EFCRwa9q/y2.png">
+<meta property="og:image" content="https://steemitimages.com/DQmVEbzzEQUoZC9GVTKbq6jLrqSgTDe4bjM3ePatri4HUVV/y3.png">
+<meta property="og:image" content="http://image2.135editor.com/cache/remote/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy91TjFMSWF2N29KOFc2ZHVCMU5samNoUWliaWNwczRlQTNoYnR2WnJRbENRODROUFRBN3RFdDZvSkxYeGlhUFdsSDlkNlFKV1pLbHdNUzJEQWhXMEgxMGZwZy8wP3d4X2ZtdD1wbmc">
+<meta property="og:updated_time" content="2021-02-26T06:44:45.940Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="YOYOW见证人监控程序部署教程（docker版）">
+<meta name="twitter:description" content="部署YOYOW见证人有几个月了，发现貌似没有人关注丢块的问题，我也没有找到有相关的开源软件可以去完成丢块自动下线的功能。像 Steem 社区有太多的类似程序了，python 的、nodejs 的，多的数不胜数。只能说 YOYOW 还是很年轻。 作为一个 YOYOW 的见证人，有义务去开发一款这样开源版本的工具。经过一晚上的折腾，基本功能已经是完成了。代码库在 这里。这个工具是基于docker进行部">
+<meta name="twitter:image" content="https://steemitimages.com/DQmZF3sQtGZo54dNxNHgcyvtXb8JitUJv7azLtL1gAyH3Rr/y1.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml"/>
+
+
+
+  
+  
+  <link rel="canonical" href="https://akawa.ink/2018/04/09/yoyow-witness-watcher"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>YOYOW见证人监控程序部署教程（docker版） | Akawa</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155419471-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-155419471-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script data-ad-client="ca-pub-7536831447654223" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Akawa</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">ETY001的博客</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-首页">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-生活">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/life" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br/>生活</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-关于">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-dm实验室">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/lab/" rel="section"><i class="menu-item-icon fa fa-fw fa-gear"></i> <br/>DM实验室</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-捐助">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/donate/" rel="section"><i class="menu-item-icon fa fa-fw fa-star"></i> <br/>捐助</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-归档">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-友链">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/friendsblog/" rel="section"><i class="menu-item-icon fa fa-fw fa-link"></i> <br/>友链</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br/>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+<div style="min-height: 480px;">
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- new-blog-auto -->
+  <ins class="adsbygoogle"
+  style="display:block"
+  data-ad-client="ca-pub-7536831447654223"
+  data-ad-slot="6481460577"
+  data-ad-format="auto"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/04/09/yoyow-witness-watcher.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">YOYOW见证人监控程序部署教程（docker版）
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-04-10 00:00:00" itemprop="dateCreated datePublished" datetime="2018-04-10T00:00:00+08:00">2018-04-10</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2018/04/09/yoyow-witness-watcher.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/04/09/yoyow-witness-watcher.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>部署YOYOW见证人有几个月了，发现貌似没有人关注丢块的问题，我也没有找到有相关的开源软件可以去完成丢块自动下线的功能。像 Steem 社区有太多的类似程序了，python 的、nodejs 的，多的数不胜数。只能说 YOYOW 还是很年轻。</p>
+<p>作为一个 YOYOW 的见证人，有义务去开发一款这样开源版本的工具。经过一晚上的折腾，基本功能已经是完成了。代码库在 <a href="https://github.com/ety001/yoyow-witness-watcher" target="_blank" rel="noopener">这里</a>。这个工具是基于docker进行部署的，如果你看了上一篇我写的《YOYOW 见证人教程》 , 那么这个工具的部署应该会很轻松。因为我花了大量的时间在部署脚本上（大约6个小时），目的就是尽可能把部署过程傻瓜化。</p>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><ul>
+<li>一台 Linux 服务器，装有 docker , wget</li>
+<li>如果需要通知服务，请自行注册discord，并创建一个新的服务器、频道和频道的webhook（文章最后有个简易获取 Webhook 的教程）。</li>
+</ul>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><h3 id="1-首先下载代码"><a href="#1-首先下载代码" class="headerlink" title="1.首先下载代码"></a>1.首先下载代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/ety001/yoyow-witness-watcher.git</span><br><span class="line">cd yoyow-witness-watcher</span><br></pre></td></tr></table></figure>
+<h3 id="2-部署-yoyow-client，并提供-RPC-服务。"><a href="#2-部署-yoyow-client，并提供-RPC-服务。" class="headerlink" title="2.部署 yoyow_client，并提供 RPC 服务。"></a>2.部署 <code>yoyow_client</code>，并提供 <code>RPC</code> 服务。</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./init.sh</span><br></pre></td></tr></table></figure>
+<p>首先提示你输入 <code>yoyow_client</code> 的下载地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">*********************************************</span><br><span class="line">Welcome to use YOYOW witness watcher.</span><br><span class="line">This tool is made by ETY001. (https://github.com/ety001)</span><br><span class="line">My YOYOW ID is 485699321. It&apos;s pleasure to get your votes!</span><br><span class="line">*********************************************</span><br><span class="line"></span><br><span class="line">Please input current yoyow_client download URL (https://github.com/yoyow-org/yoyow-core/releases/latest):</span><br><span class="line">https://github.com/yoyow-org/yoyow-core/releases/download/v0.2.1-180313/yoyow-client-v0.2.1-ubuntu-20180313.tgz</span><br></pre></td></tr></table></figure>
+<p>下载地址可以在 <a href="https://github.com/yoyow-org/yoyow-core/releases/latest" target="_blank" rel="noopener">https://github.com/yoyow-org/yoyow-core/releases/latest</a> 找到，填写下载地址后，回车继续。</p>
+<p>当看到出现 <code>Listening for incoming HTTP RPC requests on 0.0.0.0:9999</code> 以及 <code>new &gt;&gt;&gt;</code> 的时候说明 <code>yoyow_client</code> 的 docker 镜像已经做好，现在开始创建钱包并导入你的账号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Create wallet</span><br><span class="line">Logging RPC to file: logs/rpc/rpc.log</span><br><span class="line">3505859ms th_a       main.cpp:120                  main                 ] key_to_wif( committee_private_key ): 5KCBDTcyDqzsqehcb52tW5nU6pXife6V2rX9Yf7c3saYSzbDZ5W </span><br><span class="line">3505862ms th_a       main.cpp:124                  main                 ] nathan_pub_key: YYW6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV </span><br><span class="line">3505862ms th_a       main.cpp:125                  main                 ] key_to_wif( nathan_private_key ): 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3 </span><br><span class="line">Starting a new wallet with chain ID ae4f234c75199f67e526c9478cf499dd6e94c2b66830ee5c58d0868a3179baf6 (from egenesis)</span><br><span class="line">3505863ms th_a       main.cpp:172                  main                 ] wdata.ws_server: wss://wallet.yoyow.org/ws </span><br><span class="line">3506840ms th_a       main.cpp:177                  main                 ] wdata.ws_user:  wdata.ws_password:  </span><br><span class="line">Please use the set_password method to initialize a new wallet before continuing</span><br><span class="line">3509652ms th_a       main.cpp:243                  main                 ] Listening for incoming HTTP RPC requests on 0.0.0.0:9999</span><br><span class="line">new &gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<p>先设置本地钱包密码（比如 123456）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_password 123456</span><br></pre></td></tr></table></figure>
+<p>解锁本地钱包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unlock 123456</span><br></pre></td></tr></table></figure>
+<p>导入你的 YOYOW 账号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import_key YOUR_YOYOW_ID  YOUR_YOYOW_ACTIVE_KEY</span><br></pre></td></tr></table></figure>
+<p>完成以上工作后，按 <code>ctrl + d</code> 退出钱包，docker 容器开始重启</p>
+<p>直到看到 Finish 且已经在监听 9999 端口时，整个 <code>yoyow_client</code> 的部署完成。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Get Status</span><br><span class="line">00200e8bde55        yoyow_client                     &quot;/bin/sh -c &apos;/data/y…&quot;    10 seconds ago      Up 10 seconds                                                  yoyow_client</span><br><span class="line"></span><br><span class="line">Logs</span><br><span class="line">Logging RPC to file: logs/rpc/rpc.log</span><br><span class="line">140909ms th_a       main.cpp:120                  main                 ] key_to_wif( committee_private_key ): 5K**********************5W </span><br><span class="line">140910ms th_a       main.cpp:124                  main                 ] nathan_pub_key: YY************************CV </span><br><span class="line">140910ms th_a       main.cpp:125                  main                 ] key_to_wif( nathan_private_key ): 5****************************3 </span><br><span class="line">140912ms th_a       main.cpp:172                  main                 ] wdata.ws_server: wss://wallet.yoyow.org/ws </span><br><span class="line">141820ms th_a       main.cpp:177                  main                 ] wdata.ws_user:  wdata.ws_password:  </span><br><span class="line">145239ms th_a       main.cpp:243                  main                 ] Listening for incoming HTTP RPC requests on 0.0.0.0:9999</span><br><span class="line"></span><br><span class="line">************</span><br><span class="line">Finish!</span><br></pre></td></tr></table></figure>
+<h3 id="3-部署监控程序"><a href="#3-部署监控程序" class="headerlink" title="3.部署监控程序"></a>3.部署监控程序</h3><p>直接运行下面的命令开始部署</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./install_bot.sh</span><br></pre></td></tr></table></figure>
+<p>提示输入你的 YOYOW ID</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># ./install_bot.sh </span><br><span class="line">Please input YOYOW ID:</span><br><span class="line">485699321</span><br></pre></td></tr></table></figure>
+<p>提示输入你签名块用的公钥。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Please input Your Public Key:</span><br><span class="line">If you have multiple public keys, separate them with commas</span><br><span class="line">eg. YYW7TSRLZ9EXZps37Kt31qa7qi,YYW7TSRLZ9EXZpZqk25atoL2s37</span><br><span class="line">YYW7TSRLZ9EXZpZqk25atoL2s37Kt31qa7qi78ZR368kCN969rFiT,YYW733FxEEaAFTHxdTJdowZyQzJ3JnPocsVmdq4aSsm1gSd1VkYDC</span><br></pre></td></tr></table></figure>
+<p>&gt; 如果你有多台备机，可以用逗号把多个公钥隔开填写，<strong>请务必把当前正在运行的节点的公钥放在第一位</strong>，程序会在检测到丢块后，自动依次往后切换，直到所有节点都不可用。因此，如果你有两个节点的话，当第一个节点挂掉，程序自动切换到第二个备份节点后，赶紧去修第一个节点，第一个节点重启可用后，<strong>一定要重新部署下bot程序，并且填写公钥时，把目前的第二个节点的公钥放在前面</strong>。</p>
+<p>提示输入你的本地钱包密码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Please input wallet password:</span><br><span class="line">123456</span><br></pre></td></tr></table></figure>
+<p>提示输入 discord 的 webhook 地址，如果你想获取通知的话，就配置这项，否则留空。最后会简单说下怎么获取 webhook 地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Please input Discord webhook for notify (If you don&apos;t need it, leave empty.):</span><br><span class="line">https://discordapp.com/api/webhooks/433204170/X2RWo7-qiFlnMtQeQkk_sSgb5Vn0rQVWZCF5f</span><br></pre></td></tr></table></figure>
+<p>当你看到类似以下信息的时候，就已经完成了所有部署工作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Get status</span><br><span class="line">string(20) &quot;global value in init&quot;</span><br><span class="line">array(2) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(53) &quot;YYW7TSRLZ9EXZpZqk25atoL2s37Kt31qa7qi78ZR368kCN969rFiT&quot;</span><br><span class="line">  [1]=&gt;</span><br><span class="line">  string(53) &quot;YYW733FxEEaAFTHxdTJdowZyQzJ3JnPocsVmdq4aSsm1gSd1VkYDC&quot;</span><br><span class="line">&#125;</span><br><span class="line">string(9) &quot;485699321&quot;</span><br><span class="line">string(27) &quot;http://172.20.99.2:9999/rpc&quot;</span><br><span class="line">int(3)</span><br><span class="line">send_notify:&quot;&quot;</span><br><span class="line">witness_info: [&#123;&quot;id&quot;:&quot;1.5.118&quot;,&quot;account&quot;:485699321,&quot;name&quot;:&quot;yoyo485699321&quot;,&quot;sequence&quot;:1,&quot;is_valid&quot;:true,&quot;signing_key&quot;:&quot;YYW7TSRLZ9EXZpZqk25atoL2s37Kt31qa7qi78ZR368kCN969rFiT&quot;,&quot;pledge&quot;:&quot;4800000000&quot;,&quot;pledge_last_update&quot;:&quot;2018-04-09T16:27:36&quot;,&quot;average_pledge&quot;:&quot;4769814330&quot;,&quot;average_pledge_last_update&quot;:&quot;2018-04-10T09:29:36&quot;,&quot;average_pledge_next_update_block&quot;:6208938,&quot;total_votes&quot;:&quot;1012502907669&quot;,&quot;by_pledge_position&quot;:&quot;0&quot;,&quot;by_pledge_position_last_update&quot;:&quot;13192707760156474609520154309632187&quot;,&quot;by_pledge_scheduled_time&quot;:&quot;13192779100955781906176323330356157&quot;,&quot;by_vote_position&quot;:&quot;0&quot;,&quot;by_vote_position_last_update&quot;:&quot;8327365446400524735205121087916251&quot;,&quot;by_vote_scheduled_time&quot;:&quot;8327365782480909634055199728870765&quot;,&quot;last_confirmed_block_num&quot;:6208607,&quot;last_aslot&quot;:6220862,&quot;total_produced&quot;:1143,&quot;total_missed&quot;:3,&quot;url&quot;:&quot;https:\/\/github.com\/ety001&quot;&#125;]</span><br><span class="line">total_produced: 1143, total_missed: 3</span><br><span class="line">2018-04-10 10:23:38</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">***********</span><br><span class="line">Finish!!</span><br></pre></td></tr></table></figure>
+<p>如果想查看监控程序的工作状态，执行下面的命令即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs --tail 50 yoyow_witness_watcher</span><br></pre></td></tr></table></figure>
+<h3 id="4-卸载"><a href="#4-卸载" class="headerlink" title="4.卸载"></a>4.卸载</h3><p>卸载非常的简单，只需要执行下面的命令即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./uninstall_bot.sh &amp;amp;&amp;amp; ./uninstall.sh</span><br></pre></td></tr></table></figure>
+<p>&gt; 如果你只想重新部署监控程序，只需要执行 <code>./uninstall_bot.sh</code> 即可，执行完后重新执行 <code>./install_bot.sh</code>。如果你中途执行安装脚本有错误的话，也需要先执行卸载脚本后，再重新执行安装脚本。卸载脚本如果都要执行的话，执行顺序一定要是先 <code>uninstall_bot</code> 再 <code>uninstall</code>。</p>
+<h1 id="申请-Discord-的频道-Webhook"><a href="#申请-Discord-的频道-Webhook" class="headerlink" title="申请 Discord 的频道 Webhook"></a>申请 Discord 的频道 Webhook</h1><p>注册账号就不说了，打开桌面app界面（网页界面应该也差不多），在左下角找到一个加号，点击后如下图</p>
+<p><img src="https://steemitimages.com/DQmZF3sQtGZo54dNxNHgcyvtXb8JitUJv7azLtL1gAyH3Rr/y1.png" alt="y1.png"></p>
+<p>选择创建一个服务器，进入下个界面，配置下你的服务器的名字和位置后，即可完成创建，进入你的服务器，新建一个频道，然后在频道右侧有个齿轮，点击一下，如图</p>
+<p><img src="https://steemitimages.com/DQmayhuefPERpPxwx2kjtnpJ5KxgFxZ8k6wm8U2EFCRwa9q/y2.png" alt="y2.png"></p>
+<p>打开频道配置页面后，找到 Webhook 选项，然后创建一个新的 Webhook，如图</p>
+<p><img src="https://steemitimages.com/DQmVEbzzEQUoZC9GVTKbq6jLrqSgTDe4bjM3ePatri4HUVV/y3.png" alt="y3.png"></p>
+<p>填写下 Webhook 的名字后，即可完成创建，里面的 URL 即为你的 Webhook 地址。</p>
+<p><img src="http://image2.135editor.com/cache/remote/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy91TjFMSWF2N29KOFc2ZHVCMU5samNoUWliaWNwczRlQTNoYnR2WnJRbENRODROUFRBN3RFdDZvSkxYeGlhUFdsSDlkNlFKV1pLbHdNUzJEQWhXMEgxMGZwZy8wP3d4X2ZtdD1wbmc" alt=""></p>
+<p>欢迎给我投票，我的 <strong>YOYOW</strong> 号是 <strong>485699321</strong>。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/img/wechat.jpeg" style="width: 200px; max-width: 100%;"/>
+  <div>ET碎碎念，每周一，晚六点一刻更新，欢迎订阅</div>
+</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div></div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/wepay.jpg" alt="ETY001 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/alipay.png" alt="ETY001 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/btc.png" alt="ETY001 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>ety001</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://akawa.ink/2018/04/09/yoyow-witness-watcher.html" title="YOYOW见证人监控程序部署教程（docker版）">https://akawa.ink/2018/04/09/yoyow-witness-watcher.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/教程/" rel="tag"># 教程</a>
+          
+            <a href="/tags/区块链/" rel="tag"># 区块链</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/08/yoyow-witness-deploy-by-docker.html" rel="next" title="YOYOW 见证人教程(docker版)">
+                <i class="fa fa-chevron-left"></i> YOYOW 见证人教程(docker版)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/11/ssl-unable-to-verify-the-first-certificate.html" rel="prev" title="配置SSL时出现 Error: unable to verify the first certificate">
+                配置SSL时出现 Error: unable to verify the first certificate <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    <div>
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- new-blog-auto -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-7536831447654223"
+      data-ad-slot="6481460577"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/logo.jpg"
+                alt="ETY001"/>
+            
+              <p class="site-author-name" itemprop="name">ETY001</p>
+              <div class="site-description motion-element" itemprop="description">ETY001的博客</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">455</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ety001" title="GitHub &rarr; https://github.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:work@akawa.ink" title="E-Mail &rarr; mailto:work@akawa.ink"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/ety001" title="Weibo &rarr; https://weibo.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/ety001" title="Twitter &rarr; https://twitter.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+             <div class="cc-license motion-element" itemprop="license">
+              
+              
+                
+              
+              
+              
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"/></a>
+             </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#准备"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开始"><span class="nav-number">2.</span> <span class="nav-text">开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-首先下载代码"><span class="nav-number">2.0.1.</span> <span class="nav-text">1.首先下载代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-部署-yoyow-client，并提供-RPC-服务。"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.部署 yoyow_client，并提供 RPC 服务。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-部署监控程序"><span class="nav-number">2.0.3.</span> <span class="nav-text">3.部署监控程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-卸载"><span class="nav-number">2.0.4.</span> <span class="nav-text">4.卸载</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#申请-Discord-的频道-Webhook"><span class="nav-number">3.</span> <span class="nav-text">申请 Discord 的频道 Webhook</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">  <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">鲁ICP备20000145号-1 </a>&copy; 2009 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ETY001</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://akawa.ink/2018/04/09/yoyow-witness-watcher.html";
+    this.page.identifier = "2018/04/09/yoyow-witness-watcher.html";
+    this.page.title = 'YOYOW见证人监控程序部署教程（docker版）';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

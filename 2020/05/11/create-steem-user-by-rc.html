@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css"/>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=7.2.0" color="#222">
+
+
+  <link rel="manifest" href="/images/site.webmanifest">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml"/>
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: false,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在steem链上注册有三种途径，account_create,create_claimed_account和account_create_with_delegation，不过，最后这个 account_create_with_delegation 已经不再建议使用了。所以目前主要是通过 account_create 和 create_claimed_account 两个方法来注册新用户。 调用方法">
+<meta name="keywords" content="经验,steem">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过RC注册新账号的总结">
+<meta property="og:url" content="https://akawa.ink/2020/05/11/create-steem-user-by-rc.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="在steem链上注册有三种途径，account_create,create_claimed_account和account_create_with_delegation，不过，最后这个 account_create_with_delegation 已经不再建议使用了。所以目前主要是通过 account_create 和 create_claimed_account 两个方法来注册新用户。 调用方法">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-02-26T06:44:45.948Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="通过RC注册新账号的总结">
+<meta name="twitter:description" content="在steem链上注册有三种途径，account_create,create_claimed_account和account_create_with_delegation，不过，最后这个 account_create_with_delegation 已经不再建议使用了。所以目前主要是通过 account_create 和 create_claimed_account 两个方法来注册新用户。 调用方法">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml"/>
+
+
+
+  
+  
+  <link rel="canonical" href="https://akawa.ink/2020/05/11/create-steem-user-by-rc"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>通过RC注册新账号的总结 | Akawa</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155419471-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-155419471-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script data-ad-client="ca-pub-7536831447654223" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Akawa</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">ETY001的博客</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-首页">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-生活">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/life" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br/>生活</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-关于">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-dm实验室">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/lab/" rel="section"><i class="menu-item-icon fa fa-fw fa-gear"></i> <br/>DM实验室</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-捐助">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/donate/" rel="section"><i class="menu-item-icon fa fa-fw fa-star"></i> <br/>捐助</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-归档">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-友链">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/friendsblog/" rel="section"><i class="menu-item-icon fa fa-fw fa-link"></i> <br/>友链</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br/>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+<div style="min-height: 480px;">
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- new-blog-auto -->
+  <ins class="adsbygoogle"
+  style="display:block"
+  data-ad-client="ca-pub-7536831447654223"
+  data-ad-slot="6481460577"
+  data-ad-format="auto"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2020/05/11/create-steem-user-by-rc.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">通过RC注册新账号的总结
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-05-12 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-12T00:00:00+08:00">2020-05-12</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2020/05/11/create-steem-user-by-rc.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/05/11/create-steem-user-by-rc.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在steem链上注册有三种途径，<code>account_create</code>,<code>create_claimed_account</code>和<code>account_create_with_delegation</code>，不过，最后这个 <code>account_create_with_delegation</code> 已经不再建议使用了。所以目前主要是通过 <code>account_create</code> 和 <code>create_claimed_account</code> 两个方法来注册新用户。</p>
+<h1 id="调用方法"><a href="#调用方法" class="headerlink" title="调用方法"></a>调用方法</h1><h2 id="account-create"><a href="#account-create" class="headerlink" title="account_create"></a>account_create</h2><p>这个接口使用很简单，只需要交钱就能注册，即花费 steem 代币。</p>
+<p>使用方法: <a href="https://developers.steem.io/apidefinitions/#broadcast_ops_account_create" target="_blank" rel="noopener">https://developers.steem.io/apidefinitions/#broadcast_ops_account_create</a></p>
+<h2 id="create-claimed-account"><a href="#create-claimed-account" class="headerlink" title="create_claimed_account"></a>create_claimed_account</h2><p>这个接口注册用户需要配合 <code>claim_account</code> 来进行。需要使用 <code>claim_account</code> 先花费 RC 申请一个牌子，然后再消耗牌子去使用 <code>create_claimed_account</code> 注册用户。</p>
+<p><code>claim_account</code> 使用方法: <a href="https://developers.steem.io/apidefinitions/#broadcast_ops_claim_account" target="_blank" rel="noopener">https://developers.steem.io/apidefinitions/#broadcast_ops_claim_account</a></p>
+<p><code>create_claimed_account</code> 使用方法: <a href="https://developers.steem.io/apidefinitions/#broadcast_ops_create_claimed_account" target="_blank" rel="noopener">https://developers.steem.io/apidefinitions/#broadcast_ops_create_claimed_account</a></p>
+<p>这里给出一下 <code>claim_account</code> 的 <code>demo</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">const steem = require(&apos;steem&apos;);</span><br><span class="line">steem.api.setOptions(&#123; url: &apos;https://steem.61bts.com&apos; &#125;);</span><br><span class="line"></span><br><span class="line">const ac_key = &quot;&quot;;</span><br><span class="line">const user = &quot;&quot;;</span><br><span class="line"></span><br><span class="line">const keys = &#123;active: ac_key&#125;;</span><br><span class="line"></span><br><span class="line">const op = [</span><br><span class="line">  &quot;claim_account&quot;,</span><br><span class="line">  &#123;</span><br><span class="line">    &quot;fee&quot;: &quot;0.000 STEEM&quot;,</span><br><span class="line">    &quot;creator&quot;: user,</span><br><span class="line">    &quot;extensions&quot;: []</span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">const tx = &#123;</span><br><span class="line">    extensions: [],</span><br><span class="line">    operations: [</span><br><span class="line">        op</span><br><span class="line">    ]</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">steem.broadcast.send(tx, keys, (r) =&gt; &#123;</span><br><span class="line">    console.log(r);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h1 id="关于花费"><a href="#关于花费" class="headerlink" title="关于花费"></a>关于花费</h1><p>无论那个接口注册用户，都要涉及到注册费用，只不过 <code>account_create</code> 是直接花费注册费用，而 <code>create_claimed_account</code> 途径注册用户，需要计算消耗多少 RC。</p>
+<h2 id="account-create-1"><a href="#account-create-1" class="headerlink" title="account_create"></a>account_create</h2><p>目前使用 <code>account_create</code> 注册用户会消耗当前用户 3 steem 代币。那么这个数是从哪里获得的呢？</p>
+<p>我们看下面的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FC_ASSERT( o.fee == wso.median_props.account_creation_fee, &quot;Must pay the exact account creation fee. paid: $&#123;p&#125; fee: $&#123;f&#125;&quot;,</span><br><span class="line">               (&quot;p&quot;, o.fee)</span><br><span class="line">               (&quot;f&quot;, wso.median_props.account_creation_fee) );</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面的代码来自 <code>/libararies/chain/steem_evaluator.cpp</code> 中的 <code>void account_create_evaluator::do_apply( const account_create_operation&amp; o )</code>。<br>代码位置: <a href="https://github.com/steemit/steem/blob/master/libraries/chain/steem_evaluator.cpp#L331" target="_blank" rel="noopener">https://github.com/steemit/steem/blob/master/libraries/chain/steem_evaluator.cpp#L331</a></p>
+</blockquote>
+<p>可以看到在注册费这里需要断言，注册费用为 <code>wso.median_props.account_creation_fee</code>。</p>
+<p>这个 <code>wso</code> 联系上下文看到是 <code>_db.get_witness_schedule_object()</code>，可以知道是拿的见证人的信息。其中里面涉及到一个 <code>median_props</code> 的成员，需要看看如何实现（看字面意思是中位数）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/// sort them by account_creation_fee</span><br><span class="line">std::sort( active.begin(), active.end(), [&amp;]( const witness_object* a, const witness_object* b )</span><br><span class="line">&#123;</span><br><span class="line">   return a-&gt;props.account_creation_fee.amount &lt; b-&gt;props.account_creation_fee.amount;</span><br><span class="line">&#125; );</span><br><span class="line">asset median_account_creation_fee = active[active.size()/2]-&gt;props.account_creation_fee;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面的代码来自 <code>/libararies/chain/witness_schedule.cpp</code> 中的 <code>void update_median_witness_props( database&amp; db )</code> 。<br>位置在: <a href="https://github.com/steemit/steem/blob/master/libraries/chain/witness_schedule.cpp#L37" target="_blank" rel="noopener">https://github.com/steemit/steem/blob/master/libraries/chain/witness_schedule.cpp#L37</a></p>
+</blockquote>
+<p>其中 <code>active</code> 联系上下文，可以知道拿到的是当前活跃的所有见证人（目前的配置是21位），然后对这些活跃的见证人配置中的 <code>account_creation_fee</code> 进行排序，然后取中位数。</p>
+<p><strong>结论：如果想要变动注册费用，需要半数以上的活跃见证人同时调整自己的 <code>account_creation_fee</code> 配置。</strong></p>
+<h2 id="create-claimed-account-1"><a href="#create-claimed-account-1" class="headerlink" title="create_claimed_account"></a>create_claimed_account</h2><p>关于 <code>create_claimed_account</code> 和 <code>claim_account</code> 这两个函数，目前还没有完全看完，因为其中还涉及到了 RC 部分的代码。</p>
+<p><strong>目前还不清楚要扣除的RC的计算公式或者说方法。当前只是了解到在使用 <code>claim_account</code> 的时候的几个限制条件。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">if( o.fee.amount == 0 )</span><br><span class="line">&#123;</span><br><span class="line">   const auto&amp; gpo = _db.get_dynamic_global_properties();</span><br><span class="line"></span><br><span class="line">   // This block is a little weird. We want to enforce that only elected witnesses can include the transaction, but</span><br><span class="line">   // we do not want to prevent the transaction from propogating on the p2p network. Because we do not know what type of</span><br><span class="line">   // witness will have produced the including block when the tx is broadcast, we need to disregard this assertion when the tx</span><br><span class="line">   // is propogating, but require it when applying the block.</span><br><span class="line">   if( !_db.is_pending_tx() )</span><br><span class="line">   &#123;</span><br><span class="line">      const auto&amp; current_witness = _db.get_witness( gpo.current_witness );</span><br><span class="line">      FC_ASSERT( current_witness.schedule == witness_object::elected, &quot;Subsidized accounts can only be claimed by elected witnesses. current_witness:$&#123;w&#125; witness_type:$&#123;t&#125;&quot;,</span><br><span class="line">         (&quot;w&quot;,current_witness.owner)(&quot;t&quot;,current_witness.schedule) );</span><br><span class="line"></span><br><span class="line">      FC_ASSERT( current_witness.available_witness_account_subsidies &gt;= STEEM_ACCOUNT_SUBSIDY_PRECISION, &quot;Witness $&#123;w&#125; does not have enough subsidized accounts to claim&quot;,</span><br><span class="line">         (&quot;w&quot;, current_witness.owner) );</span><br><span class="line"></span><br><span class="line">      _db.modify( current_witness, [&amp;]( witness_object&amp; w )</span><br><span class="line">      &#123;</span><br><span class="line">         w.available_witness_account_subsidies -= STEEM_ACCOUNT_SUBSIDY_PRECISION;</span><br><span class="line">      &#125;);</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   FC_ASSERT( gpo.available_account_subsidies &gt;= STEEM_ACCOUNT_SUBSIDY_PRECISION, &quot;There are not enough subsidized accounts to claim&quot; );</span><br><span class="line"></span><br><span class="line">   _db.modify( gpo, [&amp;]( dynamic_global_property_object&amp; gpo )</span><br><span class="line">   &#123;</span><br><span class="line">      gpo.available_account_subsidies -= STEEM_ACCOUNT_SUBSIDY_PRECISION;</span><br><span class="line">   &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面的代码来自 <code>/libararies/chain/steem_evaluator.cpp</code> 中的 <code>void claim_account_evaluator::do_apply( const claim_account_operation&amp; o )</code> 。<br>位置在: <a href="https://github.com/steemit/steem/blob/master/libraries/chain/steem_evaluator.cpp#L3211" target="_blank" rel="noopener">https://github.com/steemit/steem/blob/master/libraries/chain/steem_evaluator.cpp#L3211</a></p>
+</blockquote>
+<p>在代码中，我们能看到有两个数量上的限制：</p>
+<ul>
+<li><code>current_witness.available_witness_account_subsidies</code></li>
+<li><code>gpo.available_account_subsidies</code></li>
+</ul>
+<p>其中还涉及到一个全局参数 <code>STEEM_ACCOUNT_SUBSIDY_PRECISION</code>。</p>
+<p>上面这三个值，我们通过下面的代码可以快速的获取到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">steem.api.getActiveWitnesses(function(err, result) &#123;</span><br><span class="line">    result.forEach((w)=&gt;&#123;</span><br><span class="line">        steem.api.getWitnessByAccount(w, (e, r) =&gt; &#123;</span><br><span class="line">            console.log(w, r.available_witness_account_subsidies);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;);</span><br><span class="line">steem.api.getDynamicGlobalProperties(function(err, result) &#123;</span><br><span class="line">  console.log(&apos;available_account_subsidies: &apos;, result[&apos;available_account_subsidies&apos;]);</span><br><span class="line">&#125;);</span><br><span class="line">steem.api.getConfig(function(err, result) &#123;</span><br><span class="line">  console.log(&apos;STEEM_ACCOUNT_SUBSIDY_PRECISION:&apos;, result[&apos;STEEM_ACCOUNT_SUBSIDY_PRECISION&apos;]);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>我们用 @justyy 提供的<a href="https://steemyy.com/steemjs/" target="_blank" rel="noopener">网页工具</a> 可以快速的看到结果。</p>
+</blockquote>
+<p><strong>目前的结论就是，使用 RC 注册用户，不仅受到你自身 RC 数量影响，还会受到当前出块见证人的余量(available_witness_account_subsidies)，以及全局的余量(available_account_subsidies) 两个值的限制。具体这两个值怎么恢复，以及申领一个牌子消耗多少RC的计算，等我读完 RC Plugin 的代码应该就可以搞明白了。</strong></p>
+<h1 id="注册费最终流向"><a href="#注册费最终流向" class="headerlink" title="注册费最终流向"></a>注册费最终流向</h1><p>目前这里没有细看，但是可以看到费用是流向了 @null 账号。在最终的写入区块的操作的时候，也有对 @null 账号的单独处理，<br>截取一段代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">case STEEM_ASSET_NUM_STEEM:</span><br><span class="line">&#123;</span><br><span class="line">   asset new_vesting( (adjust_vesting &amp;&amp; delta.amount &gt; 0) ? delta.amount * 9 : 0, STEEM_SYMBOL );</span><br><span class="line">   props.current_supply += delta + new_vesting;</span><br><span class="line">   props.virtual_supply += delta + new_vesting;</span><br><span class="line">   props.total_vesting_fund_steem += new_vesting;</span><br><span class="line">   if( check_supply )</span><br><span class="line">   &#123;</span><br><span class="line">      FC_ASSERT( props.current_supply.amount.value &gt;= 0 );</span><br><span class="line">   &#125;</span><br><span class="line">   break;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面的代码来自 <code>/libararies/chain/database.cpp</code> 中的 <code>void database::adjust_supply( const asset&amp; delta, bool adjust_vesting )</code> 。<br>位置在: <a href="https://github.com/steemit/steem/blob/master/libraries/chain/database.cpp#L4689" target="_blank" rel="noopener">https://github.com/steemit/steem/blob/master/libraries/chain/database.cpp#L4689</a></p>
+</blockquote>
+<p>其中 <code>delta</code> 就是要扣除的手续费，<code>props</code> 是 <code>dynamic_global_property_object</code>。可以看到是对整个系统的供应做了修改，但是具体如何修改，由于这里涉及的条件很多，还没有理顺清楚。</p>
+<h1 id="还未解决"><a href="#还未解决" class="headerlink" title="还未解决"></a>还未解决</h1><p>最后列出一下还没有搞清楚的事情：</p>
+<ul>
+<li>申请牌子的 RC 计算公式</li>
+<li>除了上面提到的 <code>available_witness_account_subsidies</code> 和 <code>available_account_subsidies</code> 这两个限制条件外，对于使用 RC 申请牌子是否还有其他的限制条件。</li>
+<li><code>available_witness_account_subsidies</code> 和 <code>available_account_subsidies</code> 这两个值如何恢复。</li>
+<li>注册费用最终是如何影响全局供给的。</li>
+</ul>
+<hr>
+<h4 id="好用不贵的VPS"><a href="#好用不贵的VPS" class="headerlink" title="好用不贵的VPS"></a>好用不贵的VPS</h4><ul>
+<li><a href="https://my.racknerd.com/aff.php?aff=856&amp;pid=207" target="_blank" rel="noopener">1核1G内存18G硬盘1Gbps带宽1000GB流量/月，洛杉矶机房，$23/年</a></li>
+<li><a href="https://my.racknerd.com/aff.php?aff=856&amp;pid=208" target="_blank" rel="noopener">2核2G内存25G硬盘1Gbps带宽3000GB流量/月，洛杉矶机房，$33/年</a></li>
+<li><a href="https://kvm.yunserver.com/aff.php?aff=140&amp;pid=79" target="_blank" rel="noopener">1核1G内存20G硬盘30Mbps带宽600GB流量/月，去程163直连 + 回程三网CN2_GIA，日本机房，年付方案优惠码：Friday_1，299元/年</a> , 测速链接: <a href="http://118.107.12.12/speedtest/" target="_blank" rel="noopener">http://118.107.12.12/speedtest/</a></li>
+<li><a href="https://1hour.win/" target="_blank" rel="noopener">xxxx 更多主机 xxxx</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/img/wechat.jpeg" style="width: 200px; max-width: 100%;"/>
+  <div>ET碎碎念，每周一，晚六点一刻更新，欢迎订阅</div>
+</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div></div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/wepay.jpg" alt="ETY001 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/alipay.png" alt="ETY001 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/btc.png" alt="ETY001 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>ety001</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://akawa.ink/2020/05/11/create-steem-user-by-rc.html" title="通过RC注册新账号的总结">https://akawa.ink/2020/05/11/create-steem-user-by-rc.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/经验/" rel="tag"># 经验</a>
+          
+            <a href="/tags/steem/" rel="tag"># steem</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/07/steem-watcher.html" rel="next" title="开发了一个Steem链上监测程序">
+                <i class="fa fa-chevron-left"></i> 开发了一个Steem链上监测程序
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/22/lz4-compress.html" rel="prev" title="lz4压缩是真的香">
+                lz4压缩是真的香 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    <div>
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- new-blog-auto -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-7536831447654223"
+      data-ad-slot="6481460577"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/logo.jpg"
+                alt="ETY001"/>
+            
+              <p class="site-author-name" itemprop="name">ETY001</p>
+              <div class="site-description motion-element" itemprop="description">ETY001的博客</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">455</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ety001" title="GitHub &rarr; https://github.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:work@akawa.ink" title="E-Mail &rarr; mailto:work@akawa.ink"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/ety001" title="Weibo &rarr; https://weibo.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/ety001" title="Twitter &rarr; https://twitter.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+             <div class="cc-license motion-element" itemprop="license">
+              
+              
+                
+              
+              
+              
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"/></a>
+             </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#调用方法"><span class="nav-number">1.</span> <span class="nav-text">调用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#account-create"><span class="nav-number">1.1.</span> <span class="nav-text">account_create</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#create-claimed-account"><span class="nav-number">1.2.</span> <span class="nav-text">create_claimed_account</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于花费"><span class="nav-number">2.</span> <span class="nav-text">关于花费</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#account-create-1"><span class="nav-number">2.1.</span> <span class="nav-text">account_create</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#create-claimed-account-1"><span class="nav-number">2.2.</span> <span class="nav-text">create_claimed_account</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注册费最终流向"><span class="nav-number">3.</span> <span class="nav-text">注册费最终流向</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#还未解决"><span class="nav-number">4.</span> <span class="nav-text">还未解决</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#好用不贵的VPS"><span class="nav-number">4.0.0.1.</span> <span class="nav-text">好用不贵的VPS</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">  <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">鲁ICP备20000145号-1 </a>&copy; 2009 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ETY001</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://akawa.ink/2020/05/11/create-steem-user-by-rc.html";
+    this.page.identifier = "2020/05/11/create-steem-user-by-rc.html";
+    this.page.title = '通过RC注册新账号的总结';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

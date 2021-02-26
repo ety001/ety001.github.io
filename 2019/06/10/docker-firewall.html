@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css"/>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=7.2.0" color="#222">
+
+
+  <link rel="manifest" href="/images/site.webmanifest">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml"/>
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: false,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="最近接了一个运维 cybex 节点的任务，过程甚是坎坷。首先，我的客户提供的服务器上有一个在运行的 eos 侧链节点，其次，cybex 节点的搭建，官方要求要做严格的防火墙设置，即入站规则中只允许指定的 IP 访问本地的指定端口，出站规则中只允许本地访问指定IP的指定端口。 这样就防火墙要求就有些棘手了。由于目前服务器上的 eos 侧链节点并没有什么防火墙配置，所以要是把 cybex 的出站白名单">
+<meta name="keywords" content="Server&amp;OS,Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 Docker 和 Firewalld 实现高度防护">
+<meta property="og:url" content="https://akawa.ink/2019/06/10/docker-firewall.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="最近接了一个运维 cybex 节点的任务，过程甚是坎坷。首先，我的客户提供的服务器上有一个在运行的 eos 侧链节点，其次，cybex 节点的搭建，官方要求要做严格的防火墙设置，即入站规则中只允许指定的 IP 访问本地的指定端口，出站规则中只允许本地访问指定IP的指定端口。 这样就防火墙要求就有些棘手了。由于目前服务器上的 eos 侧链节点并没有什么防火墙配置，所以要是把 cybex 的出站白名单">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://steemeditor.com/storage/images/JtTZMLQZLKqcFjL4baLqyxsSZ8N4LYcFmyDBZDrm.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/I3d5w4nJSBbIu20reYo7QscJFoESVMO2XTKGbxpn.png">
+<meta property="og:updated_time" content="2021-02-26T06:44:45.944Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用 Docker 和 Firewalld 实现高度防护">
+<meta name="twitter:description" content="最近接了一个运维 cybex 节点的任务，过程甚是坎坷。首先，我的客户提供的服务器上有一个在运行的 eos 侧链节点，其次，cybex 节点的搭建，官方要求要做严格的防火墙设置，即入站规则中只允许指定的 IP 访问本地的指定端口，出站规则中只允许本地访问指定IP的指定端口。 这样就防火墙要求就有些棘手了。由于目前服务器上的 eos 侧链节点并没有什么防火墙配置，所以要是把 cybex 的出站白名单">
+<meta name="twitter:image" content="https://steemeditor.com/storage/images/JtTZMLQZLKqcFjL4baLqyxsSZ8N4LYcFmyDBZDrm.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml"/>
+
+
+
+  
+  
+  <link rel="canonical" href="https://akawa.ink/2019/06/10/docker-firewall"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>用 Docker 和 Firewalld 实现高度防护 | Akawa</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155419471-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-155419471-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script data-ad-client="ca-pub-7536831447654223" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Akawa</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">ETY001的博客</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-首页">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-生活">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/life" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br/>生活</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-关于">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-dm实验室">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/lab/" rel="section"><i class="menu-item-icon fa fa-fw fa-gear"></i> <br/>DM实验室</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-捐助">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/donate/" rel="section"><i class="menu-item-icon fa fa-fw fa-star"></i> <br/>捐助</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-归档">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-友链">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/friendsblog/" rel="section"><i class="menu-item-icon fa fa-fw fa-link"></i> <br/>友链</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br/>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+<div style="min-height: 480px;">
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- new-blog-auto -->
+  <ins class="adsbygoogle"
+  style="display:block"
+  data-ad-client="ca-pub-7536831447654223"
+  data-ad-slot="6481460577"
+  data-ad-format="auto"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/06/10/docker-firewall.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">用 Docker 和 Firewalld 实现高度防护
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-11 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-11T00:00:00+08:00">2019-06-11</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/06/10/docker-firewall.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/06/10/docker-firewall.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近接了一个运维 <strong>cybex</strong> 节点的任务，过程甚是坎坷。首先，我的客户提供的服务器上有一个在运行的 <strong>eos</strong> 侧链节点，其次，<strong>cybex</strong> 节点的搭建，官方要求要做严格的防火墙设置，即入站规则中只允许指定的 <strong>IP</strong> 访问本地的指定端口，出站规则中只允许本地访问指定IP的指定端口。</p>
+<p>这样就防火墙要求就有些棘手了。由于目前服务器上的 <strong>eos</strong> 侧链节点并没有什么防火墙配置，所以要是把 <strong>cybex</strong> 的出站白名单机制做上了，<strong>eos</strong> 侧链要想正常工作，也需要配置一份出站白名单，否则 <strong>eos</strong> 侧链节点将拿不到其他节点的同步数据了。</p>
+<p>思前想后，觉得可以把 <strong>cybex</strong> 节点使用 <strong>docker</strong> 容器运行，这样 <strong>cybex</strong> 节点就有独立的 <strong>IP</strong> 和隔离的环境了，我只需要在宿主机，使用 <strong>cybex</strong> 容器的 <strong>IP</strong> 作为标示来过滤进出站数据包即可。</p>
+<p>思路定下来后，开始准备实施。</p>
+<p>由于宿主机操作系统是 <strong>CentOS7</strong>，也就是系统默认安装的是 <strong>Firewalld</strong>。经过一番学习，写出了入站规则，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-rich-rule &apos;rule family=&quot;ipv4&quot; source address=&quot;IP1&quot; forward-port port=&quot;5000&quot; protocol=&quot;tcp&quot; to-port=&quot;5000&quot; to-addr=&quot;172.20.0.2&quot;&apos; --permanent</span><br><span class="line">firewall-cmd --zone=public --add-rich-rule &apos;rule family=&quot;ipv4&quot; source address=&quot;IP2&quot; destination address=&quot;172.20.0.2&quot; accept&apos; --permanent</span><br></pre></td></tr></table></figure>
+<p>以上只是规则的一部分，重复语法的规则就不再写了。入站主要是两种规则，一种规则是指定来源IP，访问指定端口，就像第一条，来源 <strong>IP</strong> 是<code>IP1</code>，访问宿主机 <code>5000</code> 端口，直接转发到容器 <code>172.20.0.2</code> 的 <code>5000</code> 端口，即这是一条 <code>FORWARD</code> 链的规则。另外一种规则就是指定来源 <strong>IP</strong> 可以访问容器的所有端口，即这是一条 <code>INPUT</code> 链的规则。</p>
+<p>这里需要注意，由于我们需要容器的高度隔离，所以，在启动容器的时候，就不再使用 <code>-p</code> 参数来绑定端口了。原因我们通过 <code>iptables -L FORWORD --line-number</code> 可以看到如下信息，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@li1677-102 ~]# iptables -L FORWARD --line-number</span><br><span class="line">Chain FORWARD (policy ACCEPT)</span><br><span class="line">num  target     prot opt source               destination</span><br><span class="line">1    DOCKER-USER  all  --  anywhere             anywhere</span><br><span class="line">2    DOCKER-ISOLATION-STAGE-1  all  --  anywhere             anywhere</span><br><span class="line">3    ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED</span><br><span class="line">4    DOCKER     all  --  anywhere             anywhere</span><br><span class="line">5    ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">6    ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">7    ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED</span><br><span class="line">8    DOCKER     all  --  anywhere             anywhere</span><br><span class="line">9    ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">10   ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">11   ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED</span><br><span class="line">12   DOCKER     all  --  anywhere             anywhere</span><br><span class="line">13   ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">14   ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">15   ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED</span><br><span class="line">16   ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">17   FORWARD_direct  all  --  anywhere             anywhere</span><br><span class="line">18   FORWARD_IN_ZONES_SOURCE  all  --  anywhere             anywhere</span><br><span class="line">19   FORWARD_IN_ZONES  all  --  anywhere             anywhere</span><br><span class="line">20   FORWARD_OUT_ZONES_SOURCE  all  --  anywhere             anywhere</span><br><span class="line">21   FORWARD_OUT_ZONES  all  --  anywhere             anywhere</span><br><span class="line">22   DROP       all  --  anywhere             anywhere             ctstate INVALID</span><br><span class="line">23   REJECT     all  --  anywhere             anywhere             reject-with icmp-host-prohibited</span><br></pre></td></tr></table></figure>
+<p>结合 <code>iptables</code> 的结构流程图（<a href="http://www.zsythink.net/archives/1199/" target="_blank" rel="noopener">http://www.zsythink.net/archives/1199/</a>），</p>
+<p><img src="https://steemeditor.com/storage/images/JtTZMLQZLKqcFjL4baLqyxsSZ8N4LYcFmyDBZDrm.png" alt=""></p>
+<p>所有 <strong>Docker</strong> 容器的流量都是通过 <strong>FORWARD</strong> 链转发的，我们能看到上面第1\2\4\8\12行都是 <strong>Docker</strong> 产生的自定义链，并且通过 <strong>Docker</strong> 的官方文档了解到，官方不建议用户去修改 <strong>DOCKER</strong> 命名的自定义链，而是把需要增加的自定义内容放到 <strong>DOCKER-USER</strong> 这个自定义链中。而我们平时启动容器的时候，使用 <code>-p</code> 参数的时候，其实是把过滤规则写入了 <strong>DOCKER</strong> 链中。这就意味着，使用 <code>-p</code> 参数设置的转发过滤规则的优先级最高，无法用 <strong>Firewalld</strong> 来限制（17–21行是 <strong>Firewalld</strong> 产生的自定义链）。这也是我最初尝试的方案，用 <code>-p</code> 把容器端口映射到宿主机，然后再在宿主机配置端口策略，<strong>这个方法是不行的</strong>！</p>
+<p>写完入站规则后，也想用入站的规则改一下成出站规则，发现 <strong>Firewalld</strong> 的 <strong>rich rules</strong> 无法做到（至少目前我是绕不出来）。于是继续看文档，发现 <strong>Firewalld</strong> 有一个 <strong>–direct</strong> 的参数可以直接使用 <strong>iptables</strong> 的语法来写入规则到 <strong>iptables</strong> 中。</p>
+<p>又经过若干时间的学习和本地虚拟机实验，最终总结出的出站规则如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -p tcp -s 172.20.0.2 -d IP1 --dport 5000 -j ACCEPT</span><br><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -d IP2 -j ACCEPT</span><br><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -j REJECT</span><br></pre></td></tr></table></figure>
+<p>同样，这里也是捡出来关键的几条来展示。</p>
+<p>这里就涉及到刚才说的，如果你要添加针对 <strong>Docker</strong> 的防火墙规则，就要把规则写入到 <strong>DOCKER-USER</strong> 中，因为 <strong>DOCKER-USER</strong> 的优先级最高。这几条规则的思路就是写出要放行的是哪些，然后最后把其他的<strong>所有的</strong>出站数据都禁掉。</p>
+<p>这个地方，我踩到了一个还没有填的坑。</p>
+<p>由于 <strong>Docker</strong> 和 <strong>Firewalld</strong> 都是通过修改 <strong>iptables</strong> 来实现其相应的功能的。而 <strong>Docker</strong> 的 <strong>DOCKER-USER</strong> 链 <strong>Firewalld</strong> 无法管理。具体表现就是上面的规则，你执行后，由于加了 <code>--permanent</code> 参数，需要重载配置才能生效，但是重载配置的时候，会报错，并且新增配置并不能生效。</p>
+<p>经过两天的搜索，最终找到了一个临时的解决方案（ <a href="https://github.com/moby/moby/issues/35043#issuecomment-356036671" target="_blank" rel="noopener">https://github.com/moby/moby/issues/35043#issuecomment-356036671</a> ） 。</p>
+<p>这个方案的原理大概是这样的：<strong>Docker</strong> 启动的时候会去检查有没有 <strong>DOCKER-USER</strong> 链，如果没有就创建一个，如果有就不再操作了，只是检查该链的最后，是不是放行所有规则。由于 <strong>Docker</strong> 的这个特性，那么我们就手动删掉 <strong>DOCKER-USER</strong> 链，用 <strong>Firewalld</strong> 来创建并管理这个链，这样并不影响 <strong>Docker</strong> 的正常使用，且 <strong>Firewalld</strong> 也可以正常重启或者重载配置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Removing DOCKER-USER CHAIN (it won&apos;t exist at first)</span><br><span class="line">firewall-cmd --permanent --direct --remove-chain ipv4 filter DOCKER-USER</span><br><span class="line"></span><br><span class="line"># Flush rules from DOCKER-USER chain (again, these won&apos;t exist at first; firewalld seems to remember these even if the chain is gone)</span><br><span class="line">firewall-cmd --permanent --direct --remove-rules ipv4 filter DOCKER-USER</span><br><span class="line"></span><br><span class="line"># Add the DOCKER-USER chain to firewalld</span><br><span class="line">firewall-cmd --permanent --direct --add-chain ipv4 filter DOCKER-USER</span><br></pre></td></tr></table></figure>
+<p>所以，先执行上面这三条命令，用 <strong>Firewalld</strong> 重建 <strong>DOCKER-USER</strong> 链，然后再执行写好的出站规则，重载配置。进入容器测试了下，出站规则生效了。</p>
+<p>到这里，我本来以为已经完美配置结束了。正要欢呼的时候，<strong>cybex</strong> 那边的技术小哥说，我的 <strong>5000</strong> 端口为啥不通？</p>
+<p>WTF？！</p>
+<p>考虑了下，感觉应该是后加的出站规则影响了入站规则。我也用 <code>nc -zv server_ip 5000</code> 测试了下，发现会一直卡到连接超时。我猜测可能是 <code>firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -j REJECT</code> 这条规则影响的，于是手动删除掉这条规则，再用 <strong>nc</strong> 测试就正常了。</p>
+<p>思考了下，这个过程应该是，白名单中的外部主机向我的服务器的 <strong>5000</strong> 端口发送了握手包要建立连接，而外部主机肯定是系统随机了一个高位的端口来连接我的 <strong>5000</strong> 端口，虽然入站规则符合了，但是我回应给他的握手包却不符合我设置的出站规则，导致握手不成功。</p>
+<p>这个思路确定后，就继续去翻 <strong>iptables</strong> 的教程，去看看这种关联性的数据包怎么处理。最终还真让我发现了，<a href="http://www.zsythink.net/archives/1597" target="_blank" rel="noopener">http://www.zsythink.net/archives/1597</a></p>
+<p><img src="https://steemeditor.com/storage/images/I3d5w4nJSBbIu20reYo7QscJFoESVMO2XTKGbxpn.png" alt=""></p>
+<p>也就是，我可以在出站规则中先加上放行这些 <strong>state</strong> 的数据包的规则，所以修改后的出站规则如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -d IP2 -j ACCEPT</span><br><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -j REJECT</span><br></pre></td></tr></table></figure>
+<p>这样配置后，再测试，所有配置都已达到预期，完工！</p>
+<p>这里再补充下这种出站策略对于节点的保护的意义。</p>
+<p>很早之前，还是 <strong>webshell</strong> 盛行的时代，有见过类似这样配置的主机。由于 <strong>webshell</strong> 的运行权限一般不是 <strong>Administrator</strong> 或者 <strong>root</strong>，所以入侵者通过 <strong>web</strong> 网站拿到 <strong>webshell</strong> 后的权限比较低，会想通过上传本地溢出漏洞代码的方式，拿到最高权限。而有时候，管理员会配置上传文件的大小或者扩展名，所以直接通过 <strong>webshell</strong> 上传是受限的，所以入侵者想到了一个曲线救国的方案，就是用 <strong>webshell</strong> 指定一个下载路径，让服务器自己去指定的下载路径下载溢出漏洞的执行代码。这时候出站规则就排上用途了，如果管理员配置了禁止所有出站链接，除了 <strong>RELATED,ESTABLISHED</strong> 这样的数据包外，那么入侵者的这个方案就不可行了。另外还有就是如果入侵者通过 <strong>webshell</strong> 成功上传了被动链接式的木马程序，出站规则一样可以拦截掉。</p>
+<p>这就是我之前对于出站规则的理解，就是防止内鬼从外部获取数据。</p>
+<p>但是这次这种分布式节点，为什么还要这么设置呢？在咨询了 @abit 后豁然开朗。那就是这种配置，可以避免自己服务器的 <strong>IP</strong> 暴露给不信任的节点。不过我还是觉得这种规则的必要性并不是很强。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/img/wechat.jpeg" style="width: 200px; max-width: 100%;"/>
+  <div>ET碎碎念，每周一，晚六点一刻更新，欢迎订阅</div>
+</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div></div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/wepay.jpg" alt="ETY001 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/alipay.png" alt="ETY001 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/btc.png" alt="ETY001 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>ety001</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://akawa.ink/2019/06/10/docker-firewall.html" title="用 Docker 和 Firewalld 实现高度防护">https://akawa.ink/2019/06/10/docker-firewall.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Server-OS/" rel="tag"># Server&OS</a>
+          
+            <a href="/tags/Docker/" rel="tag"># Docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/21/bts-trade-bots.html" rel="next" title="做了个非常精简的BTS内盘做市机器人">
+                <i class="fa fa-chevron-left"></i> 做了个非常精简的BTS内盘做市机器人
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/16/remote-work-4-years.html" rel="prev" title="远程工作的四年">
+                远程工作的四年 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    <div>
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- new-blog-auto -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-7536831447654223"
+      data-ad-slot="6481460577"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/logo.jpg"
+                alt="ETY001"/>
+            
+              <p class="site-author-name" itemprop="name">ETY001</p>
+              <div class="site-description motion-element" itemprop="description">ETY001的博客</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">455</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ety001" title="GitHub &rarr; https://github.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:work@akawa.ink" title="E-Mail &rarr; mailto:work@akawa.ink"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/ety001" title="Weibo &rarr; https://weibo.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/ety001" title="Twitter &rarr; https://twitter.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+             <div class="cc-license motion-element" itemprop="license">
+              
+              
+                
+              
+              
+              
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"/></a>
+             </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">  <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">鲁ICP备20000145号-1 </a>&copy; 2009 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ETY001</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://akawa.ink/2019/06/10/docker-firewall.html";
+    this.page.identifier = "2019/06/10/docker-firewall.html";
+    this.page.title = '用 Docker 和 Firewalld 实现高度防护';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

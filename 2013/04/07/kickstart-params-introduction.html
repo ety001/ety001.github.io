@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css"/>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=7.2.0" color="#222">
+
+
+  <link rel="manifest" href="/images/site.webmanifest">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml"/>
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: false,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Kickstart文件中的主要项目及参数介绍： 每个项目都由关键字来识别；关键字可跟一个或多个参数；如果某选项后面跟随了一个等号（=），它后面就必须指定一个值。 install   (可选)明确指定系统次次进行的是全新安装系统；是默认项； cdrom  （可选）以本地CD-ROM为源安装系统； harddrive  (可选)以硬盘分区中包含的镜像为源（安装树）安装新系统；当以该种方式安装系统时，即">
+<meta name="keywords" content="Server&amp;OS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kickstart文件中的主要项目及参数介绍">
+<meta property="og:url" content="https://akawa.ink/2013/04/07/kickstart-params-introduction.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="Kickstart文件中的主要项目及参数介绍： 每个项目都由关键字来识别；关键字可跟一个或多个参数；如果某选项后面跟随了一个等号（=），它后面就必须指定一个值。 install   (可选)明确指定系统次次进行的是全新安装系统；是默认项； cdrom  （可选）以本地CD-ROM为源安装系统； harddrive  (可选)以硬盘分区中包含的镜像为源（安装树）安装新系统；当以该种方式安装系统时，即">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-02-26T06:44:45.928Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kickstart文件中的主要项目及参数介绍">
+<meta name="twitter:description" content="Kickstart文件中的主要项目及参数介绍： 每个项目都由关键字来识别；关键字可跟一个或多个参数；如果某选项后面跟随了一个等号（=），它后面就必须指定一个值。 install   (可选)明确指定系统次次进行的是全新安装系统；是默认项； cdrom  （可选）以本地CD-ROM为源安装系统； harddrive  (可选)以硬盘分区中包含的镜像为源（安装树）安装新系统；当以该种方式安装系统时，即">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml"/>
+
+
+
+  
+  
+  <link rel="canonical" href="https://akawa.ink/2013/04/07/kickstart-params-introduction"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Kickstart文件中的主要项目及参数介绍 | Akawa</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155419471-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-155419471-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script data-ad-client="ca-pub-7536831447654223" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Akawa</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">ETY001的博客</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-首页">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-生活">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/life" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br/>生活</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-关于">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-dm实验室">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/lab/" rel="section"><i class="menu-item-icon fa fa-fw fa-gear"></i> <br/>DM实验室</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-捐助">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/donate/" rel="section"><i class="menu-item-icon fa fa-fw fa-star"></i> <br/>捐助</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-归档">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-友链">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/friendsblog/" rel="section"><i class="menu-item-icon fa fa-fw fa-link"></i> <br/>友链</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br/>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+<div style="min-height: 480px;">
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- new-blog-auto -->
+  <ins class="adsbygoogle"
+  style="display:block"
+  data-ad-client="ca-pub-7536831447654223"
+  data-ad-slot="6481460577"
+  data-ad-format="auto"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/04/07/kickstart-params-introduction.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Kickstart文件中的主要项目及参数介绍
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2013-04-07 13:51:46" itemprop="dateCreated datePublished" datetime="2013-04-07T13:51:46+08:00">2013-04-07</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2013/04/07/kickstart-params-introduction.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/04/07/kickstart-params-introduction.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Kickstart文件中的主要项目及参数介绍：</p>
+<p>每个项目都由关键字来识别；关键字可跟一个或多个参数；如果某选项后面跟随了一个等号（=），它后面就必须指定一个值。</p>
+<p>install   (可选)<br>明确指定系统次次进行的是全新安装系统；是默认项；</p>
+<p>cdrom  （可选）<br>以本地CD-ROM为源安装系统；</p>
+<p>harddrive  (可选)<br>以硬盘分区中包含的镜像为源（安装树）安装新系统；当以该种方式安装系统时，即使指定clearpart –all项，源所在分区也不会被重新抹去；<br>–partition=    指定分区<br>–dir=        指定包含镜像的目录<br>例：<br>harddrive  –partition=/dev/sdb2  –dir=/data/iso<br><a id="more"></a><br>nfs   (可选)<br>指定从NFS服务器上获取安装树；<br>–server=    指定NFS服务器，主机名称或IP<br>–dir=        包含安装树的目录<br>–opts=        可以指定挂载NFS的目录时的挂载选项<br>例：<br>nfs  –server=192.168.1.254  –dir=/data/iso</p>
+<p>url   (可选)<br>指定通过FTP或HTTP从网络获取安装树；<br>–url    指定资源位置<br>例：<br>url  –url  ftp://<username>:<password>@install.example.com/iso<br>url  –url  <a href="http://install.example.com/iso" target="_blank" rel="noopener">http://install.example.com/iso</a></password></username></p>
+<p>bootloader （必需）<br>设定boot loader安装选项；<br>–append=        可以指定内核参数<br>–driveorder=    设定设备BIOS中的开机设备启动顺序<br>–location=        设定引导记录的位置； mbr：默认值；partition：将boot loader安装于包含kernel的分区超级快中；none：不安装boot loder。<br>示例：<br>bootloader  –location=mbr  –append=“rhgb quiet” –driveorder=sda,sdb</p>
+<p>clearpart （可选）<br>在建立新分区前清空系统上原有的分区表，默认不删除分区；<br>–all      擦除系统上原有所有分区；<br>–drives    删除指定驱动器上的分区<br>–initlabel    初始化磁盘卷标为系统架构的默认卷标<br>–linux        擦除所有的linux分区<br>–none（default）不移除任何分区<br>例：<br>clearpart  –drives=hda,hdb –all  –initlabel</p>
+<p>zerombr  （可选）<br>清除mbr信息，会同时清空系统用原有分区表</p>
+<p>drivedisk （可选）<br>如果使用特殊存储方式时，需要指定驱动程序盘位置以便加载存储驱动；</p>
+<ol>
+<li>将驱动盘拷贝到本地硬盘某分区根目录：<br>drivedisk <partition> [ –type=<fstype> ]</fstype></partition></li>
+<li>也可以指定一个网络位置加载驱动程序盘<br>drivedisk  –source=ftp://path/to/drive.img<br>drivedisk  –source=<a href="http://path/to/drive.img" target="_blank" rel="noopener">http://path/to/drive.img</a><br>drivedisk  –source=nfs:host://path/to/drive.img</li>
+</ol>
+<p>firewall （可选）<br>配置系统防火墙选项；<br>firewall –enable|–disable  [ –trust ] <device> [ –port= ]<br>–enable        拒绝外部发起的任何主动连接；<br>–disable        不配置任何iptables防御规则；<br>–trust        指定完全信任网卡设备；<br>–port        使用port:protocol格式指定可以通过防火墙的服务；<br>示例：<br>firewall –enable –trust eth0  –trust eth1  –port=80:tcp</device></p>
+<p>selinux （可选）<br>设置系统selinux状态；默认为启用并处于enforcing模式；<br>selinux [ –disabled|–enforcing|–premissive ]</p>
+<p>reboot （可选）<br>在系统成功安装完成后默认自动重启系统（kickstart方法时）；在收到你敢装系统完成后，会提示按任意键进行重启；<br>在本文件中没有明确指明其他方法时就默认完成方式为reboot；<br>使用 reboot 选项可能会导致安装的死循环，这依赖于安装介质和方法。需要特别注意；</p>
+<p>halt  （可选）<br>在系统成功安装完成后关机；默认为reboot；<br>其他选项还有shutdown、poweroff，需要使用请自行参考官方文档。</p>
+<p>graphical （可选）<br>默认值，在图形模式下进行kickstart方式安装；</p>
+<p>text （可选）<br>以文本方式进行kickstart安装；默认为图形界面</p>
+<p>key  (可选)<br>设置一个安装码(installration number)，用于获取redhat官方的支持服务；<br>–skip    跳过key设置，不进行设置；如果不设置可能跳转到交互模式让用户选取动作；</p>
+<p>keyboard （必需）<br>设置键盘类型；一般设置为us；</p>
+<p>lang （必需）<br>设置安装过程使用的语言及系统的缺省语言；文本模式安装时可能不支持某些语言（中、韩…），所以可能仍以默认的英文方式安装；默认en_us，装中文时，需要后期%packages部分装上中文支持组件；<br>例：<br>lang en_US</p>
+<p>timezone （可选）<br>设置系统的时区；<br>timezone  [ –utc ]  <timezone><br>例：<br>timezone  –utc  Asia/Shanghai</timezone></p>
+<p>auth/authconfig  (必需)<br>设置系统的认证方式；默认为加密但不隐藏(shadow)；<br>–enablemd5    使用MD5加密方式<br>–useshadow或—enableshadow    使用隐藏密码；<br>–enablenis=     使用NIS认证方式<br>–nisdomain=    NIS域<br>–nisserver=       NIS服务器<br>还可以设置LDAP、SMB及Kerberos 5认证方式，详细请参考官方文档；<br>例：<br>authconfig  –useshadow  –enablemd5</p>
+<p>rootpw （必需）<br>设置系统root账号的密码；<br>rootpw [ –iscrypted ]  <passwd><br>–iscrypted    表示设置的密码为加密过的串；<br>例：<br>rootpw  pa4word<br>rootpw –iscrypted  $1$RPYyxobb$/LtxMNLJC7euEARg2Vu2s1</passwd></p>
+<p>network （可选）<br>配置网络信息；在网络安装（NFS/HTTP/FTP）时必须指定；<br>–bootproto=dhcp|bootp|static    指定ip获取方式，默认为dhcp/bootp;<br>–device=    设置安装时激活来进行系统安装的网卡设备；该参数只在kickstart文件为本地文件时有效；若kickstart配置文件在网络上，安装程序会先初始化网卡然后去寻找kickstart文件；<br>–ip=    ip设置<br>–gateway=   网关<br>–nameserver=  DNS设置<br>–nodns         不设置DNS<br>–netmask=   掩码<br>–hostname= 设置安装后主机名称<br>–onboot=    设置是否在系统启动时激活网卡<br>–class=        设置DHCP的class值<br>–noipv4        禁用该设备的ipv4功能<br>–noipv6        禁用该设备的ipv6功能<br>如将网络模式设置为静态模式，则必须在一行内写上ip，netmask、dns、gateway等信息；<br>例：<br>network –bootproto=static –ip=1.1.1.1 –metmask=255.0.0.0 –gateway=1.1.1.254 –nameserver=1.1.1.2<br>netmask –bootproto=dhcp  –device=eth0</p>
+<p>skipx （可选）<br>如果该项存在，就不对系统的X进行设置；</p>
+<p>xconfig （可选）<br>配置X window ；如果不给出选项，在安装过程中需要手动调整设置；当然不安装X时不应该添加该项；<br>–driver            为显卡设置X驱动<br>–videoram=    设置显卡的RAM大小<br>–defaultdesktop=    设置GNOME/KDE作为默认桌面；假定这两个桌面环境在%packages例已经安装<br>–startxonboot   使用图形界面登录系统<br>–resolution=     设置图形界面的分辨率；可用值有640<em>480、800</em>600、1024<em>768等；确保设置指适合于显示卡及显示器；<br>–depth=           设置显示色深；可用值有8/16/24/32；确保设置值适合于显示设备；<br>例:<br>xconfig    –startxonboot  –resolution=800</em>600 –depth=16</p>
+<p>services （可选）<br>设置禁用或允许列出的服务；<br>–disabled 设置服务为禁用<br>–enabled  启动服务<br>例：<br>services –disabled autid,cups,smartd,nfslock  服务之间用逗号隔开，不能有空格</p>
+<p>iscsi（可选）<br>指定额外的ISCSI设备；<br>issci –ipaddr= ipaddr  [options].<br>–target<br>–port=<br>–user=<br>–password=</p>
+<p>part/partition  （install模式必须）<br>建立新分区；<br>part  <mntpoint>|swap|pv.id|rdid.id  options<br>mntpoint:挂载点，是在创建普通分区时指定新分区挂载位置的项；挂载点需要格式正确<br>swap： 创建swap分区；<br>raid.id:  表示创建的分区类型为raid型；必须用id号进行唯一区别；<br>pv.id：  表示所创建的分区类型为LVM型；必须用唯一id号进行区别；<br>–size=  设置分区的最小值，默认单位为M，但是不能写单位；<br>–grow  让分区自动增长利用可用的磁盘空间，或是增长到设置的maxsize值；<br>–maxsize 设置分区自动增长(grow)时的最大容量值，以M为单位，但不能写单位；<br>–onpart=/–usepart=     设置使用原有的分区；<br>–noformat    设置不格式化指定的分区，在跟—onpart一同使用时，可以避免删除原有分区上的数据，在新安装的系统中保留使用数据；<br>–asprimary    强制制定该分区为主分区；若指定失败，分区会失败，导致安装停止；<br>–fstype=    新增普通分区时指定分区的类型，可以为ext2、ext3、ext4、swap、vfat及hfs；<br>–ondisk=/–ondrive=     设定该分区创建在一个具体的磁盘上；<br>–start   指定分区以磁盘上那个磁道开始；需要跟–ondisk参数一块使用；<br>–end    指定分区以磁盘上那个磁道结束；需要跟上述两个参数一起使用；<br>–recommended：让系统自行决定分区的大小；在创建swap分区时，若RAM<2g，则分区大小为2*ram；若ram>=2G时，分区大小为RAM+2G；<br>–bytes-pre-inode=    指定分区格式化时inode的大小；默认值为4096<br>–fsoptions=    指定创建fstab文件时该分区挂载参数项；<br>例：<br>part  /boot  –fstype=“ext3” –size=100<br>part  swap  –fstype=“swap” –size=512<br>part  /  –bytes-pre-inode=4096  –fstype=“ext4”–size=10000<br>part  /data    –onpart=/dev/sdb1  –noformat<br>part  raid.100  –size=2000<br>part  pv.100     –size=1000</2g，则分区大小为2*ram；若ram></mntpoint></p>
+<p>raid  (可选)<br>设置RAID。<br>raid 挂载点  –level=<level>  –device=<mddevices_name>  <raid组成分区><br>挂载点：    选取根/时，注意尽量避免/boot在RAID内，除非为RAID1；<br>–level=     设置RAID级别<br>–device=  RAID设备名称，如md0，md1…<br>–byte-pre-inode=    设置该RAID分区上inode大小；若分区文件系统类型不支持该参数，会静默忽略参数；<br>–spares=  设置RAID的热备盘<br>–fstype=  设置文件系统类型<br>–fsoptions=  设置挂载该文件系统时自定义的一些参数，参数写入fstab文件；<br>–useexisting  使用现有的RAID设备并且重新格式化原设备<br>–noformat     在使用现有的RAID设备时不格式化原有RAID设备<br>例：完整创建一个RAID1设备示例；<br>part  raid.10  –size=1000  –ondisk=/dev/sdb<br>part  raid.11  –size=1000  –ondisk=/dev/sdc<br>raid  /data  –level=1  –device=md0  raid.10  raid.11</raid组成分区></mddevices_name></level></p>
+<p>volgroup  (可选)<br>创建一个LVM卷组VG；<br>volgroup  vg_name  partition  [options]<br>–useexiting   使用现有的VG并且重新格式化<br>–noformat    使用现有的VG时不做格式化<br>–pesize          设置PE（physical extents）块大小<br>例：<br>part pv.11  –size=2000<br>volgroup  myvg  pv.11</p>
+<p>logvol  (可选)<br>创建一个LVM逻辑卷LV；<br>logvel  mnt_point  –vgname=vg_name  –size=lv_size  –name=lv_name  [options]<br>–useexiting  使用现有的LV并且重新格式化<br>–noformat   使用现有的LV时不做格式化<br>–fstype=      指定RAID分区类型<br>–fsoptions=  设置挂载该文件系统时自定义的一些参数，参数写入fstab文件；<br>–byte-pre-inode=    设置该RAID分区上inode大小；<br>–precent=    设定LV大小为VG可用空间的比例；<br>例：<br>part pv.20  –size=5000<br>volgroup  mvvg  pv.20<br>logvol    /data  –vgname=myvg  –size=3000  –name=mydata</p>
+<p>原文地址：<a href="http://www.qianshoublog.com/post/7528.html" target="_blank" rel="noopener"><strong>http://www.qianshoublog.com/post/7528.html</strong></a><br>本文标题：<a href="http://www.qianshoublog.com/post/7528.html" target="_blank" rel="noopener"><strong>ks.cfg 文件，参数讲解</strong></a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/img/wechat.jpeg" style="width: 200px; max-width: 100%;"/>
+  <div>ET碎碎念，每周一，晚六点一刻更新，欢迎订阅</div>
+</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div></div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/wepay.jpg" alt="ETY001 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/alipay.png" alt="ETY001 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/btc.png" alt="ETY001 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>ety001</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://akawa.ink/2013/04/07/kickstart-params-introduction.html" title="Kickstart文件中的主要项目及参数介绍">https://akawa.ink/2013/04/07/kickstart-params-introduction.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/Server-OS/" rel="tag"># Server&OS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/04/02/ffmpeg-parameters.html" rel="next" title="ffmpeg参数">
+                <i class="fa fa-chevron-left"></i> ffmpeg参数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/04/07/centos5-x-ext4.html" rel="prev" title="centos5.x格式化ext4">
+                centos5.x格式化ext4 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    <div>
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- new-blog-auto -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-7536831447654223"
+      data-ad-slot="6481460577"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/logo.jpg"
+                alt="ETY001"/>
+            
+              <p class="site-author-name" itemprop="name">ETY001</p>
+              <div class="site-description motion-element" itemprop="description">ETY001的博客</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">455</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ety001" title="GitHub &rarr; https://github.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:work@akawa.ink" title="E-Mail &rarr; mailto:work@akawa.ink"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/ety001" title="Weibo &rarr; https://weibo.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/ety001" title="Twitter &rarr; https://twitter.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+             <div class="cc-license motion-element" itemprop="license">
+              
+              
+                
+              
+              
+              
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"/></a>
+             </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">  <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">鲁ICP备20000145号-1 </a>&copy; 2009 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ETY001</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://akawa.ink/2013/04/07/kickstart-params-introduction.html";
+    this.page.identifier = "2013/04/07/kickstart-params-introduction.html";
+    this.page.title = 'Kickstart文件中的主要项目及参数介绍';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css"/>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=7.2.0" color="#222">
+
+
+  <link rel="manifest" href="/images/site.webmanifest">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml"/>
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: false,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="有朋友推荐了一个设备，我还没有测试，不过原理应该跟自己用树莓派搭建的系统一样，购买地址：https://item.taobao.com/item.htm?spm=a230r.1.14.53.250350a1rJhohU&amp;amp;id=558848686579&amp;amp;ns=1&amp;amp;abbucket=18 – 更新于 20180208  对于出国狗来说，在国外想要使用国内手机语音短信服务是个比">
+<meta name="keywords" content="教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="出国狗的福音--使用树莓派搭建跨国语音短信设备">
+<meta property="og:url" content="https://akawa.ink/2018/02/07/asterisk-tuturial.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="有朋友推荐了一个设备，我还没有测试，不过原理应该跟自己用树莓派搭建的系统一样，购买地址：https://item.taobao.com/item.htm?spm=a230r.1.14.53.250350a1rJhohU&amp;amp;id=558848686579&amp;amp;ns=1&amp;amp;abbucket=18 – 更新于 20180208  对于出国狗来说，在国外想要使用国内手机语音短信服务是个比">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://steemitimages.com/DQmeYfsJr2q47CAM3c6r2D7HGnBrzD5BRpcL9FKWMrHuPcJ/1.png">
+<meta property="og:image" content="https://steemitimages.com/DQmUXTNoRjrGCMrPipXrbCrjCvowCfFdrwdzYL1byhHqLfB/2.jpg">
+<meta property="og:image" content="https://steemitimages.com/DQmSjbHWQ3cuUwZy8JqLBu6eGAr5MDnN6UrpL6xUQ4MH5aL/3.jpg">
+<meta property="og:image" content="https://steemitimages.com/DQmZ1Eae6p71XY1rG77TYAPTVXt7uYk4fnRwBu5SBMNxE7z/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmf8cLfnALZwekkbof61bzTwJuT4NV8pfrhkvLxCywX1xn/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmebVv48wZJeQPuGvhmK47oZ1kuSPy7ggZBnZfZwvS8UWo/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmRxqyu7kDgwe4CAbLhtMMWdgWHwDSi3Gugw7NJpHGobPf/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmRmkBgSRGi6Hpv2xGtLmwbx9XBKPsWjKj99PMiAq34Knv/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmXxFVjaH27ZK1Kq72xzojCRXHSLaLZZXAs4PnZYS74zxA/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmaydKeB9mJtgBLLbiTzNL4WL89nFobXC2FC8vK8PEmEqy/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmavEHVmqP8nd6H8JoPXs178ppUC8aChiYkVn87XRjR6Dk/7.png">
+<meta property="og:image" content="https://steemitimages.com/DQmUvEQBoP4kFq6gkgDA4Dfw8F94B7CcFTNiLXPM1k8CFxS/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmSxMmFx8fAAjhktmpMeM7t6YKbHoaGZ9ti4uPuJcLVW3E/8.png">
+<meta property="og:image" content="https://steemitimages.com/DQmefPwudwdN4fWGxXddERRvYemJQvqR5Zq6QdfitpyW2gz/9.png">
+<meta property="og:image" content="https://steemitimages.com/DQmeJ9NorhwV2yL8tWVKuhg6vBqBRs6DtosMStUinPdh274/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmNhr5za8A8pnyu9aNku5bPBrQtKModcVHLjBMpEAqVuNA/4.png">
+<meta property="og:image" content="https://steemitimages.com/DQmabg36E8eZuerJ7TcfxNTZoCiZ4tYUfWWWNSjNNNnrsTj/5.png">
+<meta property="og:image" content="https://steemitimages.com/DQmZieaAJTu8RaCoqrYTKqxHrQVV5R1wnRKLhskFDZ39QFw/1.jpeg">
+<meta property="og:image" content="https://steemitimages.com/DQmYraQ7jhL1wC3cFEo5XgPCFQwU2sD6miWRcUwiazmMr5J/2.jpeg">
+<meta property="og:image" content="https://steemitimages.com/DQmb9ETeHyPK8jhghBs8eAixQT3VZUjCATKuvVNVwU4QzFD/3.jpeg">
+<meta property="og:image" content="https://steemitimages.com/DQmS6gRMmMdSpbDRQDeWNEWmq9DMHT88ggDY45vLvoTvm3j/a1.png">
+<meta property="og:image" content="https://steemitimages.com/DQmaFfKZByWG2Yt7PkMmjF4EkxGV5o75cyipWA3Cro4QfRo/a2.png">
+<meta property="og:image" content="https://steemitimages.com/DQmQWksaW3rj9LbWABTN9iWjfwfh4yZCA1kvLC5D1e3qGmW/a3.png">
+<meta property="og:image" content="https://steemitimages.com/DQmWL5oQHjaM61CnKDu5boEPgZPGAHLLSyZkfkf8PcKCLbY/a4.png">
+<meta property="og:image" content="https://steemitimages.com/DQmQiMuMpn4trjb5zyeo5eKJPiEQxddrXUmdtGQe2vUM9qp/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmWqm8ojVQbY94AnwXdkgUHZwuNvsL4GSfEBeBMDR3Q1Dg/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmYDqCy2oe5BUbHjTb8DM2PH5hEqC9fBSGxDCn4AUXcwVV/b2.png">
+<meta property="og:image" content="https://steemitimages.com/DQmSg3izeiNK2srq86kgVE2inKur6GNxdx7UJntnzpAfzf7/b33.png">
+<meta property="og:image" content="https://steemitimages.com/DQmQS9kjLvNymQNX8obrTUSF8CQYv5MFEhrUgEsjjaiecS9/b44.png">
+<meta property="og:image" content="https://steemitimages.com/DQmaGPqX8bq3FNWsdh6FFZPd4U61fhzLnaWX2uttcMZua9N/b3.png">
+<meta property="og:image" content="https://steemitimages.com/DQmPrRxMQAouB4JUo6UKPjudEikazHhALdtXU5A1wQjrZ3J/b4.png">
+<meta property="og:image" content="https://steemitimages.com/DQmRxz55NeRbi4v1Cp14cn8Eq6pzrNJ865AyKePZcSkjmZs/d1.png">
+<meta property="og:image" content="https://steemitimages.com/DQmbMYLBAbZ9t6dr6mWdmVih3wQnzhHC9t9XyuYbrGJUZaU/d2.png">
+<meta property="og:image" content="https://steemitimages.com/DQmQkKY3gJdP32Rqun9w7nJ5BpeLAMQ3iWBDtSXR2fXSpPi/e1.png">
+<meta property="og:image" content="https://steemitimages.com/DQmVbB56XP6BRQWp9E9nU3cK6ahxPPxRkFQe1q9P26wJHAZ/e2.png">
+<meta property="og:image" content="https://steemitimages.com/DQmcHJMRN5jkuRaG9Uc3DCPFWDaMC67cYHAGuLdanH4dYD9/e3.png">
+<meta property="og:image" content="https://steemitimages.com/DQmVdXQZEEhkA1dB2DdHhPQ4Zr3PnZ1n7PrVvhvbHWTNhHZ/e4.png">
+<meta property="og:image" content="https://steemitimages.com/DQmcMYZhBJP7CcSbuFaEELwUx5Nhs5Cnkyb4nTjvErmNJSQ/e5.png">
+<meta property="og:image" content="https://steemitimages.com/DQmYNEaizm8VUaDHM9jXJ2PYNMp7NYg4MZ4vfszJYKu1td6/e6.png">
+<meta property="og:image" content="https://steemitimages.com/DQmdveDTjFUEDtB9evWiujvkDF3dceTKz3KYkaLDWGCPkjk/e7.png">
+<meta property="og:image" content="https://steemitimages.com/DQmXwniU9ZN5c9AQAjpSAqZfsmQZC4gArWFsSUis7LRfJXn/e8.png">
+<meta property="og:image" content="https://steemitimages.com/DQmXcqZ4F7z1TTfSGihKhdhiQoj9XbRbHY2QzGqbo7oR1S5/e9.png">
+<meta property="og:image" content="https://steemitimages.com/DQmRVY6ffJ5yJtKAzg5tU6XcGAD5dDWCGMvb9cCGfULfSVB/e10.png">
+<meta property="og:image" content="https://steemitimages.com/DQmVXxBrpUQ1CpTPw7oDZ4K3P451WS3bBg4bwPSV4FJWTgw/e11.png">
+<meta property="og:image" content="https://steemitimages.com/DQmSDNGwNUnLzXA4SLydE7ZRs8BjsVKyTJ14CRyxLNw4Lw1/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmfJnm7i4cbxdLdhh5vevRBNPRnLqmg2VqojdrWT54oFXL/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmUa2c9h5JnQugb5RfXEJohdV2k1APz4PNHfQV2JQPFHa7/s1.png">
+<meta property="og:updated_time" content="2021-02-26T06:44:45.940Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="出国狗的福音--使用树莓派搭建跨国语音短信设备">
+<meta name="twitter:description" content="有朋友推荐了一个设备，我还没有测试，不过原理应该跟自己用树莓派搭建的系统一样，购买地址：https://item.taobao.com/item.htm?spm=a230r.1.14.53.250350a1rJhohU&amp;amp;id=558848686579&amp;amp;ns=1&amp;amp;abbucket=18 – 更新于 20180208  对于出国狗来说，在国外想要使用国内手机语音短信服务是个比">
+<meta name="twitter:image" content="https://steemitimages.com/DQmeYfsJr2q47CAM3c6r2D7HGnBrzD5BRpcL9FKWMrHuPcJ/1.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml"/>
+
+
+
+  
+  
+  <link rel="canonical" href="https://akawa.ink/2018/02/07/asterisk-tuturial"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>出国狗的福音--使用树莓派搭建跨国语音短信设备 | Akawa</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155419471-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-155419471-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script data-ad-client="ca-pub-7536831447654223" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Akawa</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">ETY001的博客</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-首页">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-生活">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/life" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br/>生活</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-关于">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-dm实验室">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/lab/" rel="section"><i class="menu-item-icon fa fa-fw fa-gear"></i> <br/>DM实验室</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-捐助">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/donate/" rel="section"><i class="menu-item-icon fa fa-fw fa-star"></i> <br/>捐助</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-归档">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-友链">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/friendsblog/" rel="section"><i class="menu-item-icon fa fa-fw fa-link"></i> <br/>友链</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br/>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+<div style="min-height: 480px;">
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- new-blog-auto -->
+  <ins class="adsbygoogle"
+  style="display:block"
+  data-ad-client="ca-pub-7536831447654223"
+  data-ad-slot="6481460577"
+  data-ad-format="auto"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/02/07/asterisk-tuturial.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">出国狗的福音--使用树莓派搭建跨国语音短信设备
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-02-08 00:00:00" itemprop="dateCreated datePublished" datetime="2018-02-08T00:00:00+08:00">2018-02-08</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2018/02/07/asterisk-tuturial.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/02/07/asterisk-tuturial.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>有朋友推荐了一个设备，我还没有测试，不过原理应该跟自己用树莓派搭建的系统一样，购买地址：<a href="https://item.taobao.com/item.htm?spm=a230r.1.14.53.250350a1rJhohU&amp;id=558848686579&amp;ns=1&amp;abbucket=18" target="_blank" rel="noopener">https://item.taobao.com/item.htm?spm=a230r.1.14.53.250350a1rJhohU&amp;id=558848686579&amp;ns=1&amp;abbucket=18</a> – 更新于 20180208</p>
+</blockquote>
+<p>对于出国狗来说，在国外想要使用国内手机语音短信服务是个比较头疼的事情。这篇教程将教你用树莓派基于<br> <em>Asterisk</em> 实现一个 <em>PBX</em> 系统。最终的效果是：你可以在国外通过互联网使用你国内的手机号，享受的是国内手机号的资费。</p>
+<h3 id="基本的原理图"><a href="#基本的原理图" class="headerlink" title="基本的原理图"></a>基本的原理图</h3><p><img src="https://steemitimages.com/DQmeYfsJr2q47CAM3c6r2D7HGnBrzD5BRpcL9FKWMrHuPcJ/1.png" alt="1.png"></p>
+<h3 id="需要准备的东西"><a href="#需要准备的东西" class="headerlink" title="需要准备的东西"></a>需要准备的东西</h3><ul>
+<li>树莓派3B（使用2代也可以，不过性能不是很好）</li>
+</ul>
+<p><img src="https://steemitimages.com/DQmUXTNoRjrGCMrPipXrbCrjCvowCfFdrwdzYL1byhHqLfB/2.jpg" alt="2.jpg"></p>
+<ul>
+<li>一个带语音支持的 <em>3G</em> 卡托（尽量买华为的，并且一定要注意带语音支持，一般带语音的都是要卖出海外的，卖给国内的都是阉割掉语音功能的。我手里还有4个，有需要的可以找我，亲测可用，150国内包邮，国外的可以考虑从 <a href="http://www.alibaba.com/" target="_blank" rel="noopener">阿里巴巴</a> 上搜索 <em>3g dongle voice</em> 来购买。按照我两年前的实验来看，50多 <em>CNY</em> 的带语音卡托在树莓派上识别不出来，建议优先考虑华为，另外在 <a href="https://github.com/bg111/asterisk-chan-dongle/wiki/Requirements-and-Limitations" target="_blank" rel="noopener">这里</a> 有一份测试通过的型号清单，不过某些型号貌似也有好几种版本，比如我曾经买到过一个E169是没法用的。）</li>
+</ul>
+<p><img src="https://steemitimages.com/DQmSjbHWQ3cuUwZy8JqLBu6eGAr5MDnN6UrpL6xUQ4MH5aL/3.jpg" alt="3.jpg"></p>
+<ul>
+<li>一个带电源的USB HUB（一定要带电源，因为供电不足的话，来去电的时候可能不稳定）</li>
+<li>一根HDMI转VGA线（如果有HDMI显示器，可以忽略该配件）</li>
+<li>一张至少8G的TF卡（建议买树莓派的时候一并购买）</li>
+<li>5V2A的电源</li>
+</ul>
+<h3 id="前置技能"><a href="#前置技能" class="headerlink" title="前置技能"></a>前置技能</h3><ul>
+<li>Linux基本知识</li>
+<li>最好有折腾过树莓派</li>
+<li>折腾的精神</li>
+</ul>
+<h3 id="基础配置"><a href="#基础配置" class="headerlink" title="基础配置"></a>基础配置</h3><p>1.首先我们需要去 <a href="http://www.raspberry-asterisk.org/downloads/" target="_blank" rel="noopener">http://www.raspberry-asterisk.org/downloads/</a> 这里下载最新的镜像，该镜像是基于 <em>Debian</em><br> 已经封装好的 <em>FreePBX</em> 系统，本次教程使用的是 <em>raspbx-03-12-2017.zip</em>，其中 <em>Asterisk 13.18.3</em>, <em>FreePBX 14.0.1.20</em>。<br><strong>备注：该网站需要翻墙访问！</strong></p>
+<p>2.下载后，解压 <em>raspbx-03-12-2017.zip</em>，使用你熟悉的烧录软件，把解压出来的 <em>.img</em> 文件烧录进TF卡中。推荐使用 <a href="https://etcher.io/" target="_blank" rel="noopener">Etcher</a> 进行烧录操作。用 <a href="https://etcher.io/" target="_blank" rel="noopener">Etcher</a> 烧录还是比较方便，只需要三步即可。第一步选择镜像文件，第二步选择你的TF卡，第三步点击 <em>Flash</em> 即可开始。</p>
+<p><img src="https://steemitimages.com/DQmZ1Eae6p71XY1rG77TYAPTVXt7uYk4fnRwBu5SBMNxE7z/image.png" alt=""></p>
+<p>3.插入TF卡到树莓派中，然后上电。系统默认用户密码为： <em>root / raspberry</em>。</p>
+<p>4.登陆后，先配置 <em>WiFi</em> （如果计划使用网线，可以跳过该步，建议使用网线，稳定），打开 <code>/etc/wpa_supplicant/wpa_supplicant.conf</code> 文件，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">country=GB</span><br><span class="line">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev</span><br><span class="line">update_config=1</span><br><span class="line"># 增加如下配置，WiFi的ssid和密码</span><br><span class="line">network=&#123;</span><br><span class="line">    ssid=&quot;ety001_router&quot;</span><br><span class="line">    psk=&quot;12345678&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>增加配置后，输入 <code>reboot</code> 进行重启，重启后，<code>ifconfig</code> 就能看到 <em>IP</em> 了，系统的 <em>ssh</em> 默认是开启状态，现在就可以使用 <em>ssh</em> 了。</p>
+<p>另外镜像默认使用 <em>4G</em> 空间，如果你想扩展到 <em>TF</em> 卡全部空间，执行下面的命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">raspi-config</span><br></pre></td></tr></table></figure>
+<p>选择 <em>Advanced Options</em> ，再选择 <em>Expand Filesystem</em>，即可完成扩充。除此之外，也可以用 <code>fdisk</code> 命令完成，具体方法可以参考我博客上很早之前的一篇 <a href="/2015/01/23/expand-raspberry-pi-sd-card-space.html">博文</a>。</p>
+<p>5.打开浏览器，访问你树莓派IP，会看到如下的配置页面</p>
+<p><img src="https://steemitimages.com/DQmf8cLfnALZwekkbof61bzTwJuT4NV8pfrhkvLxCywX1xn/image.png" alt=""></p>
+<p>6.增加管理用户后，显示下面的登录界面，</p>
+<p><img src="https://steemitimages.com/DQmebVv48wZJeQPuGvhmK47oZ1kuSPy7ggZBnZfZwvS8UWo/image.png" alt=""></p>
+<p>7.点击 <code>FreePBX Administration</code> 进行管理员登陆，开始配置，登陆后进行语言和时区设置</p>
+<p><img src="https://steemitimages.com/DQmRxqyu7kDgwe4CAbLhtMMWdgWHwDSi3Gugw7NJpHGobPf/image.png" alt=""></p>
+<p>8.设置成功后，进入了管理主界面</p>
+<p><img src="https://steemitimages.com/DQmRmkBgSRGi6Hpv2xGtLmwbx9XBKPsWjKj99PMiAq34Knv/image.png" alt=""></p>
+<p>9.从 <code>Application</code> =&gt; <code>Extensions</code> =&gt; <code>Add Extension</code> =&gt; <code>Add New PJSIP Extension</code></p>
+<p><img src="https://steemitimages.com/DQmXxFVjaH27ZK1Kq72xzojCRXHSLaLZZXAs4PnZYS74zxA/image.png" alt=""></p>
+<p><img src="https://steemitimages.com/DQmaydKeB9mJtgBLLbiTzNL4WL89nFobXC2FC8vK8PEmEqy/image.png" alt=""></p>
+<p>10.需要填写的项目有 <em>User Extension</em>，<em>DisplayName</em>，<em>Secret</em>，<em>Link to a Default User</em>.</p>
+<p><img src="https://steemitimages.com/DQmavEHVmqP8nd6H8JoPXs178ppUC8aChiYkVn87XRjR6Dk/7.png" alt="7.png"></p>
+<p>其中 <em>User Extension</em> 是你的内线号码，用于呼叫和登陆客户端；<br><em>DisplayName</em> 是用于呼叫时的显示，可选填；<br><em>Secret</em> 是你在客户端登陆时需要填写的密码，请使用健壮的密码，详见最后的 <strong>安全</strong> 章节；<br><em>Link to Default User</em> 是让用户自己管理自己的号码，如果不需要，则选 <em>None</em>。</p>
+<p>点击 <em>Submit</em> 后，保存成功。用同样的方法再创建一个用户用于测试。</p>
+<p>创建完两个用户后，点击右上角的 <em>Apply Config</em> 使配置生效。</p>
+<p><img src="https://steemitimages.com/DQmUvEQBoP4kFq6gkgDA4Dfw8F94B7CcFTNiLXPM1k8CFxS/image.png" alt=""></p>
+<p>11.在 <em>Settings</em> =&gt; <em>Asterisk SIP Settings</em> 页面的 <em>General SIP Settings</em> 标签页下面，<em>External Address</em> 一栏填写你的外网IP或者你的外网域名，这里我填写了我的外网IP。<em>Local Networks</em> 中填写你的树莓派所在的子网。<em>RTP Port Ranges</em> 里，填写 <em>10000</em> 到 <em>10100</em>。这里不要使用 <em>20000</em>，测试来看，如果你只是自己用，设置 <em>10100</em> 很稳定。点击 <em>Submit</em> 保存。</p>
+<p><img src="https://steemitimages.com/DQmSxMmFx8fAAjhktmpMeM7t6YKbHoaGZ9ti4uPuJcLVW3E/8.png" alt="8.png"></p>
+<p>12.切换到 <em>Chan PJSIP Settings</em> 标签页下面，把 <em>tcp</em> 设置为 <em>yes</em>，点击 <em>Submit</em> 保存。<br><em>Asterisk</em> 默认使用的是 <em>UDP</em>，为了能保证手机app在后台运行时，可以及时收到来电提醒，需要开启 <em>tcp</em> 通信。</p>
+<p><img src="https://steemitimages.com/DQmefPwudwdN4fWGxXddERRvYemJQvqR5Zq6QdfitpyW2gz/9.png" alt="9.png"></p>
+<p><img src="https://steemitimages.com/DQmeJ9NorhwV2yL8tWVKuhg6vBqBRs6DtosMStUinPdh274/image.png" alt=""></p>
+<p>13.去自己的路由器上，设置端口映射，需要打开 <em>5060</em> 和 <em>10000-10100</em>，可以参考下图</p>
+<p><img src="https://steemitimages.com/DQmNhr5za8A8pnyu9aNku5bPBrQtKModcVHLjBMpEAqVuNA/4.png" alt="4.png"></p>
+<p><img src="https://steemitimages.com/DQmabg36E8eZuerJ7TcfxNTZoCiZ4tYUfWWWNSjNNNnrsTj/5.png" alt="5.png"></p>
+<p>14.去 <a href="http://www.linphone.org/" target="_blank" rel="noopener">http://www.linphone.org/</a> 下载 <em>Linphone</em> 到你的手机和电脑上，如下图分别用刚才新建立的两个账号登陆两个客户端。</p>
+<p><img src="https://steemitimages.com/DQmZieaAJTu8RaCoqrYTKqxHrQVV5R1wnRKLhskFDZ39QFw/1.jpeg" alt="1.jpeg"></p>
+<p><img src="https://steemitimages.com/DQmYraQ7jhL1wC3cFEo5XgPCFQwU2sD6miWRcUwiazmMr5J/2.jpeg" alt="2.jpeg"></p>
+<p><img src="https://steemitimages.com/DQmb9ETeHyPK8jhghBs8eAixQT3VZUjCATKuvVNVwU4QzFD/3.jpeg" alt="3.jpeg"></p>
+<p><img src="https://steemitimages.com/DQmS6gRMmMdSpbDRQDeWNEWmq9DMHT88ggDY45vLvoTvm3j/a1.png" alt="a1.png"></p>
+<p><img src="https://steemitimages.com/DQmaFfKZByWG2Yt7PkMmjF4EkxGV5o75cyipWA3Cro4QfRo/a2.png" alt="a2.png"></p>
+<p><img src="https://steemitimages.com/DQmQWksaW3rj9LbWABTN9iWjfwfh4yZCA1kvLC5D1e3qGmW/a3.png" alt="a3.png"></p>
+<p><img src="https://steemitimages.com/DQmWL5oQHjaM61CnKDu5boEPgZPGAHLLSyZkfkf8PcKCLbY/a4.png" alt="a4.png"></p>
+<p>现在从手机上，拨打 <em>102</em> ，如果以上设置没有问题的话，电脑上就能响铃，接起来，两边听一下，看看有没有什么问题。如果有一方听不到，很可能是端口映射的问题，重新检查下配置。端口映射这里偶尔会有莫名奇妙的问题。</p>
+<h3 id="配置GSM，实现呼入和呼出"><a href="#配置GSM，实现呼入和呼出" class="headerlink" title="配置GSM，实现呼入和呼出"></a>配置GSM，实现呼入和呼出</h3><p>1.把 <em>SIM</em> 卡插入 <em>3G</em> 卡托，把 <em>3G</em> 卡托插到树莓派或者 <em>USB HUB</em> 上。</p>
+<p>2.<em>SSH</em> 连接到树莓派后，执行下面的命令安装 <em>dongle</em> 扩展</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@raspbx:~# install-dongle</span><br></pre></td></tr></table></figure>
+<p><img src="https://steemitimages.com/DQmQiMuMpn4trjb5zyeo5eKJPiEQxddrXUmdtGQe2vUM9qp/image.png" alt=""></p>
+<p>其中①输入你插入 <em>3G</em> 卡托里的手机卡号，②输入你要准备接收短信的邮箱地址，③如果你不想转发短信留空即可。</p>
+<p>安装到最后，会再问你是否需要安装网页界面的发短信工具（即访问地址就是 <em><a href="http://raspbx_ip/sms" target="_blank" rel="noopener">http://raspbx_ip/sms</a></em>），按照提示输入即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Would you like to install a webpage for sending SMS with</span><br><span class="line">chan_dongle? (http://raspbx/sms/) [y/N] y</span><br><span class="line">Enter password for SMS page: 123456</span><br></pre></td></tr></table></figure>
+<p><strong>注意：安装 <em>dongle</em> 扩展需要翻墙</strong></p>
+<p>3.回到网页配置界面，依次访问 <em>Connectivity</em> =&gt; <em>Trunks</em>  =&gt; <em>Add Trunk</em> =&gt; <em>Add Custom Trunk</em></p>
+<p><img src="https://steemitimages.com/DQmWqm8ojVQbY94AnwXdkgUHZwuNvsL4GSfEBeBMDR3Q1Dg/image.png" alt=""></p>
+<p><img src="https://steemitimages.com/DQmYDqCy2oe5BUbHjTb8DM2PH5hEqC9fBSGxDCn4AUXcwVV/b2.png" alt="b2.png"></p>
+<p>4.在 <em>General</em> 标签页下面，设置一个 <em>Trunk Name</em>，<em>Outbound CallerID</em> 中填写你的手机号</p>
+<p><img src="https://steemitimages.com/DQmSg3izeiNK2srq86kgVE2inKur6GNxdx7UJntnzpAfzf7/b33.png" alt="b33.png"></p>
+<p>5.在 <em>custom Settings</em> 中设置 <code>dongle/dongle0/$OUTNUM$</code>。</p>
+<p><img src="https://steemitimages.com/DQmQS9kjLvNymQNX8obrTUSF8CQYv5MFEhrUgEsjjaiecS9/b44.png" alt="b44.png"></p>
+<p>这里如果你只是插了一个 <em>3G Dongle</em>，那么就是默认 <em>dongle0</em>，如果你设备上插了多个设备，你需要在命令行下输入一下命令，查看下所有的 <em>Dongle</em>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@raspbx:~# asterisk -rx &quot;dongle show devices&quot;</span><br><span class="line">ID           Group State      RSSI Mode Submode Provider Name  Model      Firmware          IMEI             IMSI             Number        </span><br><span class="line">dongle0      0     Free       6    5    4       CHN-CUGSM      E1750      11.126.10.00.00   359767033517971  460090019804894  +8617xxxxxxx44</span><br></pre></td></tr></table></figure>
+<p>6.点击 <em>Submit</em> 保存设置，然后点击右上角的 <em>Apply Config</em> 使配置生效。</p>
+<p>7.从 <em>Connectivity</em> =&gt; <em>Outbound Routes</em> =&gt; <em>Add Outbound Route</em> 中，在 <em>Route Settings</em> 下面填写一个 <em>Route Name</em>，在 <em>Trunk Sequence for Matched Routes</em> 中选择刚才添加的 <em>Trunk</em>。</p>
+<p><img src="https://steemitimages.com/DQmaGPqX8bq3FNWsdh6FFZPd4U61fhzLnaWX2uttcMZua9N/b3.png" alt="b3.png"></p>
+<p>6.切换到 <em>Dial Patterns</em> 标签下，按照下图来配置拨号规则，这里配置的规则是，匹配所有0开头的电话号码，把所有0开头的号码，去除开头的0后，转发到我们设置的那个 <em>Trunk</em> 上，进行呼出操作。</p>
+<p><img src="https://steemitimages.com/DQmPrRxMQAouB4JUo6UKPjudEikazHhALdtXU5A1wQjrZ3J/b4.png" alt="b4.png"></p>
+<p>7.点击 <em>Submit</em> 保存配置，点击右上角 <em>Apply Config</em> 使配置生效。生效后，你现在可以用你的 <em>App</em> 进行外呼操作了，只要在要拨打的电话前加拨0，即可完成外拨。</p>
+<p>8.在 <em>Connectivity</em> =&gt; <em>Inbound Routes</em> =&gt; <em>Add Inbound Route</em> =&gt; <em>General</em> 下，配置 <em>Set Destination</em> ，选择 <em>Extension</em>，从已经添加的 <em>Extension</em> 中，选择一个即可。点击 <em>Submit</em> 保存配置，点击右上角 <em>Apply Config</em> 使配置生效。生效后，你可以拨打你的 <em>3G Dongle</em> 中的手机卡号，如果顺利，你手机上的 <em>App</em> 将会接到这个呼入操作。</p>
+<p><img src="https://steemitimages.com/DQmRxz55NeRbi4v1Cp14cn8Eq6pzrNJ865AyKePZcSkjmZs/d1.png" alt="d1.png"></p>
+<p><img src="https://steemitimages.com/DQmbMYLBAbZ9t6dr6mWdmVih3wQnzhHC9t9XyuYbrGJUZaU/d2.png" alt="d2.png"></p>
+<h3 id="配置-Email，测试收发短信"><a href="#配置-Email，测试收发短信" class="headerlink" title="配置 Email，测试收发短信"></a>配置 <em>Email</em>，测试收发短信</h3><p>1.输入如下命令进入 <em>Email</em> 配置界面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># dpkg-reconfigure exim4-config</span><br></pre></td></tr></table></figure>
+<p>2.选择 <em>internet site; mail is sent and received directly using SMTP</em></p>
+<p><img src="https://steemitimages.com/DQmQkKY3gJdP32Rqun9w7nJ5BpeLAMQ3iWBDtSXR2fXSpPi/e1.png" alt="e1.png"></p>
+<p>3.配置你的发信域名</p>
+<p><img src="https://steemitimages.com/DQmVbB56XP6BRQWp9E9nU3cK6ahxPPxRkFQe1q9P26wJHAZ/e2.png" alt="e2.png"></p>
+<p>4.保持默认值</p>
+<p><img src="https://steemitimages.com/DQmcHJMRN5jkuRaG9Uc3DCPFWDaMC67cYHAGuLdanH4dYD9/e3.png" alt="e3.png"></p>
+<ol>
+<li>配置为你的发信域名</li>
+</ol>
+<p><img src="https://steemitimages.com/DQmVdXQZEEhkA1dB2DdHhPQ4Zr3PnZ1n7PrVvhvbHWTNhHZ/e4.png" alt="e4.png"></p>
+<p>6.以下几步保持默认值</p>
+<p><img src="https://steemitimages.com/DQmcMYZhBJP7CcSbuFaEELwUx5Nhs5Cnkyb4nTjvErmNJSQ/e5.png" alt="e5.png"></p>
+<p><img src="https://steemitimages.com/DQmYNEaizm8VUaDHM9jXJ2PYNMp7NYg4MZ4vfszJYKu1td6/e6.png" alt="e6.png"></p>
+<p><img src="https://steemitimages.com/DQmdveDTjFUEDtB9evWiujvkDF3dceTKz3KYkaLDWGCPkjk/e7.png" alt="e7.png"></p>
+<p><img src="https://steemitimages.com/DQmXwniU9ZN5c9AQAjpSAqZfsmQZC4gArWFsSUis7LRfJXn/e8.png" alt="e8.png"></p>
+<p><img src="https://steemitimages.com/DQmXcqZ4F7z1TTfSGihKhdhiQoj9XbRbHY2QzGqbo7oR1S5/e9.png" alt="e9.png"></p>
+<p>7.该步输入 <code>root</code></p>
+<p><img src="https://steemitimages.com/DQmRVY6ffJ5yJtKAzg5tU6XcGAD5dDWCGMvb9cCGfULfSVB/e10.png" alt="e10.png"></p>
+<p>8.完成发信配置后，使用 <code>send_test_email &lt;your_email&gt;</code> 命令进行发信测试。打开你的邮箱，检查垃圾箱，100%的会被拦截，像我用的腾讯的企业邮，在 <em>自助查询</em> 中可以找到拦截信息，为了收信顺利，把你上面配置的发信域名加入邮箱的域名白名单即可。</p>
+<p><img src="https://steemitimages.com/DQmVXxBrpUQ1CpTPw7oDZ4K3P451WS3bBg4bwPSV4FJWTgw/e11.png" alt="e11.png"></p>
+<p>9.用手机给自己 <em>3G Dongle</em> 里的手机卡发条短信，应该很快就能收到邮件了，</p>
+<p><img src="https://steemitimages.com/DQmSDNGwNUnLzXA4SLydE7ZRs8BjsVKyTJ14CRyxLNw4Lw1/image.png" alt=""></p>
+<p>10.如果想要发送短信的话，我们可以通过 <em>Web</em> 页面进行，访问 <strong><a href="http://your_raspbx_ip/sms" target="_blank" rel="noopener">http://your_raspbx_ip/sms</a></strong>，会提示你输入密码，这个密码即为你安装 <em>Dongle</em> 扩展的时候输入的那个密码，登陆后如下所示</p>
+<p><img src="https://steemitimages.com/DQmfJnm7i4cbxdLdhh5vevRBNPRnLqmg2VqojdrWT54oFXL/image.png" alt=""></p>
+<p><strong>注意：收件人手机号一定要加国号</strong></p>
+<h3 id="设备安全！！！！！"><a href="#设备安全！！！！！" class="headerlink" title="设备安全！！！！！"></a>设备安全！！！！！</h3><p>先给大家看一个截图，</p>
+<p><img src="https://steemitimages.com/DQmUa2c9h5JnQugb5RfXEJohdV2k1APz4PNHfQV2JQPFHa7/s1.png" alt="s1.png"></p>
+<p>这是目前我的设备被暴力破解的情况。</p>
+<h5 id="请一定重视安全问题"><a href="#请一定重视安全问题" class="headerlink" title="请一定重视安全问题"></a>请一定重视安全问题</h5><p>再附上我之前的悲惨遭遇：<a href="https://www.v2ex.com/t/394297#reply11" target="_blank" rel="noopener">https://www.v2ex.com/t/394297#reply11</a></p>
+<p>1.首先，你的 <em>Extension</em> 一定要给各个账号配置超强的密码</p>
+<p>2.其次，使用 <em>Fail2ban</em> 来防暴破。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># install-fail2ban</span><br></pre></td></tr></table></figure>
+<p>3.安装 <em>Fail2ban</em> 后，程序会自动启动，我们需要调整下配置，打开 <code>/etc/fail2ban/jail.conf</code> 文件，搜索 <code>[asterisk]</code>，找到 <code>maxretry</code> 项，修改为 2，就是说密码输入错2次，就会被 <em>Fail2ban</em> 拦截。再搜索下 <code>bantime</code>，修改为 <code>604800</code>。配置好后，意味着有人要是输入错两次密码，那么这个人的 <em>IP</em> 就会被屏蔽一周。保存后，执行 <code>systemctl restart fail2ban</code> 重启服务使配置生效。</p>
+<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>本来计划争取半天写完，结果写了一天半。最初其实是计划写一本 《面向菜鸟的 Asterisk 教程》，把各种好玩的功能写进去的，让菜鸟也能轻松的用上牛逼的 <em>Asterisk</em> 。不过还是感觉自己的水平和能力没有达到，于是放弃了。</p>
+<p>目前这篇教程里还未涉及的我已经测试可用的功能，还有 <strong>语音信箱</strong>，<strong>电话会议</strong>，<strong>电话组</strong>。其中 <strong>语音信箱</strong> 功能还是很赞的，可以在自己未接听电话的时候，自动把呼入转接到 <strong>语音信箱</strong>，让给你打电话的人给你留言，留言还可以配置发送到你的邮箱。这些功能有机会我再写教程吧。</p>
+<p>目前这套方案，收发短信很稳定，语音通话的话，会受到你在国外手机网络连接回你国内家里的网络情况的影响。按照两年前去欧洲的时候我的测试来看，当时在瑞士的时候，连接回国内打电话大约会有将近1秒的延时，勉强可以通话。</p>
+<p>如果有什么疑问，可以在本帖下面留言，我收到 <a href="https://steem-mention.com" target="_blank" rel="noopener">回复提醒</a> 后，会尽力第一时间给出答复。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/img/wechat.jpeg" style="width: 200px; max-width: 100%;"/>
+  <div>ET碎碎念，每周一，晚六点一刻更新，欢迎订阅</div>
+</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div></div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/wepay.jpg" alt="ETY001 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/alipay.png" alt="ETY001 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/btc.png" alt="ETY001 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>ety001</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://akawa.ink/2018/02/07/asterisk-tuturial.html" title="出国狗的福音--使用树莓派搭建跨国语音短信设备">https://akawa.ink/2018/02/07/asterisk-tuturial.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/教程/" rel="tag"># 教程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/30/how-to-build-a-steem-witness-node.html" rel="next" title="如何搭建Steem见证人节点">
+                <i class="fa fa-chevron-left"></i> 如何搭建Steem见证人节点
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/09/resolve-confusion-of-stellar-price.html" rel="prev" title="困惑我很久的价格单位终于弄明白了">
+                困惑我很久的价格单位终于弄明白了 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    <div>
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- new-blog-auto -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-7536831447654223"
+      data-ad-slot="6481460577"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/logo.jpg"
+                alt="ETY001"/>
+            
+              <p class="site-author-name" itemprop="name">ETY001</p>
+              <div class="site-description motion-element" itemprop="description">ETY001的博客</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">455</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ety001" title="GitHub &rarr; https://github.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:work@akawa.ink" title="E-Mail &rarr; mailto:work@akawa.ink"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/ety001" title="Weibo &rarr; https://weibo.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/ety001" title="Twitter &rarr; https://twitter.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+             <div class="cc-license motion-element" itemprop="license">
+              
+              
+                
+              
+              
+              
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"/></a>
+             </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本的原理图"><span class="nav-number">1.</span> <span class="nav-text">基本的原理图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#需要准备的东西"><span class="nav-number">2.</span> <span class="nav-text">需要准备的东西</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前置技能"><span class="nav-number">3.</span> <span class="nav-text">前置技能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础配置"><span class="nav-number">4.</span> <span class="nav-text">基础配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置GSM，实现呼入和呼出"><span class="nav-number">5.</span> <span class="nav-text">配置GSM，实现呼入和呼出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-Email，测试收发短信"><span class="nav-number">6.</span> <span class="nav-text">配置 Email，测试收发短信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设备安全！！！！！"><span class="nav-number">7.</span> <span class="nav-text">设备安全！！！！！</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#请一定重视安全问题"><span class="nav-number">7.0.1.</span> <span class="nav-text">请一定重视安全问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后记"><span class="nav-number">8.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">  <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">鲁ICP备20000145号-1 </a>&copy; 2009 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ETY001</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://akawa.ink/2018/02/07/asterisk-tuturial.html";
+    this.page.identifier = "2018/02/07/asterisk-tuturial.html";
+    this.page.title = '出国狗的福音--使用树莓派搭建跨国语音短信设备';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

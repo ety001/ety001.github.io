@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" href="/lib/fancybox/source/jquery.fancybox.css"/>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0"/>
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0"/>
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/safari-pinned-tab.svg?v=7.2.0" color="#222">
+
+
+  <link rel="manifest" href="/images/site.webmanifest">
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml"/>
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: true,
+    fancybox: true,
+    fastclick: false,
+    lazyload: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1.ASP对Excel的基本操作 (1) 建立Excel对象 创建Excel对象可以通过下面的代码来实现: 12345&amp;lt;%set objExcelApp = CreateObject(&amp;quot;Excel.Application&amp;quot;)objExcelApp.DisplayAlerts = false &amp;apos;不显示警告objExcelApp.Application = fals">
+<meta name="keywords" content="编程语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ASP中对于XLS文件的一些操作方法">
+<meta property="og:url" content="https://akawa.ink/2011/01/17/asp-xls.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="1.ASP对Excel的基本操作 (1) 建立Excel对象 创建Excel对象可以通过下面的代码来实现: 12345&amp;lt;%set objExcelApp = CreateObject(&amp;quot;Excel.Application&amp;quot;)objExcelApp.DisplayAlerts = false &amp;apos;不显示警告objExcelApp.Application = fals">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2021-02-26T06:44:45.916Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ASP中对于XLS文件的一些操作方法">
+<meta name="twitter:description" content="1.ASP对Excel的基本操作 (1) 建立Excel对象 创建Excel对象可以通过下面的代码来实现: 12345&amp;lt;%set objExcelApp = CreateObject(&amp;quot;Excel.Application&amp;quot;)objExcelApp.DisplayAlerts = false &amp;apos;不显示警告objExcelApp.Application = fals">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml"/>
+
+
+
+  
+  
+  <link rel="canonical" href="https://akawa.ink/2011/01/17/asp-xls"/>
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>ASP中对于XLS文件的一些操作方法 | Akawa</title>
+  
+
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155419471-1"></script>
+  <script>
+    var host = window.location.hostname;
+    if (host !== "localhost" || !true) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-155419471-1');
+    }
+  </script>
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+  <script data-ad-client="ca-pub-7536831447654223" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Akawa</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">ETY001的博客</h1>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-首页">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br/>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-生活">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/life" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br/>生活</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-关于">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br/>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-dm实验室">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/lab/" rel="section"><i class="menu-item-icon fa fa-fw fa-gear"></i> <br/>DM实验室</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-捐助">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/donate/" rel="section"><i class="menu-item-icon fa fa-fw fa-star"></i> <br/>捐助</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-归档">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br/>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-友链">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/friendsblog/" rel="section"><i class="menu-item-icon fa fa-fw fa-link"></i> <br/>友链</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br/>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+<div style="min-height: 480px;">
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- new-blog-auto -->
+  <ins class="adsbygoogle"
+  style="display:block"
+  data-ad-client="ca-pub-7536831447654223"
+  data-ad-slot="6481460577"
+  data-ad-format="auto"></ins>
+  <script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/01/17/asp-xls.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ASP中对于XLS文件的一些操作方法
+
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2011-01-17 14:19:24" itemprop="dateCreated datePublished" datetime="2011-01-17T14:19:24+08:00">2011-01-17</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2011/01/17/asp-xls.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/01/17/asp-xls.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>1.ASP对Excel的基本操作</p>
+<p>(1) 建立Excel对象</p>
+<p>创建Excel对象可以通过下面的代码来实现:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">set objExcelApp = CreateObject(&quot;Excel.Application&quot;)</span><br><span class="line">objExcelApp.DisplayAlerts = false &apos;不显示警告</span><br><span class="line">objExcelApp.Application = false &apos;不显示界面</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<p>(2) 新建Excel文件</p>
+<p>新建Excel文件可以通过以下代码来实现:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">objExcelApp.WorkBooks.add</span><br><span class="line">set objExcelBook = objExcelApp.ActiveWorkBook</span><br><span class="line">set objExcelSheets = objExcelBook.Worksheets</span><br><span class="line">set objExcelSheet = objExcelBook.Sheets(1)</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<p>(3) 读取已有的Excel文件</p>
+<p>读取已有的Excel文件可以通过下面的代码来实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">strAddr = Server.MapPath(&quot;.&quot;)</span><br><span class="line">objExcelApp.WorkBooks.Open(strAddr &amp; &quot;TempletTable.xls&quot;)</span><br><span class="line">set objExcelBook = objExcelApp.ActiveWorkBook</span><br><span class="line">set objExcelSheets = objExcelBook.Worksheets</span><br><span class="line">set objExcelSheet = objExcelBook.WorkSheets(1)</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<p>(4) 另存Excel文件</p>
+<p>另存Excel文件可以通过以下代码来实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">objExcelBook.SaveAs strAddr &amp; &quot;templateTables.xls&quot;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<p>(5) 保存Excel文件</p>
+<p>保存Excel文件可以通过以下代码来实现:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">objExcelBook.Save</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<p>(6) 退出Excel操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">objExcelApp.Quit &apos;一定要退出</span><br><span class="line">set objExcelApp = nothing</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<p>2 读取Excel文件的实例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">set xlApp = server.CreateObject(&quot;Excel.Application&quot;)</span><br><span class="line">strsource = server.MapPath(&quot;xl.xls&quot;)</span><br><span class="line">set xlbook = xlApp.WorkBooks.Open(strsource)</span><br><span class="line">set xlsheet = xlbook.Worksheets(1)</span><br><span class="line"></span><br><span class="line">i = 1</span><br><span class="line">response.write &quot;&lt;table&gt;&quot;</span><br><span class="line"></span><br><span class="line">while xlsheet.cells(i,1) &lt;&gt; &quot;&quot;</span><br><span class="line"></span><br><span class="line">response.write &quot;&lt;tr&gt;&quot;</span><br><span class="line">response.write &quot;&lt;td&gt;&quot; &amp; xlsheet.Cells(i,1) &amp; &quot;&lt;/td&gt;&quot;</span><br><span class="line">response.write &quot;&lt;td&gt;&quot; &amp; xlsheet.Cells(i,2) &amp; &quot;&lt;/td&gt;&quot;</span><br><span class="line">response.write &quot;&lt;td&gt;&quot; &amp; xlsheet.Cells(i,3) &amp; &quot;&lt;/td&gt;&quot;</span><br><span class="line">response.write &quot;&lt;tr&gt;&quot;</span><br><span class="line">i = i + 1</span><br><span class="line"></span><br><span class="line">wend</span><br><span class="line"></span><br><span class="line">response.write &quot;&lt;/table&gt;&quot;</span><br><span class="line">set xlsheet = nothing</span><br><span class="line">set xlbook = nothing</span><br><span class="line">xlApp.quit</span><br><span class="line">&apos;千万记住要加这一句，否则每运行一次你的机器里就增加一个Excel进程，而且无法释放</span><br><span class="line">&apos;set xlApp = nothing 是不行的</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>怎样将数据从Excel导入到SQL Server中</li>
+</ol>
+<p>(1)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">&lt;%</span><br><span class="line">sub dataIntoSqlServer_ceritificate(strFileName,strSheetName,myConn)</span><br><span class="line">&apos;定义</span><br><span class="line">dim myConnection</span><br><span class="line">dim strName</span><br><span class="line">dim rsXsl,rsSql</span><br><span class="line">dim myConn_Xsl</span><br><span class="line">dim cmd</span><br><span class="line">dim i,j</span><br><span class="line">dim maxId</span><br><span class="line"></span><br><span class="line">strName = strFileName</span><br><span class="line">set myConnection = Server.CreateObject(&quot;ADODB.Connection&quot;)</span><br><span class="line">set rsXsl = Server.CreateObject(&quot;ADODB.Recordset&quot;)</span><br><span class="line">set rsSql = Server.CreateObject(&quot;ADODB.Recordset&quot;)</span><br><span class="line">set cmd = server.CreateObject(&quot;ADODB.Command&quot;)</span><br><span class="line"></span><br><span class="line">cmd.ActiveConnection = myConn</span><br><span class="line"></span><br><span class="line">myConn_Xsl = &quot;Provider=Microsoft.Jet.OLEDB.4.0;Data Source=&quot; &amp; strName &amp; _</span><br><span class="line">&quot;;Extended Properties=Excel 8.0&quot;</span><br><span class="line">&apos;打开连接</span><br><span class="line">myconnection.open myConn_Xsl</span><br><span class="line">&apos;打开表</span><br><span class="line">str_Xsl = &quot;select * from [&quot; &amp; strSheetName &amp; &quot;$]&quot;</span><br><span class="line">rsXsl.open str_Xsl,myconnection,1,1</span><br><span class="line">j = 1</span><br><span class="line">Do while not rsXsl.eof</span><br><span class="line">&apos;取出最大值</span><br><span class="line">str_sql = &quot;select Max(id) as maxId from exceltosql&quot;</span><br><span class="line">rsSql.open str_Sql,myConn,1,3</span><br><span class="line">if Not rsSql.eof then</span><br><span class="line">if not isNull(rsSql(&quot;maxId&quot;)) then</span><br><span class="line">maxId=CLng(rsSql(&quot;maxId&quot;)) + 1</span><br><span class="line">else</span><br><span class="line">maxId = 1</span><br><span class="line">end if</span><br><span class="line">else</span><br><span class="line">maxId = 1</span><br><span class="line">end if</span><br><span class="line">rsSql.close &apos;//关闭对象</span><br><span class="line">&apos;加入数据库</span><br><span class="line">str_Sql = &quot;insert into exceltosql values(&quot; &amp; maxId&amp;&quot;,&apos;&quot;&amp;rsXsl(1)&amp;&quot;&apos;,&apos;&quot; &amp; rsXsl(2)&amp;&quot;&apos;)&quot;</span><br><span class="line">cmd.CommandText = str_Sql</span><br><span class="line">cmd.Excute()</span><br><span class="line">&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;</span><br><span class="line">j = j + 1</span><br><span class="line">rsXsl.moveNext</span><br><span class="line">loop</span><br><span class="line"></span><br><span class="line">response.write &quot;共导入 &quot; &amp; j_1 &amp; &quot; 条记录.&lt;br&gt;&quot;</span><br><span class="line">response.write &quot;&lt;a href=# onclick=&apos;self.close();&apos;&gt;关闭窗口&lt;/a&gt;&quot;</span><br><span class="line">set rsXsl = nothing</span><br><span class="line">set rsSql = nothing</span><br><span class="line">set myconnection = nothing</span><br><span class="line">set cmd = nothing</span><br><span class="line">end sub</span><br><span class="line">(2)</span><br><span class="line">&apos;调用方法</span><br><span class="line">&lt;%</span><br><span class="line">file1 = &quot;c:excelexample.xls&quot;</span><br><span class="line">myconn = &quot;DRIVER=&#123;SQL SERVER&#125;;SERVER=(local);uid=sa;pwd=sa;DATABASE=aspbook&quot;</span><br><span class="line">dataIntoSqlServer_ceritificate file1,&quot;sheet1&quot;,myconn</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+<p>4.ASP操作Excel技术总结</p>
+<p>目录</p>
+<pre><code>一、 环境配置
+二、 ASP对Excel的基本操作
+三、 ASP操作Excel生成数据表
+四、 ASP操作Excel生成Chart图
+五、 服务器端Excel文件浏览、下载、删除方案
+六、 附录
+</code></pre><p>正文</p>
+<pre><code>一、 环境配置
+服务器端的环境配置从参考资料上看，微软系列的配置应该都行，即：
+1．Win9x+PWS+Office
+2．Win2000 Professional+PWS+Office
+3．Win2000 Server+IIS+Office
+目前笔者测试成功的环境是后二者。Office的版本没有特殊要求，考虑到客户机配置的不确定性和下兼容特性，建议服务器端Office版本不要太高，以防止客户机下载后无法正确显示。
+服务器端环境配置还有两个偶然的发现是：
+1． 笔者开发机器上原来装有金山的WPS2002，结果Excel对象创建始终出现问题，卸载WPS2002后，错误消失。
+2． 笔者开发ASP代码喜欢用FrontPage，结果发现如果FrontPage打开（服务器端），对象创建出现不稳定现象，时而成功时而不成功。扩展考察后发现，Office系列的软件如果在服务器端运行，则Excel对象的创建很难成功。
+服务器端还必须要设置的一点是COM组件的操作权限。在命令行键入“DCOMCNFG”，则进入COM组件配置界面，选择Microsoft Excel后点击属性按钮，将三个单选项一律选择自定义，编辑中将Everyone加入所有权限。保存完毕后重新启动服务器。
+客户端的环境配置没发现什么特别讲究的地方，只要装有Office和IE即可，版本通用的好象都可以。
+
+二、 ASP对Excel的基本操作
+1、 建立Excel对象
+set objExcelApp = CreateObject(&quot;Excel.Application&quot;)
+objExcelApp.DisplayAlerts = false 不显示警告
+objExcelApp.Application.Visible = false 不显示界面
+2、 新建Excel文件
+objExcelApp.WorkBooks.add
+set objExcelBook = objExcelApp.ActiveWorkBook
+set objExcelSheets = objExcelBook.Worksheets
+set objExcelSheet = objExcelBook.Sheets(1)
+3、 读取已有Excel文件
+strAddr = Server.MapPath(&quot;.&quot;)
+objExcelApp.WorkBooks.Open(strAddr &amp; &quot;TempletTable.xls&quot;)
+set objExcelBook = objExcelApp.ActiveWorkBook
+set objExcelSheets = objExcelBook.Worksheets
+set objExcelSheet = objExcelBook.Sheets(1)
+4、 另存Excel文件
+objExcelBook.SaveAs strAddr &amp; &quot;TempTable.xls&quot;
+5、 保存Excel文件
+objExcelBook.Save （笔者测试时保存成功，页面报错。）
+6、 退出Excel操作
+objExcelApp.Quit 一定要退出
+set objExcelApp = Nothing
+
+三、 ASP操作Excel生成数据表
+1、 在一个范围内插入数据
+objExcelSheet.Range(&quot;B3:k3&quot;).Value = Array(&quot;67&quot;, &quot;87&quot;, &quot;5&quot;, &quot;9&quot;, &quot;7&quot;, &quot;45&quot;, &quot;45&quot;, &quot;54&quot;, &quot;54&quot;, &quot;10&quot;)
+2、 在一个单元格内插入数据
+objExcelSheet.Cells(3,1).Value=&quot;Internet Explorer&quot;
+3、 选中一个范围
+4、 单元格左边画粗线条
+5、 单元格右边画粗线条
+6、 单元格上边画粗线条
+7、 单元格下边画粗线条
+8、 单元格设定背景色
+9、 合并单元格
+10、 插入行
+11、 插入列
+
+四、 ASP操作Excel生成Chart图
+1、 创建Chart图
+objExcelApp.Charts.Add
+2、 设定Chart图种类
+objExcelApp.ActiveChart.ChartType = 97
+注：二维折线图，4；二维饼图，5；二维柱形图，51
+3、 设定Chart图标题
+objExcelApp.ActiveChart.HasTitle = True
+objExcelApp.ActiveChart.ChartTitle.Text = &quot;A test Chart&quot;
+4、 通过表格数据设定图形
+objExcelApp.ActiveChart.SetSourceData objExcelSheet.Range(&quot;A1:k5&quot;),1
+5、 直接设定图形数据（推荐）
+objExcelApp.ActiveChart.SeriesCollection.NewSeries
+objExcelApp.ActiveChart.SeriesCollection(1).Name = &quot;=&quot;&quot;333&quot;&quot;&quot;
+objExcelApp.ActiveChart.SeriesCollection(1).Values = &quot;={1,4,5,6,2}&quot;
+6、 绑定Chart图
+objExcelApp.ActiveChart.Location 1
+7、 显示数据表
+objExcelApp.ActiveChart.HasDataTable = True
+8、 显示图例
+objExcelApp.ActiveChart.DataTable.ShowLegendKey = True
+
+五、 服务器端Excel文件浏览、下载、删除方案
+浏览的解决方法很多，“Location.href=”，“Navigate”，“Response.Redirect”都可以实现，建议用客户端的方法，原因是给服务器更多的时间生成Excel文件。
+下载的实现要麻烦一些。用网上现成的服务器端下载组件或自己定制开发一个组件是比较好的方案。另外一种方法是在客户端操作Excel组件，由客户端操作服务器端Excel文件另存至客户端。这种方法要求客户端开放不安全ActiveX控件的操作权限，考虑到通知每个客户将服务器设置为可信站点的麻烦程度建议还是用第一个方法比较省事。
+删除方案由三部分组成：
+A： 同一用户生成的Excel文件用同一个文件名，文件名可用用户ID号或SessionID号等可确信不重复字符串组成。这样新文件生成时自动覆盖上一文件。
+B： 在Global.asa文件中设置Session_onEnd事件激发时，删除这个用户的Excel暂存文件。
+C： 在Global.asa文件中设置Application_onStart事件激发时，删除暂存目录下的所有文件。
+注：建议目录结构 Src 代码目录 Templet 模板目录 Temp 暂存目录
+
+六、 附录
+出错时Excel出现的死进程出现是一件很头疼的事情。在每个文件前加上“On Error Resume Next”将有助于改善这种情况，因为它会不管文件是否产生错误都坚持执行到“Application.Quit”，保证每次程序执行完不留下死进程。
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+      <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center;">
+  <img id="wechat_subscriber_qcode" src="/img/wechat.jpeg" style="width: 200px; max-width: 100%;"/>
+  <div>ET碎碎念，每周一，晚六点一刻更新，欢迎订阅</div>
+</div>
+
+    
+
+    
+      
+    
+    
+      <div>
+        <div id="reward-container">
+  <div></div>
+  <button id="reward-button" disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/wepay.jpg" alt="ETY001 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/alipay.png" alt="ETY001 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+      
+      
+        
+      
+      <div style="display: inline-block">
+        <img src="/img/btc.png" alt="ETY001 比特币"/>
+        <p>比特币</p>
+      </div>
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        
+
+
+
+
+  
+
+
+
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>ety001</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    
+    <a href="https://akawa.ink/2011/01/17/asp-xls.html" title="ASP中对于XLS文件的一些操作方法">https://akawa.ink/2011/01/17/asp-xls.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        
+          
+        
+        <div class="post-tags">
+          
+            <a href="/tags/编程语言/" rel="tag"># 编程语言</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2011/01/07/da-yu-soccer.html" rel="next" title="大羽，见羽不见">
+                <i class="fa fa-chevron-left"></i> 大羽，见羽不见
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2011/01/19/water-frozen.html" rel="prev" title="开水比凉水先结冰的奥秘">
+                开水比凉水先结冰的奥秘 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    <div>
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- new-blog-auto -->
+      <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-7536831447654223"
+      data-ad-slot="6481460577"
+      data-ad-format="auto"></ins>
+      <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/img/logo.jpg"
+                alt="ETY001"/>
+            
+              <p class="site-author-name" itemprop="name">ETY001</p>
+              <div class="site-description motion-element" itemprop="description">ETY001的博客</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">455</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">57</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/ety001" title="GitHub &rarr; https://github.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:work@akawa.ink" title="E-Mail &rarr; mailto:work@akawa.ink"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://weibo.com/ety001" title="Weibo &rarr; https://weibo.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://twitter.com/ety001" title="Twitter &rarr; https://twitter.com/ety001" rel="noopener" target="_blank"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            </div>
+          
+
+          
+             <div class="cc-license motion-element" itemprop="license">
+              
+              
+                
+              
+              
+              
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"/></a>
+             </div>
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">  <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">鲁ICP备20000145号-1 </a>&copy; 2009 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ETY001</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.2.0"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.2.0"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+
+
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://akawa.ink/2011/01/17/asp-xls.html";
+    this.page.identifier = "2011/01/17/asp-xls.html";
+    this.page.title = 'ASP中对于XLS文件的一些操作方法';
+    };
+  function loadComments() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://akawa.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', '' + +new Date());
+    (d.head || d.body).appendChild(s);
+  }
+  
+    window.addEventListener('load', loadComments, false);
+  
+</script>
+
+
+
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
