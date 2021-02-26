@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://akawa.ink/2011/09/22/jquery-tutorial.html</loc>
+    
+    <lastmod>2021-02-26T09:42:28.198Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://akawa.ink/2011/09/21/jquery-tutorial.html</loc>
+    
+    <lastmod>2021-02-26T07:04:17.484Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://akawa.ink/2018/11/09/docker-lnmp.html</loc>
     
     <lastmod>2021-02-26T06:50:58.462Z</lastmod>
@@ -2249,13 +2263,6 @@
   </url>
   
   <url>
-    <loc>https://akawa.ink/2012/10/18/phpmyadmin-data-confused.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.924Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://akawa.ink/2012/11/07/php-countthe-string-length.html</loc>
     
     <lastmod>2021-02-26T06:44:45.924Z</lastmod>
@@ -2431,21 +2438,7 @@
   </url>
   
   <url>
-    <loc>https://akawa.ink/2011/09/21/jquery-tutorial.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.920Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://akawa.ink/2011/09/21/were-all-in-this-togther.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.920Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://akawa.ink/2011/09/22/jquery-tutorial.html</loc>
     
     <lastmod>2021-02-26T06:44:45.920Z</lastmod>
     
@@ -2543,21 +2536,7 @@
   </url>
   
   <url>
-    <loc>https://akawa.ink/2011/12/18/ubuntu-floder.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.920Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://akawa.ink/2011/12/27/nginx-413-request-entity-too-large.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.920Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://akawa.ink/2012/01/09/php-gd.html</loc>
     
     <lastmod>2021-02-26T06:44:45.920Z</lastmod>
     
@@ -2593,13 +2572,6 @@
   
   <url>
     <loc>https://akawa.ink/2012/01/18/nginx-rewrite-references.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.920Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://akawa.ink/2012/01/20/node-js-introductory-study.html</loc>
     
     <lastmod>2021-02-26T06:44:45.920Z</lastmod>
     
@@ -2900,13 +2872,6 @@
   </url>
   
   <url>
-    <loc>https://akawa.ink/2011/04/19/cin-getline.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.916Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://akawa.ink/2011/04/16/diary.html</loc>
     
     <lastmod>2021-02-26T06:44:45.916Z</lastmod>
@@ -3104,13 +3069,6 @@
   
   <url>
     <loc>https://akawa.ink/2010/11/01/how-to-build-a-amateur-soccer-team.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.912Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://akawa.ink/2010/11/04/19-css-safe-fonts.html</loc>
     
     <lastmod>2021-02-26T06:44:45.912Z</lastmod>
     
