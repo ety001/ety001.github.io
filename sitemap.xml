@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://akawa.ink/2012/10/04/rest.html</loc>
+    
+    <lastmod>2021-02-26T15:06:42.345Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://akawa.ink/2018/04/09/yoyow-witness-watcher.html</loc>
+    
+    <lastmod>2021-02-26T14:50:41.199Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://akawa.ink/2019/05/21/bts-trade-bots.html</loc>
     
     <lastmod>2021-02-26T14:41:44.246Z</lastmod>
@@ -779,13 +793,6 @@
   </url>
   
   <url>
-    <loc>https://akawa.ink/2018/04/09/yoyow-witness-watcher.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.940Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://akawa.ink/2018/04/08/yoyow-witness-deploy-by-docker.html</loc>
     
     <lastmod>2021-02-26T06:44:45.940Z</lastmod>
@@ -1346,13 +1353,6 @@
   </url>
   
   <url>
-    <loc>https://akawa.ink/2013/10/22/some-nifty-udev-rules-and-examples.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.932Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://akawa.ink/2013/10/22/usb-storage-device-auto-mounts-under-the-linux-text-mode.html</loc>
     
     <lastmod>2021-02-26T06:44:45.932Z</lastmod>
@@ -1857,13 +1857,6 @@
   </url>
   
   <url>
-    <loc>https://akawa.ink/2013/07/06/linux-strace.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.928Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://akawa.ink/2013/07/18/blog-server-moved.html</loc>
     
     <lastmod>2021-02-26T06:44:45.928Z</lastmod>
@@ -1963,13 +1956,6 @@
   
   <url>
     <loc>https://akawa.ink/2013/09/24/php-bit-operation.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.928Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://akawa.ink/2013/09/23/whats-the-suid.html</loc>
     
     <lastmod>2021-02-26T06:44:45.928Z</lastmod>
     
@@ -2236,13 +2222,6 @@
   
   <url>
     <loc>https://akawa.ink/2012/09/11/move-goahead-webserver-to-android.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.924Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://akawa.ink/2012/10/04/rest.html</loc>
     
     <lastmod>2021-02-26T06:44:45.924Z</lastmod>
     
