@@ -3103,15 +3103,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[我使用的VPS]]></title>
-    <url>%2F2011%2F07%2F24%2Fmy-vps.html</url>
-    <content type="text"><![CDATA[从三个月前我开始使用我的VPS来搭建我的博客，虽然现在来看，资源还是浪费严重，但是我正在逐步开始利用起来。这家的VPS还是很稳定的，至少在我用的三个月里是没有宕过机，只是我的apache宕过好几次，导致在线率才96%多。我现在正在使用的这款VPS是每个月52元的jz学习型的。 如果你想购买的话，请先点击这里进行注册，注册完成后，登录VPS面板，即可添加VPS主机， 具体的信息都在下面的列表中， 具体列表如下： VPS套餐I机房位于美国西海岸加利福尼亚州。购买时请选择“美国加州02”。 方案套餐jz学习型jz升级型jz至尊型CPU个数2 VCpu2 VCpu2 VCpu内存256 MB512 MB1024 MB硬盘20 GB25 GB35 GB流量350 GB800 GB1200 GB独立IP操作系统Linux,WindowsLinux,WindowsLinux,WindowsXenSystem面板价格52 RMB88 RMB158 RMB优惠码 jz256M4v jz512M4v jz1G4v VPS套餐II机房位于美国西海岸加利福尼亚州。购买时请选择“美国加州01”。 方案套餐学习型豪华型商务型CPU个数4 VCpu4 VCpu4 VCpu内存256 MB512 MB1024 MB硬盘20 GB25 GB30 GB流量2000 GB2000 GB2000 GB独立IP操作系统Linux,WindowsLinux,WindowsLinux,WindowsXenSystem面板价格68 RMB108 RMB168 RMB优惠码 no2plan1 no2plan2 no2plan3 VPS套餐III机房位于美国斯克兰顿。购买时请选择“美国VD”。 方案套餐VD学习型VD升级型VD加强型CPU个数2 VCpu2 VCpu2 VCpu内存128 MB256 MB512 MB硬盘20 GB25 GB30 GB流量500 GB1000 GB1500 GB独立IP操作系统Linux,WindowsLinux,WindowsLinux,WindowsXenSystem面板价格28 RMB38 RMB68 RMB优惠码 vd128 vd256 vd512 【注意事项】购买本商品，视同接受以下所有条款：[*1]：退款条件：,24小时内当您觉得不满意时,可以向我们客服申请全额退款,超过24小时收取25%手续费加使用天数，我们将按照您的使用时间,舍去小数点,折算成剩下的RMB通过支付宝退还给您. [*2]：VPS禁止赌博、幼儿色情、诈骗、恐怖分子、暴力、垃圾邮件、盗版侵权、扫描端口、抓肉鸡等相关内容和活动；禁止从事违反中美两地法律的行为，用户承担一切责任；为了服务器其他VPS客户的稳定，禁止作为大流量下载、在线播放、视频点播、私服、VOIP等严重占用资源的服务，一经发现，立即关闭服务器并不退款。]]></content>
-      <tags>
-        <tag>杂七杂八</tag>
-        <tag>网站日志</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[Ntalker for Wordpress]]></title>
     <url>%2F2011%2F07%2F24%2Fntalker-for-wordpress.html</url>
     <content type="text"><![CDATA[这个页面是专门用来记录我开发的Ntalker for Wordpress插件的相关信息的。 Ntalker可以用来实现，使所有访问当前页面的用户进行及时聊天和互动。当前是1.1版本，只是实现了最基本的聊天功能，添加好友，列出好友列表等功能将会在稍候的版本中推出。 由于已经在Wordpress官网上上传了该插件，地址：http://wordpress.org/extend/plugins/ntalker-for-wordpress/，所以该页面以后主要用作插件信息反馈。欢迎各位使用过插件的亲们留下宝贵的意见。 ============= Ntalker for Wordpress 1.1 新浪云平台特别版 ============= 该版本针对新浪云平台研发，具体使用方法同普通版本一样，请参见：Ntalker for Wordpress。感谢您对于本插件的关注，如果您有好的建议或者想法，希望您能来Ntalker for Wordpress页面留言。如果您觉得这个插件很好用的话，恳请您能通过您的博客帮助推广，再次感谢！ ++++++++++++++++++++++++++++++++++++++++++++++++++++ ============= Ntalker for Wordpress 展望 ============= 1、预计在1.2版本中去掉该文件，实现在wp后台进行相关数据的配置。 2、1.x系列版本将主要实现Ntalker的基础聊天功能，其余功能如加好友，改在线等状态这类附加功能，初步计划在2.x版本中加入，届时可以通过Ntalker for Wordpress插件把你的wp打造成一个小型的社区。2.x版本将会在wp数据库新建一个表来实现记录好友关系，我已经开始着手思考这个表的构造了，如果您有好的想法，还请您能在这里留言，我将会为此感激不尽！ ++++++++++++++++++++++++++++++++++++++++++++++++++++ ～～～～～～～～～～～～～～～ 感谢区 ～～～～～～～～～～～～～～～ 感谢“鲁大Ubuntu群”里帮助我测试的同志们，感谢笨兔兔和寒山烟雨的一直充当首测！ ～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～～ 如果各位有什么问题可以在这个页面留言。 ===================下载区=================== Ntalker for Wordpress 1.1 新浪云平台特别版]]></content>
