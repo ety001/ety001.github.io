@@ -434,6 +434,174 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/12/18/sql-safe.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2013/12/18/sql-safe.html" class="post-title-link" itemprop="url">SQL防注入:使用base64构建安全查询</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2013-12-19 07:55:28" itemprop="dateCreated datePublished" datetime="2013-12-19T07:55:28+08:00">2013-12-19</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2013/12/18/sql-safe.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/12/18/sql-safe.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>转载请注明：<a href="http://www.turen.me/" target="_blank" rel="noopener">土人的国度</a> » <a href="http://www.turen.me/archives/388" target="_blank" rel="noopener">SQL防注入:使用base64构建安全查询</a></p>
+<p>SQL注入，主要是通过加入特殊字符，使用特殊编码将非法SQL语句注入到查询中，并得到返回数据</p>
+<p>看到了一些防SQL注入的手段，自己也经过思考总结了一下，得到了一个流程：</p>
+<p><strong>1.查询前强制转换输入</strong></p>
+<p>对于提交的输入：</p>
+<p>特定类型int, date等：进行强制类型转换，如intval, date_create；</p>
+<p>字符串一律使用mysql_real_escape_string过滤</p>
+<p>有格式的使用正则表达式进行验证</p>
+<p>对于不需要模糊查询的字段，建议使用base64编码后再进一步处理并存入数据库，下文详述
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2013/12/18/sql-safe.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/12/14/about-the-asynchronous-callback-in-javascript.html"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1902,170 +2070,6 @@ https://bbs.archlinux.org/viewtopic.php?id=85956
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/10/10/pxelinux-default-config-comment.html"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ETY001"/>
-      <meta itemprop="description" content="ETY001的博客"/>
-      <meta itemprop="image" content="/img/logo.jpg"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2013/10/10/pxelinux-default-config-comment.html" class="post-title-link" itemprop="url">pxelinux中default配置文件的注释</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2013-10-10 18:58:57" itemprop="dateCreated datePublished" datetime="2013-10-10T18:58:57+08:00">2013-10-10</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/2013/10/10/pxelinux-default-config-comment.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/10/10/pxelinux-default-config-comment.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          <br/>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              # 默认启动的是 &apos;label linux&apos; 中标记的内核default linux# 显示 &apos;boot: &apos; 提示符。# 为 &apos;0&apos; 时则不提示，将会直接启动 &apos;default&apos; 参数中指定的内容。prompt 1# 
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2013/10/10/pxelinux-default-config-comment.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2116,7 +2120,7 @@ https://bbs.archlinux.org/viewtopic.php?id=85956
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">442</span>
+                    <span class="site-state-item-count">443</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

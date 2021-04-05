@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://akawa.ink/"/>
-  <updated>2021-02-26T06:44:45.948Z</updated>
+  <updated>2021-04-05T08:53:40.478Z</updated>
   <id>https://akawa.ink/</id>
   
   <author>
@@ -15,6 +15,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>How to set a proxy for dockerd?</title>
+    <link href="https://akawa.ink/2021/04/04/how-to-set-a-proxy-for-dockerd.html"/>
+    <id>https://akawa.ink/2021/04/04/how-to-set-a-proxy-for-dockerd.html</id>
+    <published>2021-04-04T16:00:00.000Z</published>
+    <updated>2021-04-05T08:53:40.478Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://cdn.steemitimages.com/DQmZmk5YpB38FTThN8M9z64pb54H3LjZLFEGYGMij9BuMYL/image.png" alt="image.png"></p><p>In some cases, we need to pull some docker image through our custom proxy server.</p><p>But the <code>HTTPS_PROXY</code> and <code>HTTP_PROXY</code> in current login terminal will not be useful for the <code>docker pull</code> command.<br>The <code>proxychains-ng</code> tool is the same situation.</p><p>This is because docker is divided into <code>dockerd</code> and <code>client</code>. The <code>docker pull</code> command is executed by <code>dockerd</code> service. So we need make sure <code>dockerd</code> use proxy server.</p><p>The Docker daemon uses the <code>HTTP_PROXY</code>, <code>HTTPS_PROXY</code>, and <code>NO_PROXY</code> environmental variables in its start-up environment to configure HTTP or HTTPS proxy behavior. You cannot configure these environment variables using the <code>daemon.json</code> file.</p><p>So we can edit the systemd service file.</p><p><strong>1.First create a new folder</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir -p /etc/systemd/system/docker.service.d</span><br></pre></td></tr></table></figure><p><strong>2.Then create a new file named <code>/etc/systemd/system/docker.service.d/http-proxy.conf</code></strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Service]</span><br><span class="line">Environment=&quot;HTTP_PROXY=http://proxy.example.com:80&quot;</span><br><span class="line">Environment=&quot;HTTPS_PROXY=http://proxy.example.com:80&quot;</span><br></pre></td></tr></table></figure><p><strong>3.Reload and restart</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl daemon-reload</span><br><span class="line">$ sudo systemctl restart docker</span><br></pre></td></tr></table></figure><p><strong>4.Verify that the configuration has been loaded and matches the changes you made, for example:</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$  sudo systemctl show --property=Environment docker</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;&lt;img src=&quot;https://cdn.steemitimages.com/DQmZmk5YpB38FTThN8M9z64pb54H3LjZLFEGYGMij9BuMYL/image.png&quot; alt=&quot;image.png&quot;&gt;&lt;/p&gt;
+&lt;p&gt;In some cases,
+      
+    
+    </summary>
+    
+    
+      <category term="配置" scheme="https://akawa.ink/tags/%E9%85%8D%E7%BD%AE/"/>
+    
+      <category term="经验" scheme="https://akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+      <category term="Docker" scheme="https://akawa.ink/tags/Docker/"/>
+    
+      <category term="proxy" scheme="https://akawa.ink/tags/proxy/"/>
+    
+      <category term="服务器" scheme="https://akawa.ink/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+  </entry>
   
   <entry>
     <title>在前端获取UTC时间戳的方法</title>
@@ -561,34 +593,6 @@
       <category term="经验" scheme="https://akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
     
       <category term="服务器" scheme="https://akawa.ink/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Code Server使用小技巧--禁用浏览器标签页关闭</title>
-    <link href="https://akawa.ink/2020/03/11/code-server-trick.html"/>
-    <id>https://akawa.ink/2020/03/11/code-server-trick.html</id>
-    <published>2020-03-11T16:00:00.000Z</published>
-    <updated>2021-02-26T06:44:45.948Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近在我工作用的台式机上部署了传说中的、微软的 <strong>Code Server</strong>。</p><p><strong>Code Server</strong> 其实就是微软 <strong>Code editing</strong> 的服务器版，可以通过在你的服务器上，通过 <strong>Docker</strong> 容器建立一个网页 <strong>IDE</strong>，这样能做的事情就太多了。</p><p>比如我现在需要经常出门，而我的工作环境都在台式机上，有时候出门仅几个小时，在笔记本上可能代码都没有写完，就回家了，要把工作进度转移到台式机上就很麻烦。</p><p>现在用了 <strong>Code Server</strong> 后，我出门在笔记本上，只要用 <strong>SSH</strong> 把家里台式机的相关端口映射到笔记本的本地，就可以获得跟在台式机上开发几乎一致的开发体验。</p><p>不过里面也有一点很不爽，就是经常会习惯性的按 <strong>Command + W</strong> 想去关闭 <strong>Code Server</strong> 里的标签页，结果就是触发了浏览器的快捷键，把整个网页都关掉了。</p><p>从网上搜索了一下，发现了一个<a href="https://github.com/cdr/code-server/issues/53#issuecomment-563350766" target="_blank" rel="noopener">非常赞的方法</a>，就是通过参数，让 <strong>Chrome</strong> 以 <strong>App</strong> 的形式运行，这样就可以自动屏蔽掉一些快捷键，其中包括 <strong>Command + W</strong>，更厉害的是，<strong>Command + W</strong> 可以像 <strong>IDE</strong> 里一样，关闭当前的代码标签页。</p><p>具体命令就是</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chrome --app=http://localhost:8080</span><br></pre></td></tr></table></figure><p>如果你是OSX系统，那么命令就是</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --app=http://localhost:8080</span><br></pre></td></tr></table></figure><p>最后的效果就是这样：</p><p><img src="/upload/20200312/WX20200313-013203@2x.png" alt="WX20200313-013203@2x.png"></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;最近在我工作用的台式机上部署了传说中的、微软的 &lt;strong&gt;Code Server&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Code Server&lt;/strong&gt; 其实就是微软 &lt;strong&gt;Code editing&lt;/strong&gt; 的服务器版，可以通过
-      
-    
-    </summary>
-    
-    
-      <category term="配置" scheme="https://akawa.ink/tags/%E9%85%8D%E7%BD%AE/"/>
-    
-      <category term="经验" scheme="https://akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
-    
-      <category term="code server" scheme="https://akawa.ink/tags/code-server/"/>
     
   </entry>
   

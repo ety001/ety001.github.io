@@ -434,6 +434,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/06/21/client-server-type-ddns-for-cloudflare.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/06/21/client-server-type-ddns-for-cloudflare.html" class="post-title-link" itemprop="url">自己实现了一个cs类型的ddns更新</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-22 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-22T00:00:00+08:00">2019-06-22</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2019/06/21/client-server-type-ddns-for-cloudflare.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/06/21/client-server-type-ddns-for-cloudflare.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              最近家里的服务器的 cloudflare 的 DDNS 更新功能总是不灵验，估计问题是跟墙有关吧。
+不得不说这种基础设施还是得自己开发。
+考虑到有墙的原因，所以实现更新IP的思路就是，本地获取公网IP，然后发送到墙外的服务器。然后墙外的服务器拿到IP后再更新 cloudflare。
+获取并转发公网I
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/06/21/client-server-type-ddns-for-cloudflare.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/06/19/remote-work-2.html"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1911,172 +2078,6 @@ use BitWasp\Bitcoin\Key\Factory\PrivateKeyFactory;use BitWasp\Buffertools\Buffer
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/04/03/laravel-task-schedule-docker.html"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ETY001"/>
-      <meta itemprop="description" content="ETY001的博客"/>
-      <meta itemprop="image" content="/img/logo.jpg"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/04/03/laravel-task-schedule-docker.html" class="post-title-link" itemprop="url">Laravel Task Schedule 在 Docker 环境下的实践</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-04-04 00:00:00" itemprop="dateCreated datePublished" datetime="2019-04-04T00:00:00+08:00">2019-04-04</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/2019/04/03/laravel-task-schedule-docker.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/04/03/laravel-task-schedule-docker.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          <br/>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              起因最近一个项目用到了 Laravel 框架的 Task Schedule 功能。
-这个功能其实就是把 Laravel 的一个 Command 加到 Crontab 中，即
-* * * * *  php /path-to-your-project/artisan schedule:run &gt;&
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/04/03/laravel-task-schedule-docker.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2127,7 +2128,7 @@ use BitWasp\Bitcoin\Key\Factory\PrivateKeyFactory;use BitWasp\Buffertools\Buffer
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">442</span>
+                    <span class="site-state-item-count">443</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
