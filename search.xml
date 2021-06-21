@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[How to install on Ubuntu 20.04]]></title>
+    <title><![CDATA[How to install docker on Ubuntu 20.04]]></title>
     <url>%2F2021%2F06%2F21%2Fhow-to-install-docker-on-ubuntu-20-04.html</url>
     <content type="text"><![CDATA[This is one line command to install docker on Ubuntu 20.04. 123456apt update -y &amp;&amp; \apt install -y apt-transport-https ca-certificates curl software-properties-common &amp;&amp; \curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - &amp;&amp; \add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable&quot; &amp;&amp; \apt update -y &amp;&amp; \apt install -y docker-ce This command line has been verified on Ubuntu20.04. This will speed up deploying a fresh vps process. That is why I write all command in one line.]]></content>
       <tags>
