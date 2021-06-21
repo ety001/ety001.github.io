@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[How to install on Ubuntu 20.04]]></title>
+    <url>%2F2021%2F06%2F21%2Fhow-to-install-docker-on-ubuntu-20-04.html</url>
+    <content type="text"><![CDATA[This is one line command to install docker on Ubuntu 20.04. 123456apt update -y &amp;&amp; \apt install -y apt-transport-https ca-certificates curl software-properties-common &amp;&amp; \curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - &amp;&amp; \add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable&quot; &amp;&amp; \apt update -y &amp;&amp; \apt install -y docker-ce This command line has been verified on Ubuntu20.04. This will speed up deploying a fresh vps process. That is why I write all command in one line.]]></content>
+      <tags>
+        <tag>配置</tag>
+        <tag>经验</tag>
+        <tag>Docker</tag>
+        <tag>服务器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[How to set a proxy for dockerd?]]></title>
     <url>%2F2021%2F04%2F04%2Fhow-to-set-a-proxy-for-dockerd.html</url>
     <content type="text"><![CDATA[In some cases, we need to pull some docker image through our custom proxy server. But the HTTPS_PROXY and HTTP_PROXY in current login terminal will not be useful for the docker pull command.The proxychains-ng tool is the same situation. This is because docker is divided into dockerd and client. The docker pull command is executed by dockerd service. So we need make sure dockerd use proxy server. The Docker daemon uses the HTTP_PROXY, HTTPS_PROXY, and NO_PROXY environmental variables in its start-up environment to configure HTTP or HTTPS proxy behavior. You cannot configure these environment variables using the daemon.json file. So we can edit the systemd service file. 1.First create a new folder 1$ sudo mkdir -p /etc/systemd/system/docker.service.d 2.Then create a new file named /etc/systemd/system/docker.service.d/http-proxy.conf 123[Service]Environment=&quot;HTTP_PROXY=http://proxy.example.com:80&quot;Environment=&quot;HTTPS_PROXY=http://proxy.example.com:80&quot; 3.Reload and restart 12$ sudo systemctl daemon-reload$ sudo systemctl restart docker 4.Verify that the configuration has been loaded and matches the changes you made, for example: 1$ sudo systemctl show --property=Environment docker]]></content>

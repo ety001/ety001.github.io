@@ -8,6 +8,14 @@
     </url>
 
     <url>
+        <loc>https://akawa.ink/2021/06/21/how-to-install-docker-on-ubuntu-20-04.html</loc>
+        <lastmod>2021-06-21T22:04:28.150Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://akawa.ink/2019/04/01/kvm-win10.html</loc>
         <lastmod>2021-05-28T14:29:07.639Z</lastmod>
         <changefreq>weekly</changefreq>
