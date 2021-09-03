@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://akawa.ink/2012/06/02/archlinux-xfce-volume.html</loc>
+    
+    <lastmod>2021-09-03T15:16:50.377Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://akawa.ink/2021/06/21/how-to-install-docker-on-ubuntu-20-04.html</loc>
     
     <lastmod>2021-06-21T22:15:07.084Z</lastmod>
@@ -2145,13 +2152,6 @@
   
   <url>
     <loc>https://akawa.ink/2012/05/15/php-ip2long-has-bug.html</loc>
-    
-    <lastmod>2021-02-26T06:44:45.924Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://akawa.ink/2012/06/02/archlinux-xfce-volume.html</loc>
     
     <lastmod>2021-02-26T06:44:45.924Z</lastmod>
     
