@@ -450,6 +450,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/03/13/make-the-users-can-write-dev-input-event-not-using-sudo.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2013/03/13/make-the-users-can-write-dev-input-event-not-using-sudo.html" class="post-title-link" itemprop="url">如何让普通用户不用sudo就可以写入/dev/input/event</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2013-03-14 07:40:10" itemprop="dateCreated datePublished" datetime="2013-03-14T07:40:10+08:00">2013-03-14</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2013/03/13/make-the-users-can-write-dev-input-event-not-using-sudo.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/03/13/make-the-users-can-write-dev-input-event-not-using-sudo.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              最近在做的一个项目中，有一个细节是需要用C实现模拟键盘输入，发现每次执行程序的时候，都需要用sudo，因为默认情况下/dev/input/下的event都是root属主和属组，并且权限是640。如果要实现普通用户直接可以写的话，可以去做一个udev的规则，比如用root用户创建一个如下位置的规则文件
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2013/03/13/make-the-users-can-write-dev-input-event-not-using-sudo.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/02/08/the-message-in-the-end-of-the-year.html"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1945,177 +2109,6 @@ Modeline &quot;1280x1024_60.00&quot;  109.00  1280 1368 1496 1712  1024 1027 103
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/01/19/linux-lib-menu-set.html"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ETY001"/>
-      <meta itemprop="description" content="ETY001的博客"/>
-      <meta itemprop="image" content="/img/logo.jpg"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2013/01/19/linux-lib-menu-set.html" class="post-title-link" itemprop="url">Linux 静态库与动态库搜索路径设置</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2013-01-19 15:24:52" itemprop="dateCreated datePublished" datetime="2013-01-19T15:24:52+08:00">2013-01-19</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/2013/01/19/linux-lib-menu-set.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/01/19/linux-lib-menu-set.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          <br/>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <ol>
-<li>连接和运行时库文件搜索路径到设置</li>
-</ol>
-<p>库文件在连接（静态库和共享库）和运行（仅限于使用共享库的程序）时被使用，其搜索路径是在系统中进行设置的。一般 Linux 系统把 /lib 和 /usr/lib 两个目录作为默认的库搜索路径，所以使用这两个目录中的库时不需要进行设置搜索路径即可直接使用。对于处于默认库搜索路径之外的库，需要将库的位置添加到库的搜索路径之中。设置库文件的搜索路径有下列两种方式，可任选其一使用：</p>
-<p>(1). 在 /etc/ld.so.conf 文件中添加库的搜索路径。(或者在/etc/ld.so.conf.d 下新建一个.conf文件，将搜索路径一行一个加入-junziyang)</p>
-<p>将自己可能存放库文件的路径都加入到/etc/ld.so.conf中是明智的选择添加方法也极其简单，将库文件的绝对路径直接写进去就OK了，一行一个。例如：</p>
-<pre><code>/usr/X11R6/lib
-
-/usr/local/lib
-
-/opt/lib
-</code></pre><p>需要注意的是：这种搜索路径的设置方式对于程序连接时的库（包括共享库和静态库）的定位已经足够了，但是对于使用了共享库的程序的执行还是不够的。这是因为为了加快程序执行时对共享库的定位速度，避免使用搜索路径查找共享库的低效率，所以是直接读取库列表文件 /etc/ld.so.cache 从中进行搜索的。/etc/ld.so.cache 是一个非文本的数据文件，不能直接编辑，它是根据 /etc/ld.so.conf 中设置的搜索路径由 /sbin/ldconfig 命令将这些搜索路径下的共享库文件集中在一起而生成的（ldconfig 命令要以 root 权限执行）。<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2013/01/19/linux-lib-menu-set.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2166,7 +2159,7 @@ Modeline &quot;1280x1024_60.00&quot;  109.00  1280 1368 1496 1712  1024 1027 103
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">444</span>
+                    <span class="site-state-item-count">445</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

@@ -450,6 +450,172 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2012/03/19/config-the-user-limits-of-authority-in-proftpd.html"/>
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ETY001"/>
+      <meta itemprop="description" content="ETY001的博客"/>
+      <meta itemprop="image" content="/img/logo.jpg"/>
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa"/>
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2012/03/19/config-the-user-limits-of-authority-in-proftpd.html" class="post-title-link" itemprop="url">配置proftpd的用户权限</a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2012-03-20 03:49:32" itemprop="dateCreated datePublished" datetime="2012-03-20T03:49:32+08:00">2012-03-20</time>
+            </span>
+          
+
+          
+
+          
+
+          
+            
+            
+              
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">评论数：</span>
+                <a href="/2012/03/19/config-the-user-limits-of-authority-in-proftpd.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2012/03/19/config-the-user-limits-of-authority-in-proftpd.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          <br/>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>
+              今天需要在服务器上配置两个ftp账户a和b，两个账户需要在同一个组，并且a允许ssh登陆，而b不允许ssh登陆。两个用户登陆ftp的时候都必须要限制在自己的家目录内。
+具体配置不详说，只说一下几个关键点：
+1、b用户因为不具备ssh登陆权限，所以在proftpd的配置文件里要加下面这行配置Requi
+              ...
+            </p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2012/03/19/config-the-user-limits-of-authority-in-proftpd.html#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://akawa.ink/2012/03/16/hi121-shop.html"/>
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1928,171 +2094,6 @@ UnixBench 4.10 下载地址：http://soft.vpser.net/test/unixbench/unixben
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2012/02/20/nginx-502-bad-gateway-error.html"/>
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="ETY001"/>
-      <meta itemprop="description" content="ETY001的博客"/>
-      <meta itemprop="image" content="/img/logo.jpg"/>
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa"/>
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2012/02/20/nginx-502-bad-gateway-error.html" class="post-title-link" itemprop="url">Nginx 502 Bad Gateway错误触发条件与解决方法</a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2012-02-20 14:46:32" itemprop="dateCreated datePublished" datetime="2012-02-20T14:46:32+08:00">2012-02-20</time>
-            </span>
-          
-
-          
-
-          
-
-          
-            
-            
-              
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">评论数：</span>
-                <a href="/2012/02/20/nginx-502-bad-gateway-error.html#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2012/02/20/nginx-502-bad-gateway-error.html" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          <br/>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>
-              一些运行在Nginx上的网站有时候会出现“502 Bad Gateway”错误，有些时候甚至频繁的出现。以下是从Google搜集整理的一些Nginx 502错误的排查方法，供参考：
-Nginx 502错误的原因比较多，是因为在代理模式下后端服务器出现问题引起的。这些错误一般都不是nginx本身的问题
-              ...
-            </p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2012/02/20/nginx-502-bad-gateway-error.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2143,7 +2144,7 @@ Nginx 502错误的原因比较多，是因为在代理模式下后端服务器�
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">444</span>
+                    <span class="site-state-item-count">445</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

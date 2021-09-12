@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://akawa.ink/"/>
-  <updated>2021-06-21T22:15:07.084Z</updated>
+  <updated>2021-09-12T16:37:30.727Z</updated>
   <id>https://akawa.ink/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>在 Chromebook Linux 中安装必备的软件</title>
+    <link href="https://akawa.ink/2021/09/11/install-required-software-on-chromebook-debian-buster.html"/>
+    <id>https://akawa.ink/2021/09/11/install-required-software-on-chromebook-debian-buster.html</id>
+    <published>2021-09-11T16:00:00.000Z</published>
+    <updated>2021-09-12T16:37:30.727Z</updated>
+    
+    <content type="html"><![CDATA[<p>ChromeOS 内置 Debian buster 的 Linux 系统</p><ol><li><p>修改国内源, <code>/etc/apt/sources.list</code></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">deb http://mirrors.163.com/debian/ buster main non-free contrib</span><br><span class="line">deb http://mirrors.163.com/debian/ buster-updates main non-free contrib</span><br><span class="line">deb http://mirrors.163.com/debian/ buster-backports main non-free contrib</span><br><span class="line">deb http://mirrors.163.com/debian-security/ buster/updates main non-free contrib</span><br><span class="line"></span><br><span class="line">deb-src http://mirrors.163.com/debian/ buster main non-free contrib</span><br><span class="line">deb-src http://mirrors.163.com/debian/ buster-updates main non-free contrib</span><br><span class="line">deb-src http://mirrors.163.com/debian/ buster-backports main non-free contrib</span><br><span class="line">deb-src http://mirrors.163.com/debian-security/ buster/updates main non-free contrib</span><br></pre></td></tr></table></figure></li><li><p>安装 Docker</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update -y</span><br><span class="line">sudo apt-get install -y\</span><br><span class="line">    apt-transport-https \</span><br><span class="line">    ca-certificates \</span><br><span class="line">    curl \</span><br><span class="line">    gnupg \</span><br><span class="line">    lsb-release</span><br><span class="line">curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</span><br><span class="line">echo \</span><br><span class="line">  &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \</span><br><span class="line">  $(lsb_release -cs) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br><span class="line">sudo apt-get update -y</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io -y</span><br></pre></td></tr></table></figure></li><li><p>修改 Docker 日志量</p></li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># /etc/docker/daemon.json</span><br><span class="line">&#123;</span><br><span class="line">  &quot;log-driver&quot;:&quot;json-file&quot;,</span><br><span class="line">  &quot;log-opts&quot;: &#123;&quot;max-size&quot;:&quot;5m&quot;, &quot;max-file&quot;:&quot;3&quot;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart docker</span><br><span class="line">sudo systemctl enable docker</span><br></pre></td></tr></table></figure><ol><li>下载 vscode</li></ol><p><a href="https://code.visualstudio.com" target="_blank" rel="noopener">https://code.visualstudio.com</a></p><ol><li>下载 vnc viewer</li></ol><p><a href="https://www.realvnc.com/en/connect/download/viewer" target="_blank" rel="noopener">https://www.realvnc.com/en/connect/download/viewer</a></p><ol><li><p>配置 Chrome 各个插件</p></li><li><p>配置 ssh</p></li><li><p>从 github 下载私有配置，进行自定义设置</p></li><li><p>安装 Linux 搜狗拼音</p></li></ol><p><a href="https://pinyin.sogou.com/linux/?r=pinyin" target="_blank" rel="noopener">https://pinyin.sogou.com/linux/?r=pinyin</a></p><ol><li>安装 LinuxQQ</li></ol><p><a href="https://im.qq.com/linuxqq/download.html" target="_blank" rel="noopener">https://im.qq.com/linuxqq/download.html</a></p><ol><li>安装 Linux QQ音乐</li></ol><p><a href="https://y.qq.com/download/download.html" target="_blank" rel="noopener">https://y.qq.com/download/download.html</a></p><ol><li>安装 Linux 网易云音乐</li></ol><p><a href="https://music.163.com/#/download" target="_blank" rel="noopener">https://music.163.com/#/download</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;ChromeOS 内置 Debian buster 的 Linux 系统&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;修改国内源, &lt;code&gt;/etc/apt/sources.list&lt;/code&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table
+      
+    
+    </summary>
+    
+    
+      <category term="Server&amp;OS" scheme="https://akawa.ink/tags/Server-OS/"/>
+    
+  </entry>
   
   <entry>
     <title>How to install docker on Ubuntu 20.04</title>
@@ -549,37 +575,6 @@
       
       
         &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/steemit/jussi&quot; target=&quot;_blank&quot; rel=&quot;noopen
-      
-    
-    </summary>
-    
-    
-      <category term="配置" scheme="https://akawa.ink/tags/%E9%85%8D%E7%BD%AE/"/>
-    
-      <category term="经验" scheme="https://akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
-    
-      <category term="steem" scheme="https://akawa.ink/tags/steem/"/>
-    
-      <category term="服务器" scheme="https://akawa.ink/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-    
-      <category term="steemit" scheme="https://akawa.ink/tags/steemit/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>中国大陆地区第一台不稳定Steem全节点正式上线</title>
-    <link href="https://akawa.ink/2020/03/22/the-first-steem-full-node-on-china-mainland.html"/>
-    <id>https://akawa.ink/2020/03/22/the-first-steem-full-node-on-china-mainland.html</id>
-    <published>2020-03-22T16:00:00.000Z</published>
-    <updated>2021-02-26T06:44:45.948Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>鉴于之前全节点的内存占用太高（需要256G内存），一直没有机会去部署一台。后来Mira版出来后，社区也没有看到有相关的运行信息的帖子，而我也是懒，所以这个事情就一直拖到现在。</p><p>最近由于 Tron 收购 Steem 的事件发酵过程中，曾有一段时间多数节点不可用，于是我又重新把这个事情提上了议事日程。</p><p>经过两周的折腾，目前服务器已上线，地址是：</p><blockquote><p><a href="https://steem.61bts.com" target="_blank" rel="noopener">https://steem.61bts.com</a></p></blockquote><h1 id="相关信息"><a href="#相关信息" class="headerlink" title="相关信息"></a>相关信息</h1><p>下面就来总结下，以给想要搭建全节点的同学参考。</p><h2 id="软件实施方案"><a href="#软件实施方案" class="headerlink" title="软件实施方案"></a>软件实施方案</h2><p>目前我是使用 @someguy123 的 Docker 工具来部署的，整个部署过程还是很轻松的。其中需要注意的就是 <code>config.ini</code> 的配置中的 <code>plugin</code> 配置，可以参考官方的配置文件。</p><blockquote><p><a href="https://github.com/steemit/steem/blob/master/contrib/fullnode.config.ini" target="_blank" rel="noopener">https://github.com/steemit/steem/blob/master/contrib/fullnode.config.ini</a><br>官方配置中缺少了 <code>follow</code> 插件</p></blockquote><p>另外就是 <code>Shared file</code> 的配置，如果要省内存，就不要把 <code>Shared file</code> 放到 <code>/dev/shm</code> 里，我的配置信息可以参考下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shared-file-size = 64G</span><br><span class="line">shared-file-dir = /steem/witness_node_data_dir/blockchain/</span><br></pre></td></tr></table></figure><p>记得把 <code>web</code> 服务端口打开</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">webserver-http-endpoint = 0.0.0.0:8091</span><br><span class="line">webserver-ws-endpoint = 0.0.0.0:8090</span><br></pre></td></tr></table></figure><p>同时还要在 <code>run.sh</code> 中打开端口</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">: $&#123;PORTS=&quot;2001,8090,8091&quot;&#125;</span><br></pre></td></tr></table></figure><h2 id="硬件参考"><a href="#硬件参考" class="headerlink" title="硬件参考"></a>硬件参考</h2><p>目前我的服务器配置如下：</p><ul><li>双路 E5 2670</li><li>256G 内存</li><li>硬盘是 一块希捷 6T 硬盘（ST6000NM0115）和一块希捷 2T 硬盘（ST2000DM006）组成的 8T 大小的 LVM 卷</li></ul><h2 id="网络情况"><a href="#网络情况" class="headerlink" title="网络情况"></a>网络情况</h2><p>由于在国内主机服务商买大内存+高带宽的设备太特么几吧贵了，所以我用了一个折中的办法，这也是为什么我说是不稳定全节点的原因。</p><p>折中方案就是，机器自己组装放在家里，网络出口从机房买。</p><p>目前家里是联通光纤，上行是 30Mbps，然后在阿里云买了一台 1核 1G内存 5Mbps 青岛节点的 ECS（我家离青岛节点近，延时 10ms 以内），最后使用 <a href="https://github.com/ehang-io/nps" target="_blank" rel="noopener">NPS/NPC</a> 把家里的服务器端口映射到阿里云的 ECS上。</p><p>之所以使用 NPS 也是积累的经验。</p><p>最早的时候，我是家里用 DDNS 把动态公网 IP 绑定在一个域名A上，然后在 ECS 上，用 Nginx 反向代理到域名A。</p><p>这个方案的缺点就是，如果动态 IP 变了，那么你的 ECS 上的 Nginx 也需要重启才能刷新域名A到 IP 的 DNS 缓存。</p><p>而 NPS 是服务端/客户端程序。客户端跑在家里的服务器上，服务端跑在 ECS 上。这样就是客户端主动去连接服务端，并建立隧道。这就避免了动态 IP 变动的尴尬。</p><p>目前服务最大的不稳定性，就是由于服务器在家里，意外断电的情况还是存在的。</p><h2 id="运行参考"><a href="#运行参考" class="headerlink" title="运行参考"></a>运行参考</h2><p>目前全节点运行后，内存占用情况是，<strong>真实内存占用不到 3G ，虚拟内存占用不到 14G</strong>。</p><p>区块数据的硬盘占用，在当前高度（41626529），<code>witness_node_data_dir/blockchain</code> <strong>目录的大小是 362G</strong>。</p><p>这次我先后尝试了带 <code>--memory-replay</code> 参数和不带参数的 <code>replay</code>。带着 <code>--memory-replay</code> 参数，目前的区块高度进行 <code>replay</code> 的话，需要 230G 内存。而不带参数，则只需要不到 3G 内存。</p><p>所以，内存足够的话，可以尝试用 <code>--memory-replay</code> 参数加速 <code>replay</code> 过程，等 <code>replay</code> 结束后，可以停掉进程后，去掉参数再启动，就可以了。</p><p>目前高度的数据，不使用 <code>--memory-replay</code> 参数，在机械硬盘的情况下，<code>replay</code> 一次大概需要6天多的时间。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>MIra版的确是最大程度把数据从内存里摘出来了，这对于社交平台服务端来说太重要了。因为社交平台的数据是爆炸性增长的，如果都怼到内存里，服务端的运行成本就太高了！</p><p>不过目前的架构设计还是没有完全解决后期数据量暴涨可能导致的成本问题、维护问题。</p><p>如果有什么问题，可以直接回复本帖。</p><p>完！撒花！</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;鉴于之前全节点的内存占用太高（需要256G内存），一直没有机会去部署一台。后来Mira版出来后，社区也没有看到有相关的运行信息的帖子，而我也
       
     
     </summary>
