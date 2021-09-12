@@ -110,7 +110,7 @@
 <meta property="og:site_name" content="Akawa">
 <meta property="og:description" content="ChromeOS 内置 Debian buster 的 Linux 系统  修改国内源, /etc/apt/sources.list 123456789deb http://mirrors.163.com/debian/ buster main non-free contribdeb http://mirrors.163.com/debian/ buster-updates main non-fr">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-09-12T19:53:21.602Z">
+<meta property="og:updated_time" content="2021-09-12T22:17:54.741Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在 Chromebook Linux 中安装必备的软件">
 <meta name="twitter:description" content="ChromeOS 内置 Debian buster 的 Linux 系统  修改国内源, /etc/apt/sources.list 123456789deb http://mirrors.163.com/debian/ buster main non-free contribdeb http://mirrors.163.com/debian/ buster-updates main non-fr">
@@ -593,6 +593,8 @@
 <li>安装 Linux 搜狗拼音</li>
 </ol>
 <p><a href="https://pinyin.sogou.com/linux/?r=pinyin" target="_blank" rel="noopener">https://pinyin.sogou.com/linux/?r=pinyin</a></p>
+<p>安装完，在家目录创建 <code>~/.pam_environment</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">GTK_IM_MODULE DEFAULT=fcitx</span><br><span class="line">QT_IM_MODULE  DEFAULT=fcitx</span><br><span class="line">XMODIFIERS    DEFAULT=\@im=fcitx</span><br></pre></td></tr></table></figure>
 <ol>
 <li>安装 LinuxQQ</li>
 </ol>
