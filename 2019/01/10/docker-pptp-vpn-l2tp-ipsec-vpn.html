@@ -110,7 +110,7 @@
 <meta property="og:site_name" content="Akawa">
 <meta property="og:description" content="虽然平时主要用 Shadowsocks，但是架不住有时候没法安装 Shadowsocks 的客户端，那么就还是需要 PPTP VPN 或者 L2TP VPN。 最早的时候，是使用的各种一键安装脚本，但是由于系统版本差异，每次需要安装的时候，都要现找可用的一键脚本，太费劲了。于是从网上找了别人封装好的 Docker 镜像，这篇文章总结下，基本上就是一条语句就搞定了。 PPTP VPN使用的镜像是 m">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2021-02-26T06:44:45.944Z">
+<meta property="og:updated_time" content="2021-11-09T07:52:42.352Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用 Docker 快速部署 PPTP VPN 和 L2TP + IPSEC VPN">
 <meta name="twitter:description" content="虽然平时主要用 Shadowsocks，但是架不住有时候没法安装 Shadowsocks 的客户端，那么就还是需要 PPTP VPN 或者 L2TP VPN。 最早的时候，是使用的各种一键安装脚本，但是由于系统版本差异，每次需要安装的时候，都要现找可用的一键脚本，太费劲了。于是从网上找了别人封装好的 Docker 镜像，这篇文章总结下，基本上就是一条语句就搞定了。 PPTP VPN使用的镜像是 m">
@@ -553,7 +553,7 @@
 <h1 id="L2TP-IPSEC-VPN"><a href="#L2TP-IPSEC-VPN" class="headerlink" title="L2TP + IPSEC VPN"></a>L2TP + IPSEC VPN</h1><p>使用的镜像是 <code>hwdsl2/ipsec-vpn-server</code>，需要先配置下用户名、密码和PSK，新建一个环境变量的文件 <code>/etc/l2tp-env</code>，内容如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">VPN_IPSEC_PSK=abcdef</span><br><span class="line">VPN_USER=ety001</span><br><span class="line">VPN_PASSWORD=123456</span><br></pre></td></tr></table></figure>
 <p>上面的就是配置了一个用户名 <code>ety001</code>，密码 <code>123456</code>，PSK 为 <code>abcdef</code> 的用户，然后执行下面的命令就可以了，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name ipsec-vpn-server --env-file /etc/l2tp-env --restart=always -p 500:500/udp -p 4500:4500/udp -v /lib/modules:/lib/modules:ro -d --privileged hwdsl2/ipsec-vpn-server</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">docker run --name ipsec-vpn-server \</span><br><span class="line">--env-file /etc/l2tp-env \</span><br><span class="line">--restart=always \</span><br><span class="line">-p 500:500/udp \</span><br><span class="line">-p 4500:4500/udp \</span><br><span class="line">-p 1701:1701/udp \</span><br><span class="line">-v /lib/modules:/lib/modules:ro \</span><br><span class="line">-d --privileged \</span><br><span class="line">hwdsl2/ipsec-vpn-server</span><br></pre></td></tr></table></figure>
 <p>最后检查下 <code>udp 500</code> 和 <code>udp 4500</code> 端口在防火墙上是否打开就可以了。</p>
 <h1 id="Shadowsocks"><a href="#Shadowsocks" class="headerlink" title="Shadowsocks"></a>Shadowsocks</h1><p>最后再附带上一个一句话部署 <code>Shadowsocks</code> 的命令，先创建个配置文件 <code>/etc/shadowsocks.json</code>，内容如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;server&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">    &quot;server_port&quot;: 10000,</span><br><span class="line">    &quot;local_address&quot;:&quot;127.0.0.1&quot;,</span><br><span class="line">    &quot;local_port&quot;:1080,</span><br><span class="line">    &quot;password&quot;:&quot;ety001&quot;,</span><br><span class="line">    &quot;timeout&quot;:60,</span><br><span class="line">    &quot;method&quot;:&quot;aes-256-cfb&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>然后执行下面的命令部署<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 10000:10000 -v /etc/shadowsocks.json:/conf/shadowsocks.json --restart=always --name ss ety001/ss</span><br></pre></td></tr></table></figure></p>
@@ -1036,7 +1036,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">  <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">鲁ICP备20000145号-1 </a>&copy; 2009 – <span itemprop="copyrightYear">2021</span>
+        <div class="copyright">  <a href="https://beian.miit.gov.cn" rel="noopener" target="_blank">鲁ICP备20000145号-1 </a>&copy; 2009 – <span itemprop="copyrightYear">2022</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
