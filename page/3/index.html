@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -194,6 +194,105 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html" class="post-title-link" itemprop="url">解决 Bad SMB2 (sign_algo_id=0) signature for message 问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-03-23 08:24:49" itemprop="dateCreated datePublished" datetime="2022-03-23T08:24:49+08:00">2022-03-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>解决 Bad SMB2 (sign_algo_id&#x3D;0) signature for message 问题<br>最近线下培训教育机构都停了，孩子报的班都改为了线上授课，教练和老师会把视频发过来，看着学。</p>
+<p>由于手机屏幕太小，所以打算把视频放到家里的服务器上，通过 samba 共享让投影可以读取。</p>
+<p>但是却遇到不能连接的问题，看了下服务器的日志，发现有报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[2022/03/23 00:57:09.728871,  0] ../../libcli/smb/smb2_signing.c:722(smb2_signing_check_pdu)</span><br><span class="line">  Bad SMB2 (sign_algo_id=0) signature for message</span><br><span class="line">[2022/03/23 00:57:09.729142,  0] ../../lib/util/util.c:570(dump_data)</span><br><span class="line">  [0000] 73 34 44 8A 28 41 5E 00   D4 5E 9D 5D 38 39 9B A0   s4D.(A^. .^.]89..</span><br><span class="line">[2022/03/23 00:57:09.729263,  0] ../../lib/util/util.c:570(dump_data)</span><br><span class="line">  [0000] 6C 38 C8 B5 93 51 16 95   12 2C 64 92 54 A0 E2 8E   l8...Q.. .,d.T...</span><br><span class="line">[2022/03/23 00:57:42.258662,  0] ../../source3/smbd/server.c:1734(main)</span><br></pre></td></tr></table></figure>
+
+<p>搜索了一下，似乎只有一个方案，就是降级协议，在 <code>/etc/samba/smb.conf</code> 文件的 <code>[global]</code> 中增加下面的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server min protocol = LANMAN2</span><br></pre></td></tr></table></figure>
+
+<p>重启服务， <code>systemctl restart smb</code>。</p>
+<p>再次连接，成功！</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -634,7 +733,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2022/02/22/how-to-install-docker-on-debian-10-11.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2022/02/23/how-to-install-docker-on-debian-10-11.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -652,7 +751,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/02/22/how-to-install-docker-on-debian-10-11.html" class="post-title-link" itemprop="url">How to install docker on Debian 10/11</a>
+          <a href="/2022/02/23/how-to-install-docker-on-debian-10-11.html" class="post-title-link" itemprop="url">How to install docker on Debian 10/11</a>
         </h2>
 
         <div class="post-meta-container">
@@ -676,8 +775,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2022/02/22/how-to-install-docker-on-debian-10-11.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/02/22/how-to-install-docker-on-debian-10-11.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2022/02/23/how-to-install-docker-on-debian-10-11.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/02/23/how-to-install-docker-on-debian-10-11.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -722,7 +821,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2021/09/11/install-required-software-on-chromebook-debian-buster.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2021/09/12/install-required-software-on-chromebook-debian-buster.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -740,7 +839,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/09/11/install-required-software-on-chromebook-debian-buster.html" class="post-title-link" itemprop="url">在 Chromebook Linux 中安装必备的软件</a>
+          <a href="/2021/09/12/install-required-software-on-chromebook-debian-buster.html" class="post-title-link" itemprop="url">在 Chromebook Linux 中安装必备的软件</a>
         </h2>
 
         <div class="post-meta-container">
@@ -770,8 +869,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2021/09/11/install-required-software-on-chromebook-debian-buster.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/09/11/install-required-software-on-chromebook-debian-buster.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2021/09/12/install-required-software-on-chromebook-debian-buster.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/09/12/install-required-software-on-chromebook-debian-buster.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -898,7 +997,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2021/06/21/how-to-install-docker-on-ubuntu-20-04.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2021/06/22/how-to-install-docker-on-ubuntu-20-04.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -916,7 +1015,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/06/21/how-to-install-docker-on-ubuntu-20-04.html" class="post-title-link" itemprop="url">How to install docker on Ubuntu 20.04</a>
+          <a href="/2021/06/22/how-to-install-docker-on-ubuntu-20-04.html" class="post-title-link" itemprop="url">How to install docker on Ubuntu 20.04</a>
         </h2>
 
         <div class="post-meta-container">
@@ -940,8 +1039,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2021/06/21/how-to-install-docker-on-ubuntu-20-04.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/06/21/how-to-install-docker-on-ubuntu-20-04.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2021/06/22/how-to-install-docker-on-ubuntu-20-04.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/06/22/how-to-install-docker-on-ubuntu-20-04.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -986,7 +1085,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2021/04/04/how-to-set-a-proxy-for-dockerd.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2021/04/05/how-to-set-a-proxy-for-dockerd.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1004,7 +1103,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/04/04/how-to-set-a-proxy-for-dockerd.html" class="post-title-link" itemprop="url">How to set a proxy for dockerd?</a>
+          <a href="/2021/04/05/how-to-set-a-proxy-for-dockerd.html" class="post-title-link" itemprop="url">How to set a proxy for dockerd?</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1028,8 +1127,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2021/04/04/how-to-set-a-proxy-for-dockerd.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/04/04/how-to-set-a-proxy-for-dockerd.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2021/04/05/how-to-set-a-proxy-for-dockerd.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/04/05/how-to-set-a-proxy-for-dockerd.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1087,7 +1186,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2020/09/10/get-utc-timestamp-on-the-frontend.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2020/09/11/get-utc-timestamp-on-the-frontend.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1105,7 +1204,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/09/10/get-utc-timestamp-on-the-frontend.html" class="post-title-link" itemprop="url">在前端获取UTC时间戳的方法</a>
+          <a href="/2020/09/11/get-utc-timestamp-on-the-frontend.html" class="post-title-link" itemprop="url">在前端获取UTC时间戳的方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1135,8 +1234,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2020/09/10/get-utc-timestamp-on-the-frontend.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/10/get-utc-timestamp-on-the-frontend.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2020/09/11/get-utc-timestamp-on-the-frontend.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/09/11/get-utc-timestamp-on-the-frontend.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1169,149 +1268,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2020/07/25/steem-reward-detail.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/07/25/steem-reward-detail.html" class="post-title-link" itemprop="url">STEEM每个块出块奖励代码解读</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-07-26 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-26T00:00:00+08:00">2020-07-26</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-02-26 14:44:45" itemprop="dateModified" datetime="2021-02-26T14:44:45+08:00">2021-02-26</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2020/07/25/steem-reward-detail.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2020/07/25/steem-reward-detail.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p>为了方便查看相关的系统参数和变量，我写了一个工具，文章中提到的参数都可以在工具中看到。<br>工具地址：<a target="_blank" rel="noopener" href="https://dev-tools.steem.fans/">https://dev-tools.steem.fans/</a></p>
-</blockquote>
-<h1 id="一、通胀与每个块理论产出STEEM量"><a href="#一、通胀与每个块理论产出STEEM量" class="headerlink" title="一、通胀与每个块理论产出STEEM量"></a>一、通胀与每个块理论产出STEEM量</h1><p>steem 的通胀率是按照规律线性递减的，直到达到设置的值，通胀率就不会再减小了。</p>
-<p><strong>通胀率如何计算？</strong></p>
-<p>通胀率从 <code>STEEM_INFLATION_RATE_START_PERCENT（978）</code>开始，到 <code>STEEM_INFLATION_RATE_STOP_PERCENT（95）</code>结束。</p>
-<p>即从 9.78% 到 0.95%。其中递减率是每 <code>STEEM_INFLATION_NARROWING_PERIOD（250000）</code>块减少 0.01%。</p>
-<p>公式：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">current_inflation_rate = max( STEEM_INFLATION_RATE_START_PERCENT - head_block_num / STEEM_INFLATION_NARROWING_PERIOD, STEEM_INFLATION_RATE_STOP_PERCENT )</span><br></pre></td></tr></table></figure>
-
-<p>通胀是针对现有供应量来算的，所以每年新增的STEEM数量按照当前所在的25万块这个区间的通胀率算的话是：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">virtual_supply * current_inflation_rate</span><br></pre></td></tr></table></figure>
-
-<p>由于每3秒出一个块，所以理论上如果不丢块，每年出块数量为 <code>STEEM_BLOCKS_PER_YEAR</code>（即 60<em>60</em>24<em>365</em>3），</p>
-<p>进而当前25万块区间内，每个块的理论产出为：<code>virtual_supply * current_inflation_rate / STEEM_BLOCKS_PER_YEAR</code></p>
-<p>按照当前写文章时间的高度（45429466）算出来的块理论产出STEEM数量为 <code>EachBlockRewardInTheory = 2.944 STEEM</code> 。</p>
-<p>相关代码：<a target="_blank" rel="noopener" href="https://github.com/steemit/steem/blob/0.23.x/libraries/chain/database.cpp#L2396-L2403">https://github.com/steemit/steem/blob/0.23.x/libraries/chain/database.cpp#L2396-L2403</a></p>
-<h1 id="二、每个块理论产生STEEM量如何分配"><a href="#二、每个块理论产生STEEM量如何分配" class="headerlink" title="二、每个块理论产生STEEM量如何分配"></a>二、每个块理论产生STEEM量如何分配</h1><p>总的来说，每个块是按照 65% content reward, 15% vesting_reward, 10% SPS fund, 10% witness reward。</p>
-<p>按照上边的例子，分别得到</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">content_reward = EachBlockRewardInTheory * 0.65 = 1.913 STEEM</span><br><span class="line">vesting_reward = EachBlockRewardInTheory * 0.15 = 0.441 STEEM</span><br><span class="line">sps_fund = EachBlockRewardInTheory * 0.1 = 0.294 STEEM</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>注意：<br>这里在 HF17 之后有这样的操作，new_content_reward &#x3D; pay_reward_funds( content_reward )，<br>目前 pay_reward_funds 没看懂，我的工具暂时定义 new_content_reward &#x3D; content_reward 。</p>
-</blockquote>
-<p>另外，见证人收益不是直接乘以 10%，而是减出来的，即</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">witness_reward = EachBlockRewardInTheory - new_content_reward - vesting_reward - sps_fund</span><br></pre></td></tr></table></figure>
-
-<p>如此便得到最初的四项分配值。</p>
-<p>之后还需要进行一些计算和分类，来最终把块产生的STEEM加入到各个池子中。</p>
-<p>其中，需要先处理见证人的收益。</p>
-<p>见证人分为TOP20（Elected）和非TOP20（TimeShare），两者的权重（weight）不同。</p>
-<p>见证人的最终收益计算公式：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">new_witness_reward = witness_reward * STEEM_MAX_WITNESSES * weight / witness_pay_normalization_factor</span><br></pre></td></tr></table></figure>
-
-<p>其中 <code>STEEM_MAX_WITNESSES</code> 为 21，<code>witness_pay_normalization_factor</code> 为 25.</p>
-<p>TOP20的权重（elected_weight）为 1，非TOP20的权重（timeshare_weight）为 5.</p>
-<p>除了见证人外，对于 <code>sps_fund_reward</code> 也需要单独计算，因为 SPS 最终是以 SBD 为单位，而块产生的是STEEM，所以需要进行转换。</p>
-<p>转换率来自喂价，即 <code>current_median_history</code>。最终公式为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sps_sbd = sps_fund_reward * current_median_history</span><br></pre></td></tr></table></figure>
-
-<p>这个时候，所有的计算工作基本结束，开始对数据进行写入操作，也就是进入各个池子，</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">total_vesting_fund_steem += vesting_reward</span><br><span class="line">total_reward_fund_steem += new_content_reward</span><br><span class="line">current_supply += new_content_reward + vesting_reward + new_witness_reward</span><br><span class="line">current_sbd_supply +=  new_sbd</span><br><span class="line">virtual_supply += new_content_reward + vesting_reward + new_witness_reward + sps_fund</span><br><span class="line">sps_interval_ledger += sps_fund</span><br></pre></td></tr></table></figure>
-
-<p>最后一步，把 <code>new_witness_reward</code> 以 <code>vesting_shares</code> 的形式发放给见证人。 vesting_shares 就是 SP 的实质。</p>
-<p>相关代码：<a target="_blank" rel="noopener" href="https://github.com/steemit/steem/blob/0.23.x/libraries/chain/database.cpp#L2404-L2453">https://github.com/steemit/steem/blob/0.23.x/libraries/chain/database.cpp#L2404-L2453</a></p>
-<p>最后是我画的产出STEEM流向图：</p>
-<p><img src="/img/2021/steem-block-reward.jpg" alt="steem-block-reward.jpg"></p>
-<hr>
-<h4 id="Some-very-cheap-and-good-VPS"><a href="#Some-very-cheap-and-good-VPS" class="headerlink" title="Some very cheap and good VPS"></a>Some very cheap and good VPS</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://my.racknerd.com/aff.php?aff=856&pid=207">1Core&#x2F;1G RAM&#x2F;18G Disk&#x2F;1Gbps, $23&#x2F;year</a></li>
-<li><a target="_blank" rel="noopener" href="https://my.racknerd.com/aff.php?aff=856&pid=208">2Core&#x2F;2G RAM&#x2F;25G Disk&#x2F;1Gbps, $33&#x2F;year</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

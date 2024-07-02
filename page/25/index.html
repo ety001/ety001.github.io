@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -203,7 +203,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/12/02/float-caculate-problem.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/12/03/mysqli_pconnect-is-not-exist.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -221,7 +221,111 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2013/12/02/float-caculate-problem.html" class="post-title-link" itemprop="url">浮点数运算问题</a>
+          <a href="/2013/12/03/mysqli_pconnect-is-not-exist.html" class="post-title-link" itemprop="url">mysqli_pconnect is not exist</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2013-12-03 13:00:23" itemprop="dateCreated datePublished" datetime="2013-12-03T13:00:23+08:00">2013-12-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2013/12/03/mysqli_pconnect-is-not-exist.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/12/03/mysqli_pconnect-is-not-exist.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>This function not exists for mysqli db extension. For Persistent Connections can use p: prefix by hostname at php 5.3.</p>
+<p>fix:</p>
+<pre><code>function mysqli_pconnect($host, $username, $password, $new_link = false, $port = 0)
+&#123;
+    if($port)
+    &#123;
+        mysqli_connect(&quot;p:&quot;.$host, $username, $password, $new_link, $port);
+    &#125;
+    else
+    &#123;
+        mysqli_connect(&quot;p:&quot;.$host, $username, $password, $new_link);
+    &#125;
+&#125;
+</code></pre>
+<p>for more infomation:<a target="_blank" rel="noopener" href="http://us1.php.net/manual/zh/mysqli.construct.php">http://us1.php.net/manual/zh/mysqli.construct.php</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/12/03/float-caculate-problem.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2013/12/03/float-caculate-problem.html" class="post-title-link" itemprop="url">浮点数运算问题</a>
         </h2>
 
         <div class="post-meta-container">
@@ -251,8 +355,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2013/12/02/float-caculate-problem.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/12/02/float-caculate-problem.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2013/12/03/float-caculate-problem.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/12/03/float-caculate-problem.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -623,7 +727,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/10/17/ubuntu-12-04-not-start-gui-but-start-the-text-mode.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/10/18/ubuntu-12-04-not-start-gui-but-start-the-text-mode.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -641,7 +745,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2013/10/17/ubuntu-12-04-not-start-gui-but-start-the-text-mode.html" class="post-title-link" itemprop="url">Ubuntu 12.04 不启动GUI直接进入命令行</a>
+          <a href="/2013/10/18/ubuntu-12-04-not-start-gui-but-start-the-text-mode.html" class="post-title-link" itemprop="url">Ubuntu 12.04 不启动GUI直接进入命令行</a>
         </h2>
 
         <div class="post-meta-container">
@@ -671,8 +775,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2013/10/17/ubuntu-12-04-not-start-gui-but-start-the-text-mode.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/10/17/ubuntu-12-04-not-start-gui-but-start-the-text-mode.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2013/10/18/ubuntu-12-04-not-start-gui-but-start-the-text-mode.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/10/18/ubuntu-12-04-not-start-gui-but-start-the-text-mode.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -713,7 +817,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/10/11/linux-unix-setuid-seteuid-setreuid-setresuid.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/10/12/linux-unix-setuid-seteuid-setreuid-setresuid.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -731,7 +835,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2013/10/11/linux-unix-setuid-seteuid-setreuid-setresuid.html" class="post-title-link" itemprop="url">linux/unix下setuid/seteuid/setreuid/setresuid</a>
+          <a href="/2013/10/12/linux-unix-setuid-seteuid-setreuid-setresuid.html" class="post-title-link" itemprop="url">linux/unix下setuid/seteuid/setreuid/setresuid</a>
         </h2>
 
         <div class="post-meta-container">
@@ -761,8 +865,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2013/10/11/linux-unix-setuid-seteuid-setreuid-setresuid.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/10/11/linux-unix-setuid-seteuid-setreuid-setresuid.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2013/10/12/linux-unix-setuid-seteuid-setreuid-setresuid.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/10/12/linux-unix-setuid-seteuid-setreuid-setresuid.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -781,7 +885,7 @@
 <p>setresuid()有个性质，英文名称是all-or-nothing effect，意思是，如果setresuid()<br>对某一个ID设置成功了，其他的失败了，比如只改变了ruid，suid和euid都改失败了<br>那么程序会将ruid改回原来的值，即保证要么三个ID都能成功修改，要么三个都没能修改成功。<br>PS：FreeBSD和Linux支持setresuid，Solaris不支持setresuid，但有自己的实现方式。
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2013/10/11/linux-unix-setuid-seteuid-setreuid-setresuid.html#more" rel="contents">
+              <a class="btn" href="/2013/10/12/linux-unix-setuid-seteuid-setreuid-setresuid.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1006,7 +1110,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/10/08/the-point-to-run-a-roots-program-in-php-env.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/10/09/the-point-to-run-a-roots-program-in-php-env.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1024,7 +1128,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2013/10/08/the-point-to-run-a-roots-program-in-php-env.html" class="post-title-link" itemprop="url">关于php执行root权限的命令的实现要点</a>
+          <a href="/2013/10/09/the-point-to-run-a-roots-program-in-php-env.html" class="post-title-link" itemprop="url">关于php执行root权限的命令的实现要点</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1054,8 +1158,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2013/10/08/the-point-to-run-a-roots-program-in-php-env.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/10/08/the-point-to-run-a-roots-program-in-php-env.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2013/10/09/the-point-to-run-a-roots-program-in-php-env.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/10/09/the-point-to-run-a-roots-program-in-php-env.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1091,112 +1195,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2013/10/07/analysis-of-linux-process-authority.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2013/10/07/analysis-of-linux-process-authority.html" class="post-title-link" itemprop="url">linux下进程权限分析</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2013-10-08 07:42:13" itemprop="dateCreated datePublished" datetime="2013-10-08T07:42:13+08:00">2013-10-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2013/10/07/analysis-of-linux-process-authority.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2013/10/07/analysis-of-linux-process-authority.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>转自：<a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-27105712-id-3349522.html">http://blog.chinaunix.net/uid-27105712-id-3349522.html</a></p>
-<p>在linux下，关于文件权限，大部分人接触比较多，也比较熟悉了解.但是对进程权限一般知之甚少。本文总结一下linux系统下进程权限问题和现象。</p>
-<p>需要强调的是，本文是linux系统下讨论，因为linux和unix有很多不同的地方，并且各个不同的unix系统也有很多不同。</p>
-<p>先开门见山的列出本文讨论对象：ruid(实际用户id： real userid)、euid(有效用户用户:effective userid), suid(保存用户id:saved userid)、fuid(文件系统用户id)。</p>
-<p>除了上面4个，还涉及到一个位 设置用户id位(set user id bit),，即我们通常所说的处rwx之外那个s标志位。</p>
-<p>另外，本文主要讨论userid，groupid规则基本一样，例如rgid, egid, sgid, fgid等，本文就不做组id方面的重复讨论了。</p>
-<p>首先，查看这几个uid的方法有两种方式：一是ps 命令 (ps -ax -o ruid -o euid -o suid -o fuid -o pid -o fname)列出这几个uid；二是查看status文件，（cat &#x2F;proc&#x2F;2495&#x2F;status | grep Uid）。</p>
-<p>本文创建5个test用户 test1~test5用来做本文中sample讨论使用，代表常见普通权限用户。
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2013/10/07/analysis-of-linux-process-authority.html#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/24/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/26/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/24/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/26/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

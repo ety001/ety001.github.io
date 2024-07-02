@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -203,7 +203,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/04/08/yoyow-witness-deploy-by-docker.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/04/10/yoyow-witness-watcher.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -221,7 +221,160 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/04/08/yoyow-witness-deploy-by-docker.html" class="post-title-link" itemprop="url">YOYOW 见证人教程(docker版)</a>
+          <a href="/2018/04/10/yoyow-witness-watcher.html" class="post-title-link" itemprop="url">YOYOW见证人监控程序部署教程（docker版）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-04-10 00:00:00" itemprop="dateCreated datePublished" datetime="2018-04-10T00:00:00+08:00">2018-04-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-02-26 22:50:41" itemprop="dateModified" datetime="2021-02-26T22:50:41+08:00">2021-02-26</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2018/04/10/yoyow-witness-watcher.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/04/10/yoyow-witness-watcher.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>部署YOYOW见证人有几个月了，发现貌似没有人关注丢块的问题，我也没有找到有相关的开源软件可以去完成丢块自动下线的功能。像 Steem 社区有太多的类似程序了，python 的、nodejs 的，多的数不胜数。只能说 YOYOW 还是很年轻。</p>
+<p>作为一个 YOYOW 的见证人，有义务去开发一款这样开源版本的工具。经过一晚上的折腾，基本功能已经是完成了。代码库在 <a target="_blank" rel="noopener" href="https://github.com/ety001/yoyow-witness-watcher">这里</a>。这个工具是基于docker进行部署的，如果你看了上一篇我写的《YOYOW 见证人教程》 , 那么这个工具的部署应该会很轻松。因为我花了大量的时间在部署脚本上（大约6个小时），目的就是尽可能把部署过程傻瓜化。</p>
+<h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><ul>
+<li>一台 Linux 服务器，装有 docker , wget</li>
+<li>如果需要通知服务，请自行注册discord，并创建一个新的服务器、频道和频道的webhook（文章最后有个简易获取 Webhook 的教程）。</li>
+</ul>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><h3 id="1-首先下载代码"><a href="#1-首先下载代码" class="headerlink" title="1.首先下载代码"></a>1.首先下载代码</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/ety001/yoyow-witness-watcher.git</span><br><span class="line">cd yoyow-witness-watcher</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-部署-yoyow-client，并提供-RPC-服务。"><a href="#2-部署-yoyow-client，并提供-RPC-服务。" class="headerlink" title="2.部署 yoyow_client，并提供 RPC 服务。"></a>2.部署 <code>yoyow_client</code>，并提供 <code>RPC</code> 服务。</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./init.sh</span><br></pre></td></tr></table></figure>
+
+<p>首先提示你输入 <code>yoyow_client</code> 的下载地址：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">*********************************************</span><br><span class="line">Welcome to use YOYOW witness watcher.</span><br><span class="line">This tool is made by ETY001. (https://github.com/ety001)</span><br><span class="line">My YOYOW ID is 485699321. It&#x27;s pleasure to get your votes!</span><br><span class="line">*********************************************</span><br><span class="line"></span><br><span class="line">Please input current yoyow_client download URL (https://github.com/yoyow-org/yoyow-core/releases/latest):</span><br><span class="line">https://github.com/yoyow-org/yoyow-core/releases/download/v0.2.1-180313/yoyow-client-v0.2.1-ubuntu-20180313.tgz</span><br></pre></td></tr></table></figure>
+
+<p>下载地址可以在 <a target="_blank" rel="noopener" href="https://github.com/yoyow-org/yoyow-core/releases/latest">https://github.com/yoyow-org/yoyow-core/releases/latest</a> 找到，填写下载地址后，回车继续。</p>
+<p>当看到出现 <code>Listening for incoming HTTP RPC requests on 0.0.0.0:9999</code> 以及 <code>new &gt;&gt;&gt;</code> 的时候说明 <code>yoyow_client</code> 的 docker 镜像已经做好，现在开始创建钱包并导入你的账号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Create wallet</span><br><span class="line">Logging RPC to file: logs/rpc/rpc.log</span><br><span class="line">3505859ms th_a       main.cpp:120                  main                 ] key_to_wif( committee_private_key ): 5KCBDTcyDqzsqehcb52tW5nU6pXife6V2rX9Yf7c3saYSzbDZ5W</span><br><span class="line">3505862ms th_a       main.cpp:124                  main                 ] nathan_pub_key: YYW6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV</span><br><span class="line">3505862ms th_a       main.cpp:125                  main                 ] key_to_wif( nathan_private_key ): 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3</span><br><span class="line">Starting a new wallet with chain ID ae4f234c75199f67e526c9478cf499dd6e94c2b66830ee5c58d0868a3179baf6 (from egenesis)</span><br><span class="line">3505863ms th_a       main.cpp:172                  main                 ] wdata.ws_server: wss://wallet.yoyow.org/ws</span><br><span class="line">3506840ms th_a       main.cpp:177                  main                 ] wdata.ws_user:  wdata.ws_password:</span><br><span class="line">Please use the set_password method to initialize a new wallet before continuing</span><br><span class="line">3509652ms th_a       main.cpp:243                  main                 ] Listening for incoming HTTP RPC requests on 0.0.0.0:9999</span><br><span class="line">new &gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>先设置本地钱包密码（比如 123456）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set_password 123456</span><br></pre></td></tr></table></figure>
+
+<p>解锁本地钱包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unlock 123456</span><br></pre></td></tr></table></figure>
+
+<p>导入你的 YOYOW 账号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import_key YOUR_YOYOW_ID  YOUR_YOYOW_ACTIVE_KEY</span><br></pre></td></tr></table></figure>
+
+<p>完成以上工作后，按 <code>ctrl + d</code> 退出钱包，docker 容器开始重启</p>
+<p>直到看到 Finish 且已经在监听 9999 端口时，整个 <code>yoyow_client</code> 的部署完成。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Get Status</span><br><span class="line">00200e8bde55        yoyow_client                     &quot;/bin/sh -c &#x27;/data/y…&quot;    10 seconds ago      Up 10 seconds                                                  yoyow_client</span><br><span class="line"></span><br><span class="line">Logs</span><br><span class="line">Logging RPC to file: logs/rpc/rpc.log</span><br><span class="line">140909ms th_a       main.cpp:120                  main                 ] key_to_wif( committee_private_key ): 5K**********************5W</span><br><span class="line">140910ms th_a       main.cpp:124                  main                 ] nathan_pub_key: YY************************CV</span><br><span class="line">140910ms th_a       main.cpp:125                  main                 ] key_to_wif( nathan_private_key ): 5****************************3</span><br><span class="line">140912ms th_a       main.cpp:172                  main                 ] wdata.ws_server: wss://wallet.yoyow.org/ws</span><br><span class="line">141820ms th_a       main.cpp:177                  main                 ] wdata.ws_user:  wdata.ws_password:</span><br><span class="line">145239ms th_a       main.cpp:243                  main                 ] Listening for incoming HTTP RPC requests on 0.0.0.0:9999</span><br><span class="line"></span><br><span class="line">************</span><br><span class="line">Finish!</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-部署监控程序"><a href="#3-部署监控程序" class="headerlink" title="3.部署监控程序"></a>3.部署监控程序</h3><p>直接运行下面的命令开始部署</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./install_bot.sh</span><br></pre></td></tr></table></figure>
+
+<p>提示输入你的 YOYOW ID</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># ./install_bot.sh</span><br><span class="line">Please input YOYOW ID:</span><br><span class="line">485699321</span><br></pre></td></tr></table></figure>
+
+<p>提示输入你签名块用的公钥。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Please input Your Public Key:</span><br><span class="line">If you have multiple public keys, separate them with commas</span><br><span class="line">eg. YYW7TSRLZ9EXZps37Kt31qa7qi,YYW7TSRLZ9EXZpZqk25atoL2s37</span><br><span class="line">YYW7TSRLZ9EXZpZqk25atoL2s37Kt31qa7qi78ZR368kCN969rFiT,YYW733FxEEaAFTHxdTJdowZyQzJ3JnPocsVmdq4aSsm1gSd1VkYDC</span><br></pre></td></tr></table></figure>
+
+<p>&gt; 如果你有多台备机，可以用逗号把多个公钥隔开填写，<strong>请务必把当前正在运行的节点的公钥放在第一位</strong>，程序会在检测到丢块后，自动依次往后切换，直到所有节点都不可用。因此，如果你有两个节点的话，当第一个节点挂掉，程序自动切换到第二个备份节点后，赶紧去修第一个节点，第一个节点重启可用后，<strong>一定要重新部署下bot程序，并且填写公钥时，把目前的第二个节点的公钥放在前面</strong>。</p>
+<p>提示输入你的本地钱包密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Please input wallet password:</span><br><span class="line">123456</span><br></pre></td></tr></table></figure>
+
+<p>提示输入 discord 的 webhook 地址，如果你想获取通知的话，就配置这项，否则留空。最后会简单说下怎么获取 webhook 地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Please input Discord webhook for notify (If you don&#x27;t need it, leave empty.):</span><br><span class="line">https://discordapp.com/api/webhooks/433204170/X2RWo7-qiFlnMtQeQkk_sSgb5Vn0rQVWZCF5f</span><br></pre></td></tr></table></figure>
+
+<p>当你看到类似以下信息的时候，就已经完成了所有部署工作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Get status</span><br><span class="line">string(20) &quot;global value in init&quot;</span><br><span class="line">array(2) &#123;</span><br><span class="line">  [0]=&gt;</span><br><span class="line">  string(53) &quot;YYW7TSRLZ9EXZpZqk25atoL2s37Kt31qa7qi78ZR368kCN969rFiT&quot;</span><br><span class="line">  [1]=&gt;</span><br><span class="line">  string(53) &quot;YYW733FxEEaAFTHxdTJdowZyQzJ3JnPocsVmdq4aSsm1gSd1VkYDC&quot;</span><br><span class="line">&#125;</span><br><span class="line">string(9) &quot;485699321&quot;</span><br><span class="line">string(27) &quot;http://172.20.99.2:9999/rpc&quot;</span><br><span class="line">int(3)</span><br><span class="line">send_notify:&quot;&quot;</span><br><span class="line">witness_info: [&#123;&quot;id&quot;:&quot;1.5.118&quot;,&quot;account&quot;:485699321,&quot;name&quot;:&quot;yoyo485699321&quot;,&quot;sequence&quot;:1,&quot;is_valid&quot;:true,&quot;signing_key&quot;:&quot;YYW7TSRLZ9EXZpZqk25atoL2s37Kt31qa7qi78ZR368kCN969rFiT&quot;,&quot;pledge&quot;:&quot;4800000000&quot;,&quot;pledge_last_update&quot;:&quot;2018-04-09T16:27:36&quot;,&quot;average_pledge&quot;:&quot;4769814330&quot;,&quot;average_pledge_last_update&quot;:&quot;2018-04-10T09:29:36&quot;,&quot;average_pledge_next_update_block&quot;:6208938,&quot;total_votes&quot;:&quot;1012502907669&quot;,&quot;by_pledge_position&quot;:&quot;0&quot;,&quot;by_pledge_position_last_update&quot;:&quot;13192707760156474609520154309632187&quot;,&quot;by_pledge_scheduled_time&quot;:&quot;13192779100955781906176323330356157&quot;,&quot;by_vote_position&quot;:&quot;0&quot;,&quot;by_vote_position_last_update&quot;:&quot;8327365446400524735205121087916251&quot;,&quot;by_vote_scheduled_time&quot;:&quot;8327365782480909634055199728870765&quot;,&quot;last_confirmed_block_num&quot;:6208607,&quot;last_aslot&quot;:6220862,&quot;total_produced&quot;:1143,&quot;total_missed&quot;:3,&quot;url&quot;:&quot;https:\/\/github.com\/ety001&quot;&#125;]</span><br><span class="line">total_produced: 1143, total_missed: 3</span><br><span class="line">2018-04-10 10:23:38</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">***********</span><br><span class="line">Finish!!</span><br></pre></td></tr></table></figure>
+
+<p>如果想查看监控程序的工作状态，执行下面的命令即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker logs --tail 50 yoyow_witness_watcher</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-卸载"><a href="#4-卸载" class="headerlink" title="4.卸载"></a>4.卸载</h3><p>卸载非常的简单，只需要执行下面的命令即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./uninstall_bot.sh &amp;amp;&amp;amp; ./uninstall.sh</span><br></pre></td></tr></table></figure>
+
+<p>&gt; 如果你只想重新部署监控程序，只需要执行 <code>./uninstall_bot.sh</code> 即可，执行完后重新执行 <code>./install_bot.sh</code>。如果你中途执行安装脚本有错误的话，也需要先执行卸载脚本后，再重新执行安装脚本。卸载脚本如果都要执行的话，执行顺序一定要是先 <code>uninstall_bot</code> 再 <code>uninstall</code>。</p>
+<h1 id="申请-Discord-的频道-Webhook"><a href="#申请-Discord-的频道-Webhook" class="headerlink" title="申请 Discord 的频道 Webhook"></a>申请 Discord 的频道 Webhook</h1><p>注册账号就不说了，打开桌面app界面（网页界面应该也差不多），在左下角找到一个加号，点击后如下图</p>
+<p><img src="https://steemitimages.com/DQmZF3sQtGZo54dNxNHgcyvtXb8JitUJv7azLtL1gAyH3Rr/y1.png" alt="y1.png"></p>
+<p>选择创建一个服务器，进入下个界面，配置下你的服务器的名字和位置后，即可完成创建，进入你的服务器，新建一个频道，然后在频道右侧有个齿轮，点击一下，如图</p>
+<p><img src="https://steemitimages.com/DQmayhuefPERpPxwx2kjtnpJ5KxgFxZ8k6wm8U2EFCRwa9q/y2.png" alt="y2.png"></p>
+<p>打开频道配置页面后，找到 Webhook 选项，然后创建一个新的 Webhook，如图</p>
+<p><img src="https://steemitimages.com/DQmVEbzzEQUoZC9GVTKbq6jLrqSgTDe4bjM3ePatri4HUVV/y3.png" alt="y3.png"></p>
+<p>填写下 Webhook 的名字后，即可完成创建，里面的 URL 即为你的 Webhook 地址。</p>
+<p>欢迎给我投票，我的 <strong>YOYOW</strong> 号是 <strong>485699321</strong>。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/04/09/yoyow-witness-deploy-by-docker.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2018/04/09/yoyow-witness-deploy-by-docker.html" class="post-title-link" itemprop="url">YOYOW 见证人教程(docker版)</a>
         </h2>
 
         <div class="post-meta-container">
@@ -251,8 +404,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/04/08/yoyow-witness-deploy-by-docker.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/04/08/yoyow-witness-deploy-by-docker.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/04/09/yoyow-witness-deploy-by-docker.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/04/09/yoyow-witness-deploy-by-docker.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -377,7 +530,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/03/19/bitshares-and-stellar.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/03/20/bitshares-and-stellar.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -395,7 +548,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/03/19/bitshares-and-stellar.html" class="post-title-link" itemprop="url">简单的谈谈 Bitshares 和 Stellar</a>
+          <a href="/2018/03/20/bitshares-and-stellar.html" class="post-title-link" itemprop="url">简单的谈谈 Bitshares 和 Stellar</a>
         </h2>
 
         <div class="post-meta-container">
@@ -425,8 +578,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/03/19/bitshares-and-stellar.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/19/bitshares-and-stellar.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/03/20/bitshares-and-stellar.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/20/bitshares-and-stellar.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -480,7 +633,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/03/18/stellar-dev-summarize.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/03/19/stellar-dev-summarize.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -498,7 +651,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/03/18/stellar-dev-summarize.html" class="post-title-link" itemprop="url">Stellar开发中关于offer相关的总结</a>
+          <a href="/2018/03/19/stellar-dev-summarize.html" class="post-title-link" itemprop="url">Stellar开发中关于offer相关的总结</a>
         </h2>
 
         <div class="post-meta-container">
@@ -528,8 +681,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/03/18/stellar-dev-summarize.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/18/stellar-dev-summarize.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/03/19/stellar-dev-summarize.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/19/stellar-dev-summarize.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -696,7 +849,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/03/09/resolve-confusion-of-stellar-price.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/03/10/resolve-confusion-of-stellar-price.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -714,7 +867,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/03/09/resolve-confusion-of-stellar-price.html" class="post-title-link" itemprop="url">困惑我很久的价格单位终于弄明白了</a>
+          <a href="/2018/03/10/resolve-confusion-of-stellar-price.html" class="post-title-link" itemprop="url">困惑我很久的价格单位终于弄明白了</a>
         </h2>
 
         <div class="post-meta-container">
@@ -744,8 +897,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/03/09/resolve-confusion-of-stellar-price.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/09/resolve-confusion-of-stellar-price.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/03/10/resolve-confusion-of-stellar-price.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/03/10/resolve-confusion-of-stellar-price.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -808,7 +961,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/02/07/asterisk-tuturial.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/02/08/asterisk-tuturial.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -826,7 +979,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/02/07/asterisk-tuturial.html" class="post-title-link" itemprop="url">出国狗的福音--使用树莓派搭建跨国语音短信设备</a>
+          <a href="/2018/02/08/asterisk-tuturial.html" class="post-title-link" itemprop="url">出国狗的福音--使用树莓派搭建跨国语音短信设备</a>
         </h2>
 
         <div class="post-meta-container">
@@ -856,8 +1009,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/02/07/asterisk-tuturial.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/02/07/asterisk-tuturial.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/02/08/asterisk-tuturial.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/02/08/asterisk-tuturial.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1037,7 +1190,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/01/30/how-to-build-a-steem-witness-node.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/01/31/how-to-build-a-steem-witness-node.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1055,7 +1208,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/01/30/how-to-build-a-steem-witness-node.html" class="post-title-link" itemprop="url">如何搭建Steem见证人节点</a>
+          <a href="/2018/01/31/how-to-build-a-steem-witness-node.html" class="post-title-link" itemprop="url">如何搭建Steem见证人节点</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1085,8 +1238,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/01/30/how-to-build-a-steem-witness-node.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/30/how-to-build-a-steem-witness-node.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/01/31/how-to-build-a-steem-witness-node.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/31/how-to-build-a-steem-witness-node.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1229,7 +1382,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/01/20/use-rsync-to-transfer-files.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/01/21/use-rsync-to-transfer-files.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1247,7 +1400,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/01/20/use-rsync-to-transfer-files.html" class="post-title-link" itemprop="url">服务器间大文件传输还是要用Rsync</a>
+          <a href="/2018/01/21/use-rsync-to-transfer-files.html" class="post-title-link" itemprop="url">服务器间大文件传输还是要用Rsync</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1277,8 +1430,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/01/20/use-rsync-to-transfer-files.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/20/use-rsync-to-transfer-files.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/01/21/use-rsync-to-transfer-files.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/21/use-rsync-to-transfer-files.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1339,7 +1492,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/01/16/build-a-dockerized-lnmp-environment-by-portainer.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1357,7 +1510,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html" class="post-title-link" itemprop="url">Build a dockerized LNMP environment by portainer / 通过portainer搭建docker化的LNMP环境</a>
+          <a href="/2018/01/16/build-a-dockerized-lnmp-environment-by-portainer.html" class="post-title-link" itemprop="url">Build a dockerized LNMP environment by portainer / 通过portainer搭建docker化的LNMP环境</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1387,8 +1540,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/01/16/build-a-dockerized-lnmp-environment-by-portainer.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/16/build-a-dockerized-lnmp-environment-by-portainer.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1641,7 +1794,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/01/13/vundle-tutorial.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/01/14/vundle-tutorial.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1659,7 +1812,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/01/13/vundle-tutorial.html" class="post-title-link" itemprop="url">Vundle使用教程</a>
+          <a href="/2018/01/14/vundle-tutorial.html" class="post-title-link" itemprop="url">Vundle使用教程</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1689,8 +1842,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/01/13/vundle-tutorial.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/13/vundle-tutorial.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/01/14/vundle-tutorial.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/14/vundle-tutorial.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1741,131 +1894,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/01/07/create-a-simple-smtp-server-by-postfix-and-sasl.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/01/07/create-a-simple-smtp-server-by-postfix-and-sasl.html" class="post-title-link" itemprop="url">用postfix和sasl搭建一个简易的发邮件服务器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-01-08 00:00:00" itemprop="dateCreated datePublished" datetime="2018-01-08T00:00:00+08:00">2018-01-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-02-26 14:44:45" itemprop="dateModified" datetime="2021-02-26T14:44:45+08:00">2021-02-26</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2018/01/07/create-a-simple-smtp-server-by-postfix-and-sasl.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/01/07/create-a-simple-smtp-server-by-postfix-and-sasl.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>有时候为了发送一定量的邮件，而使用类似QQ邮箱这样厂商的产品就会受到各种限制。<br>为此，需要自己搭建个简易的发邮件的服务器。需求很简单：服务器只需要能发邮件，<br>不需要接收邮件，且发邮件可以使用 <code>smtp</code> 登陆验证来使用。</p>
-<h1 id="安装MTA服务器"><a href="#安装MTA服务器" class="headerlink" title="安装MTA服务器"></a>安装MTA服务器</h1><p>我的VPS是 <code>centos7</code> ，系统自带了 <code>postfix</code>，然后还需要安装 <code>sasl</code>，<br>这个是为了实现 <code>smtp</code> 验证必备的软件。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install cyrus*</span><br></pre></td></tr></table></figure>
-
-<p>如果你的服务器上没有 <code>postfix</code> ，而是 <code>sendmail</code>，你需要先卸载再安装。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm -e sendmail</span><br><span class="line">yum install postfix</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置DNS"><a href="#配置DNS" class="headerlink" title="配置DNS"></a>配置DNS</h1><p>我用的是DNSPOD，要配置的域名为 <code>mypi.win</code>，也就是我希望发邮件的地址是<br><code>username@mypi.win</code>。需要在DNSPOD做以下三条配置</p>
-<p><img src="/upload/20180108/1.png" alt="dns配置"></p>
-<p>其中 <code>SPF</code> 配置中的内容为 <code>v=spf1 a mx ip4:x.x.x.x -all</code>，把其中的<br><code>x.x.x.x</code> 换成你的服务器IP，也就是你的主域名指向的IP。</p>
-<p><code>SPF</code> 的作用是为了降低邮件被识别为垃圾邮件的概率，配置好以后，可以去<a target="_blank" rel="noopener" href="http://www.kitterman.com/spf/validate.html">这里</a><br>测试下是否配置正确了。</p>
-<h1 id="配置postfix"><a href="#配置postfix" class="headerlink" title="配置postfix"></a>配置postfix</h1><p>修改 <code>/etc/postfix/main.cf</code> 的内容。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">##将下面的配置项注释取消，后面填上合适值##</span><br><span class="line">myhostname = mypi.win</span><br><span class="line">#大约在75行，postfix主机名，修改成你的域名 此项需要添加A记录并指向postfix所在主机公网IP</span><br><span class="line">mydomain = mypi.win</span><br><span class="line">#大约在83行，后面为主机域名</span><br><span class="line">myorigin = $mydomain</span><br><span class="line">#大约在100行，设置postfix邮箱的域名后缀为$mydomain，即mypi.win</span><br><span class="line">inet_interfaces = localhost</span><br><span class="line">#大约在117行</span><br><span class="line">#指定postfix系统监听的网络接口 此处必须是localhost或127.0.0.1或内网ip</span><br><span class="line">#若注释或填入公网ip  服务器的25端口将对公网开放</span><br><span class="line">#默认值为all 即监听所有网络接口</span><br><span class="line">#此项指定localhost后 本机postfix就只能发邮件不能接收邮件</span><br><span class="line">inet_protocols = ipv4</span><br><span class="line">#大约在120行,指定网络协议</span><br><span class="line">mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain</span><br><span class="line">#大约在165行</span><br><span class="line">#指定postfix接收邮件时收件人的域名，换句话说，也就是你的postfix系统要接收什么样的邮件。</span><br><span class="line">#此项配置中$myhostname表示postfix接受@$myhostname为后缀的邮箱的邮件 逗号分割支持指多项</span><br><span class="line">#此项默认值使用myhostname</span><br><span class="line">local_recipient_maps =</span><br><span class="line">#此项制定接收邮件的规则 可以是hash文件 此项对本次配置无意义 可以直接注释</span><br><span class="line">mynetworks = x.x.x.x, 172.17.0.1, 127.0.0.1</span><br><span class="line">#大约在266行</span><br><span class="line">#指定你所在的网络的网络地址</span><br><span class="line">#本服务器的公网IP x.x.x.x、内网ip 172.17.0.1、以及localhost的ip127.0.0.1</span><br><span class="line">#请依据实际情况修改</span><br><span class="line">smtpd_banner = ETY001 Steemit Mention Server</span><br><span class="line">#大约在571行</span><br><span class="line">#指定MUA通过smtp连接postfix时返回的header头信息</span><br><span class="line"></span><br><span class="line">#SMTP Config</span><br><span class="line">broken_sasl_auth_clients = yes</span><br><span class="line">#指定postfix兼容MUA使用不规则的smtp协议--主要针对老版本的outlook 此项对于本次配置无意义</span><br><span class="line">smtpd_client_restrictions = permit_sasl_authenticated</span><br><span class="line">#指定可以向postfix发起SMTP连接的客户端的主机名或ip地址</span><br><span class="line">#此处permit_sasl_authenticated意思是允许通过sasl认证（也就是smtp链接时通过了账号、密码效验的用户）的所有用户</span><br><span class="line">smtpd_recipient_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination</span><br><span class="line">#发件人在执行RCPT TO命令时提供的地址进行限制规则 此处照搬复制即可</span><br><span class="line">smtpd_sasl_auth_enable = yes</span><br><span class="line">#指定postfix使用sasl验证 通俗的将就是启用smtp并要求进行账号、密码效验</span><br><span class="line">smtpd_sasl_local_domain = $mydomain</span><br><span class="line">#指定SMTP认证的本地域名 本次配置可以使用 smtpd_sasl_local_domain = &#x27;&#x27; 或干脆注释掉 默认为空</span><br><span class="line">smtpd_sasl_security_options = noanonymous</span><br><span class="line">#取消smtp的匿名登录 此项默认值为noanonymous smtp若能匿名登录危害非常大 此项请务必指定为noanonymous</span><br><span class="line">message_size_limit = 5242880</span><br><span class="line">#指定通过postfix发送邮件的体积大小 此处表示5M</span><br></pre></td></tr></table></figure>
-
-<h1 id="配置-SMTP"><a href="#配置-SMTP" class="headerlink" title="配置 SMTP"></a>配置 SMTP</h1><p>配置 <code>postfix</code> 启用 <code>sasldb2</code> 的账号密码验证方式：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sasl2/smtpd.conf</span><br><span class="line">#向这个文件写入如下的内容（这个文件的路径为64位系统的，如果是32位系统应该在/usr/lib/sasl2/smtpd.cof）</span><br><span class="line"></span><br><span class="line">pwcheck_method: auxprop</span><br><span class="line">auxprop_plugin: sasldb</span><br><span class="line">mech_list: plain login CRAM-MD5 DIGEST-MD5</span><br></pre></td></tr></table></figure>
-
-<p>接下来新建一个连接stmp服务的用户名和密码：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@mypi ~]# saslpasswd2 -c -u `postconf -h mydomain` steemit</span><br></pre></td></tr></table></figure>
-
-<p>这条命令会新建一个 <code>steemit@mypi.win</code> 的用户，接着会让你输入密码，假设密码为 <code>123456789</code>。</p>
-<p>新建完成后，可以使用 <code>sasldblistusers2</code> 命令 来查看 已经添加了哪些用户（密码使用userPassword代替）：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@mypi ~]# sasldblistusers2</span><br><span class="line">steemit@mypi.win: userPassword</span><br></pre></td></tr></table></figure>
-
-<p>修改 <code>sasldb</code> 的权限，让 <code>postfix</code> 可以读取其中的内容</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@mypi ~]# chgrp postfix /etc/sasldb2</span><br><span class="line">[root@mypi ~]# chmod 640 /etc/sasldb2</span><br></pre></td></tr></table></figure>
-
-<h1 id="启动-postfix-并添加开机启动"><a href="#启动-postfix-并添加开机启动" class="headerlink" title="启动 postfix 并添加开机启动"></a>启动 postfix 并添加开机启动</h1><p>如果是 centos7 ，执行下面的命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start postfix</span><br><span class="line">systemctl enable postfix</span><br></pre></td></tr></table></figure>
-
-<h1 id="测试smtp"><a href="#测试smtp" class="headerlink" title="测试smtp"></a>测试smtp</h1><p>在另外的电脑上执行下面的命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/ # nc mypi.win 25</span><br><span class="line">220 ETY001 Steemit Mention Server</span><br><span class="line">auth login</span><br><span class="line">334 VXNlcm5hbWU6</span><br><span class="line">c3RlZW1pdEBteXBpLndpbg==</span><br><span class="line">334 UGFzc3dvcmQ6</span><br><span class="line">MTIzNDU2Nzg5</span><br><span class="line">235 2.7.0 Authentication successful</span><br></pre></td></tr></table></figure>
-
-<p>其中 <code>auth login</code> 为登陆验证指令， <code>c3RlZW1pdEBteXBpLndpbg==</code> 是邮箱地址<br><code>steemit@mypi.win</code> 的 <code>base64</code> 编码后字符串，<code>MTIzNDU2Nzg5</code> 是密码<br><code>123456789</code> 的 <code>base64</code> 编码后字符串。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/15/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/15/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

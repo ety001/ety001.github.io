@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -194,6 +194,111 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/04/08/c-plus-point.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2011/04/08/c-plus-point.html" class="post-title-link" itemprop="url">c++中指针数组的研究</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2011-04-08 12:33:28" itemprop="dateCreated datePublished" datetime="2011-04-08T12:33:28+08:00">2011-04-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2011/04/08/c-plus-point.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/04/08/c-plus-point.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>上次的C++实验课第二个题，我一直在调试，今天终于搞出来了。下面我把整个过程写一写。<br>题目：</p>
+<p>【题目2】编写程序，输入十个国家名称用字符指针数组实现排序输出。</p>
+<p>【要求】<br>    ① 程序的功能是实现字符串的排序输出，例如，输入10个国家的名字分别是”China”,”USA”,”Australia”,”Austria”,”Brazil”,”Japan”,”England”,”Canada”,”Italy”,”France”，则排序后输出的结果为<br>    “Australia”,”Austria”,”Brazil”,”Canada”,”China”,”England”,”France”,”Italy”,”Japan”,”USA”<br>    ② 设计一个独立的函数ccmp，实现相应的功能<br>    ③ 函数调用时，参数通过字符指针数组传递<br>    【提示】<br>    ① ccmp函数可按如下方式定义：<br>    void ccmp(char * a[]);;<br>    其中，字符指针数组a中的指针分别指向10个国家的名称字符串<br>    ② 程序可用中的 <code>strcmp(char *s1,char * s2)</code> 函数对两个字符串的先后顺序进行判定，当s1&lt;s2时，返回值&lt;0，当s1&#x3D;s2时，返回值&#x3D;0 当s1&gt;s2时，返回值&gt;0</p>
+<p>我写的成品代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">void ccmp(char *a[]);</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	int i=0;</span><br><span class="line">	char* num[10]; //申请一个指针数组</span><br><span class="line">	char a[][10]=&#123;&quot;China&quot;,&quot;USA&quot;,&quot;Australia&quot;,&quot;Austria&quot;,&quot;Brazil&quot;,&quot;Japan&quot;,&quot;England&quot;,&quot;Canada&quot;,&quot;Italy&quot;,&quot;France&quot;&#125;;//初始字符串</span><br><span class="line"></span><br><span class="line">	for(i=0;i&lt;10;i++)num[i]=a[i];//把字符串数组发给一个指针数组</span><br><span class="line"></span><br><span class="line">	ccmp(num);</span><br><span class="line"></span><br><span class="line">	for(i=0;i&lt;10;i++)cout&lt;&lt;num[i]&lt;&lt;endl;//输出结果</span><br><span class="line"></span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line">void ccmp(char* a[])</span><br><span class="line">&#123;</span><br><span class="line">	char *temp;</span><br><span class="line">	for(int i=0;i&lt;9;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		for(int j=0;j&lt;9-i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			if(strcmp(a[j],a[j+1])&gt;0)</span><br><span class="line">			&#123;</span><br><span class="line">				temp=a[j];</span><br><span class="line">				a[j]=a[j+1];</span><br><span class="line">				a[j+1]=temp;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>出现的第一个问题是</strong>，对于指针数组的理解刚开始有些模糊，不过现在已经算是明白了。先说一下什么是指针？指针就是一个存储地址的变量。比如说我们申请一个存储整型数据的空间来存储整数，那么这个空间的地址就是一个整型指针，申请方法如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//这里申请了一个整型指针，我习惯把*靠近int书写，这样更容易理解，这个下面会讲到</span><br><span class="line">int* p;</span><br><span class="line">int a=6;</span><br><span class="line">p=&amp;a;</span><br></pre></td></tr></table></figure>
+
+<p>上面这个小段程序，我们可以把变量a理解为一个小房子，这个小房子建设在内存里，而要找到这个房子需要有一个地址，这个地址就是平时我们所说的内存地址，而p也同样也是一个小房子，只是这个房子很特殊，只存储其他普通房子的地址，也就是变量a的地址。指针一直困惑人的地方就是<em>p和p到底是什么意思？其实</em>p在内存里面是没有空间的，也就是说<em>p根本不是房子，p才是房子，就好比一把打开房门的钥匙，只有</em>和p组合在一起成为<em>p，才能读取出p中存放地址所指向空间内的内容（这里就是数字6）。那为什么申请普通变量的时候是<code>int a;</code>而申请指针变量的时候是<code>int *p</code>呢？这里a的地位难道和</em>p不是一回事吗？很显然这不是一回事，但是就是这种书写导致了初学者的混淆，这也是为什么我习惯写成<code>int* p;</code>了，也就是说<code>int</code>和<code>int*</code>不是一回事，而<code>a</code>和<code>p</code>的地位是一样的，都是一个变量，只不过p只能用来存储地址。不知道我罗嗦这么多，大家是否看懂了，不过至少我现在明白了，嘿嘿～</p>
+<p>那说完指针，就来看看指针数组。所谓的指针数组，就是一组变量每个变量都是用来并且只能用来存储地址的。在我写的那段程序中，用来存储全部字符串的数组<code>a[][]</code>，第一维维数其实就是字符串的个数，第二维的维数即是每个字符串的最大字符个数。我出现的第一个错误就是在这里出现的。依照上面的分析，那么a[0]的值就是第一个字符串“China”的首字符的地址，如果用cout输出a[0]的话，得到的输出结果就是“China”，因此程序写出来的第一遍中没有那个num指针数组。我在第13行直接写的是  ccmp(a[]);  然后就是一系列的错误，后来发现不能这样写，而是应该把这些字符串的首字母的地址给一个指针数组，然后用这个指针数组进行传值。于是就有了num指针数组。但是在使用num时，又出现了很多错误，但是错误的本质都是相同的，都是出错在赋值运算上。<strong>也就是说从一个变量到另一个变量的赋值时出错，原因就是没有搞清楚你正在使用变量的类型，它里面存储的东西的类型，以及将要用来承接用的变量的类型和它能存储什么样的数据。前前后后调试了很多遍，把每一个变量的每种情形都搞明白了，这里的错误也就解决了。</strong></p>
+<p><strong>第二个问题出在了strcmp()的使用上</strong>。最开始第26行，我写的是if(strcmp(a[j],a[j+1]))，也就是没有那个”&gt;0”。依照题目的意思只要a[j]&gt;a[j+1]，那么strcmp的返回值就是大于0的值，那么在if中就是真，但是运行的时候，排序就是不对。这里我插一句我是如何发现问题出现在这里的，下面的代码就是我的调试代码（只粘贴了ccmp函数），注意第8、11、12、13、17行的输出代码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">void ccmp(char* a[])</span><br><span class="line">&#123;</span><br><span class="line">	char *temp;</span><br><span class="line">	for(int i=0;i&lt;9;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		for(int j=0;j&lt;9-i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cout&lt;&lt;&quot;wai:&quot;&lt;&lt;strcmp(a[j],a[j+1])&lt;&lt;endl;</span><br><span class="line">			if(strcmp(a[j],a[j+1])&gt;0)</span><br><span class="line">			&#123;</span><br><span class="line">				cout&lt;&lt;strcmp(a[j],a[j+1])&lt;&lt;endl;</span><br><span class="line">				cout&lt;&lt;&quot;a[j]&quot;&lt;&lt;a[j]&lt;&lt;&quot;::a[j+1]&quot;&lt;&lt;a[j+1]&lt;&lt;endl;</span><br><span class="line">				cout&lt;&lt;j&lt;&lt;endl;</span><br><span class="line">				temp=a[j];</span><br><span class="line">				a[j]=a[j+1];</span><br><span class="line">				a[j+1]=temp;</span><br><span class="line">				cout&lt;&lt;&quot;a[j]&quot;&lt;&lt;a[j]&lt;&lt;&quot;::a[j+1]&quot;&lt;&lt;a[j+1]&lt;&lt;endl;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最初的时候，我只是添加了第12行的代码，输出了每次循环体中的a[j]和a[j+1]，观察结果发现i&#x3D;0时的所有循环结果输出，“China”字符串一直在a[j]的位置，也就是说它一直都是被当作最大值的。为了验证想法，于是我又添加了第13和17行，又输出了一遍，我的判断被验证了，那么问题就出在了if的判断条件上了。我又添加第11行的代码，发现i&#x3D;0时，这里输出的全是-1，然后我又添加了第9行代码，继续运行，结果使我很疑惑，因为我的概念搞混了。<code>我在写程序的时候，想成了大于0的数代表真，小于等于0的数代表假。直到我开始写这篇文章了，我才反应过来，非0值都是真，只有0才是假（我为我自己学的不牢固感到悲哀啊……=_=）。</code>问题找到，加上”&gt;0”就解决了。</p>
+<p>以上即为我的整个实验过程，希望对各位正在学习C的看客有所帮助吧。有理解不到位的地方，还请高人指点一二，小弟不胜感激～</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -388,7 +493,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/03/23/programer-ten-floors.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/03/24/programer-ten-floors.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -406,7 +511,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2011/03/23/programer-ten-floors.html" class="post-title-link" itemprop="url">程序员的十层楼（作者：周伟明）转载</a>
+          <a href="/2011/03/24/programer-ten-floors.html" class="post-title-link" itemprop="url">程序员的十层楼（作者：周伟明）转载</a>
         </h2>
 
         <div class="post-meta-container">
@@ -436,8 +541,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2011/03/23/programer-ten-floors.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/03/23/programer-ten-floors.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2011/03/24/programer-ten-floors.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/03/24/programer-ten-floors.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -512,7 +617,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/03/16/wu-ku.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/03/17/wu-ku.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -530,7 +635,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2011/03/16/wu-ku.html" class="post-title-link" itemprop="url">吾酷彩铃词典大全</a>
+          <a href="/2011/03/17/wu-ku.html" class="post-title-link" itemprop="url">吾酷彩铃词典大全</a>
         </h2>
 
         <div class="post-meta-container">
@@ -560,8 +665,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2011/03/16/wu-ku.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/03/16/wu-ku.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2011/03/17/wu-ku.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/03/17/wu-ku.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -933,7 +1038,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/03/11/my-blog-change-host.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/03/12/my-blog-change-host.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -951,7 +1056,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2011/03/11/my-blog-change-host.html" class="post-title-link" itemprop="url">DM博客的服务器空间调换完毕</a>
+          <a href="/2011/03/12/my-blog-change-host.html" class="post-title-link" itemprop="url">DM博客的服务器空间调换完毕</a>
         </h2>
 
         <div class="post-meta-container">
@@ -981,8 +1086,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2011/03/11/my-blog-change-host.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/03/11/my-blog-change-host.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2011/03/12/my-blog-change-host.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/03/12/my-blog-change-host.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1121,100 +1226,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/02/28/diary.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2011/02/28/diary.html" class="post-title-link" itemprop="url">近期小记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2011-02-28 15:50:58" itemprop="dateCreated datePublished" datetime="2011-02-28T15:50:58+08:00">2011-02-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2011/02/28/diary.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/02/28/diary.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>从2月26号返回学校就一直在忙碌着，调整了很多事情，主要是在做收尾工作。从去年9月就开始和团委周旋的事情也基本算是落下了帷幕，我终于可以解放出来啦~</p>
-<p>既然事情基本上都已安排妥当，那么就要开始学习了，毕竟接下来的这一年是考研复习的一年，可能自己的博客就不再经常更新了，只能感叹精力有限啊！利用有限的时间好好的把我的专业课搞一下。</p>
-<p>最后就是简单一提最近看到的两个新闻，一个是诺基亚好像从明年开始就停止s60系统的维护工作了，这意味着统治那么长时间的塞班s60系统的正式落伍吧。另一个就是联通今年将发布Linux的手机操作系统。这两个新闻对我很有冲击力，别的我就不多说了。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/41/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><span class="page-number current">42</span><a class="page-number" href="/page/43/">43</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/43/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/41/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><span class="page-number current">42</span><a class="page-number" href="/page/43/">43</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/43/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

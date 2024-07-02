@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -203,7 +203,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/09/07/setup-shadowsocks-libev.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/09/17/ssh-port-forward.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -221,7 +221,128 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/09/07/setup-shadowsocks-libev.html" class="post-title-link" itemprop="url">编译安装shadowsocks-libev</a>
+          <a href="/2015/09/17/ssh-port-forward.html" class="post-title-link" itemprop="url">ssh端口转发</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2015-09-17 00:00:00" itemprop="dateCreated datePublished" datetime="2015-09-17T00:00:00+08:00">2015-09-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-01-30 16:53:28" itemprop="dateModified" datetime="2022-01-30T16:53:28+08:00">2022-01-30</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/09/17/ssh-port-forward.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/17/ssh-port-forward.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="基本参数："><a href="#基本参数：" class="headerlink" title="基本参数："></a>基本参数：</h2><pre><code>* -L [bind_address:]port:host:hostport
+* -L [bind_address:]port:remote_socket
+* -L local_socket:host:hostport
+* -L local_socket:remote_socket
+* -R [bind_address:]port:host:hostport
+* -R [bind_address:]port:local_socket
+* -R remote_socket:host:hostport
+* -R remote_socket:local_socket
+* -C 压缩
+* -g global forward 全局转发，否则只能绑定到127.0.0.1
+* -R 远程转发
+* -L 本地转发
+* -f 后台认证用户/密码，通常和-N连用，不用登录到远程主机
+* -N 不执行脚本或命令，通常与-f连用。
+</code></pre>
+<h2 id="前置配置"><a href="#前置配置" class="headerlink" title="前置配置"></a>前置配置</h2><p>如果用的是 <em>openssh</em> ，先设置 <strong>远端服务器</strong> 的 <em>GatewayPorts</em> 为 <em>yes</em>，否则 <strong>远程映射</strong> 时，<br>在远端无法绑定到 <em>0.0.0.0</em> 。</p>
+<h2 id="本地映射"><a href="#本地映射" class="headerlink" title="本地映射"></a>本地映射</h2><p>通过参数可以看到，除了端口外，还支持socket文件映射，所以有四种方式。</p>
+<p>理解起来，就是把远程的端口映射到本地，我们的访问是从本地的端口开始的，最终目的地是远程端口。</p>
+<p>解决的问题是，远程主机的防火墙只开放了 <code>22</code> 端口，而我们要访问远程主机的其他端口，比如 <code>5900</code>。</p>
+<p>参考命令:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 192.168.1.1 是远程主机的内网IP</span><br><span class="line"># 1.1.1.1 是远程主机的公网IP</span><br><span class="line">ssh -CfNgL 15900:192.168.1.1:5900 root@1.1.1.1</span><br></pre></td></tr></table></figure>
+
+<h2 id="远程映射"><a href="#远程映射" class="headerlink" title="远程映射"></a>远程映射</h2><p>通过参数可以看到，除了端口外，还支持socket文件映射，所以也有四种方式。</p>
+<p>理解起来，就是把本地的端口映射到远端，我们的访问是从远端的端口开始的，最终目的地是本地端口。</p>
+<p>解决的问题是，本地主机没有公网IP，而我们需要从公网访问到本地的某个服务。</p>
+<blockquote>
+<p>需要在远程主机端的 sshd_config 中启用 GatewayPorts。</p>
+</blockquote>
+<p>参考命令:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 192.168.1.1 是本地主机的内网IP</span><br><span class="line"># 1.1.1.1 是远程主机的公网IP</span><br><span class="line"># 访问远程主机的12222端口相当于直接访问了本地22</span><br><span class="line">ssh -CfNgR 12222:192.168.1.1:22 root@1.1.1.1</span><br></pre></td></tr></table></figure>
+
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>如果你的远程服务器的 <code>ssh</code> 端口不是默认的　<code>22</code>，比如是　<code>2233</code>，　<br>那么直接加上　<code>-p 2233</code> 参数即可。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/09/08/setup-shadowsocks-libev.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2015/09/08/setup-shadowsocks-libev.html" class="post-title-link" itemprop="url">编译安装shadowsocks-libev</a>
         </h2>
 
         <div class="post-meta-container">
@@ -251,8 +372,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/09/07/setup-shadowsocks-libev.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/setup-shadowsocks-libev.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/09/08/setup-shadowsocks-libev.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/08/setup-shadowsocks-libev.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -301,7 +422,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/09/07/upcase-number-to-chinese.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/09/08/upcase-number-to-chinese.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -319,7 +440,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/09/07/upcase-number-to-chinese.html" class="post-title-link" itemprop="url">PHP下把阿拉伯数字转换成大写汉字</a>
+          <a href="/2015/09/08/upcase-number-to-chinese.html" class="post-title-link" itemprop="url">PHP下把阿拉伯数字转换成大写汉字</a>
         </h2>
 
         <div class="post-meta-container">
@@ -349,8 +470,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/09/07/upcase-number-to-chinese.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/upcase-number-to-chinese.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/09/08/upcase-number-to-chinese.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/08/upcase-number-to-chinese.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -391,7 +512,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/09/07/when-using-dompdf-close-xdebug.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/09/08/when-using-dompdf-close-xdebug.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -409,7 +530,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/09/07/when-using-dompdf-close-xdebug.html" class="post-title-link" itemprop="url">使用dompdf时，关掉xdebug</a>
+          <a href="/2015/09/08/when-using-dompdf-close-xdebug.html" class="post-title-link" itemprop="url">使用dompdf时，关掉xdebug</a>
         </h2>
 
         <div class="post-meta-container">
@@ -439,8 +560,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/09/07/when-using-dompdf-close-xdebug.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/07/when-using-dompdf-close-xdebug.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/09/08/when-using-dompdf-close-xdebug.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/09/08/when-using-dompdf-close-xdebug.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -484,7 +605,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/08/21/mac-launchctl-nginx-on-port-80.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/08/22/mac-launchctl-nginx-on-port-80.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -502,7 +623,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/08/21/mac-launchctl-nginx-on-port-80.html" class="post-title-link" itemprop="url">Mac下Launchctl无法启动80端口的nginx解决方案</a>
+          <a href="/2015/08/22/mac-launchctl-nginx-on-port-80.html" class="post-title-link" itemprop="url">Mac下Launchctl无法启动80端口的nginx解决方案</a>
         </h2>
 
         <div class="post-meta-container">
@@ -532,8 +653,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/08/21/mac-launchctl-nginx-on-port-80.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/21/mac-launchctl-nginx-on-port-80.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/08/22/mac-launchctl-nginx-on-port-80.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/22/mac-launchctl-nginx-on-port-80.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -576,7 +697,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/08/10/ubuntu-apt-get-install-php-config.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/08/11/ubuntu-apt-get-install-php-config.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -594,7 +715,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/08/10/ubuntu-apt-get-install-php-config.html" class="post-title-link" itemprop="url">ubuntu的apt-get安装Nginx+PHP时的配置</a>
+          <a href="/2015/08/11/ubuntu-apt-get-install-php-config.html" class="post-title-link" itemprop="url">ubuntu的apt-get安装Nginx+PHP时的配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -624,8 +745,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/08/10/ubuntu-apt-get-install-php-config.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/10/ubuntu-apt-get-install-php-config.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/08/11/ubuntu-apt-get-install-php-config.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/08/11/ubuntu-apt-get-install-php-config.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -669,7 +790,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/07/18/mouse-wheel-control-page-change.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/07/19/mouse-wheel-control-page-change.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -687,7 +808,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/07/18/mouse-wheel-control-page-change.html" class="post-title-link" itemprop="url">鼠标滚轮控制页面切换</a>
+          <a href="/2015/07/19/mouse-wheel-control-page-change.html" class="post-title-link" itemprop="url">鼠标滚轮控制页面切换</a>
         </h2>
 
         <div class="post-meta-container">
@@ -717,8 +838,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/07/18/mouse-wheel-control-page-change.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/18/mouse-wheel-control-page-change.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/07/19/mouse-wheel-control-page-change.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/19/mouse-wheel-control-page-change.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -780,7 +901,7 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/07/10/manual-setup-crx.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/07/11/manual-setup-crx.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -798,7 +919,7 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/07/10/manual-setup-crx.html" class="post-title-link" itemprop="url">手动安装crx扩展</a>
+          <a href="/2015/07/11/manual-setup-crx.html" class="post-title-link" itemprop="url">手动安装crx扩展</a>
         </h2>
 
         <div class="post-meta-container">
@@ -828,8 +949,8 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/07/10/manual-setup-crx.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/10/manual-setup-crx.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/07/11/manual-setup-crx.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/11/manual-setup-crx.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -891,7 +1012,7 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/07/06/review-bookmarks.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/07/07/review-bookmarks.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -909,7 +1030,7 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/07/06/review-bookmarks.html" class="post-title-link" itemprop="url">终于又填了一个坑，Chrome Extension -- Review Bookmarks</a>
+          <a href="/2015/07/07/review-bookmarks.html" class="post-title-link" itemprop="url">终于又填了一个坑，Chrome Extension -- Review Bookmarks</a>
         </h2>
 
         <div class="post-meta-container">
@@ -939,8 +1060,8 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/07/06/review-bookmarks.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/06/review-bookmarks.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/07/07/review-bookmarks.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/07/07/review-bookmarks.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -984,7 +1105,7 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/06/25/checkbox-jquery-checked.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/06/26/checkbox-jquery-checked.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1002,7 +1123,7 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/06/25/checkbox-jquery-checked.html" class="post-title-link" itemprop="url">用jquery判断checkbox是否选中</a>
+          <a href="/2015/06/26/checkbox-jquery-checked.html" class="post-title-link" itemprop="url">用jquery判断checkbox是否选中</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1032,8 +1153,8 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/06/25/checkbox-jquery-checked.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/25/checkbox-jquery-checked.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/06/26/checkbox-jquery-checked.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/26/checkbox-jquery-checked.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1067,110 +1188,8 @@ $(&#39;body&#39;).bind(&#39;mousewheel&#39;, function(event, delta) &#123;
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/06/21/make-an-online-clipboard-with-swoole-and-redis.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/06/21/make-an-online-clipboard-with-swoole-and-redis.html" class="post-title-link" itemprop="url">用swoole + redis 实现一个网络剪切板</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2015-06-22 00:00:00" itemprop="dateCreated datePublished" datetime="2015-06-22T00:00:00+08:00">2015-06-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2015/06/21/make-an-online-clipboard-with-swoole-and-redis.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/06/21/make-an-online-clipboard-with-swoole-and-redis.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>应用地址：<a target="_blank" rel="noopener" href="https://oc.mypi.win/">https://oc.mypi.win</a></p>
-<p>之前一直计划接触下 swoole 、redis 、docker。最近时间稍微宽裕些，于是就把这三者揉到一起，<br>把之前自己用的剪切板重新写了一遍，之前的那个是个nodejs版的。</p>
-<p>redis在上一个公司有过接触，但是由于都是封装在底层的，平时用的时候，也只是调用方法，所以认识不够深刻。<br>这次读了些资料，主要是看了下redis提供的数据结构。现在我对这货的核心功能的认识就是，用C实现了一个安全操作层，<br>用来对内存进行读取写入操作，并且实现了几种数据结构，用于存储结构化的数据。</p>
-<p>开发目标是应用要能允许建立多个剪切板，每个剪切板有个唯一标示，每个剪切板的容量是50条。因此先想到了队列，<br>于是最后用的是redis的list的数据结构，用户提供剪切板的name和进入剪切板的password，产生唯一标示的方法如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$hash = md5($password . $name);</span><br></pre></td></tr></table></figure>
-
-<p>然后用$hash作为这个剪切板list的key。</p>
-<p>另外一个问题就是如何把websocket的frame_id 和 $hash 关联起来。<br>frame_id其实就是client_id，即连入到服务器的客户端的唯一标示，$hash和client的关系是，一对多的，<br>即一个剪切板，可能会有多台终端接入。</p>
-<p>最后考虑了下，使用redis的hash数据结构和list数据结构来完成这个对应关系。hash数据结构用来存储<br>frame_id 到 hash 的关系，即通过该结构，提供 frame_id 即可找到 对应的剪切板list的key，即 $hash 值。</p>
-<p>那么list结构是用来做什么的呢？list中存储的是 $hash 做key，每个 list 里面存储着当前连接到该剪切板的<br>所有终端的 frame_id，这个list的作用就是用来广播的，即同一个剪切板内的某个终端更新剪切板后，通知其他终端更新。</p>
-<p>关于制作swoole的docker镜像，可以看这里 <a href="https://akawa.ink/2015/06/13/make-swoole-docker.html">https://akawa.ink/2015/06/13/make-swoole-docker.html</a></p>
-<p>代码：<a target="_blank" rel="noopener" href="https://github.com/ety001/online-clipboard">https://github.com/ety001/online-clipboard</a></p>
-<p>swoole-docker：<a target="_blank" rel="noopener" href="https://registry.hub.docker.com/u/ety001/min_swoole/">https://registry.hub.docker.com/u/ety001/min_swoole/</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/17/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/19/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/17/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><span class="page-number current">18</span><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/19/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

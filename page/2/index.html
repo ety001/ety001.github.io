@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -194,6 +194,97 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2023/03/27/demo-code-about-how-to-create-a-new-account-by-steem-js-sdk.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/03/27/demo-code-about-how-to-create-a-new-account-by-steem-js-sdk.html" class="post-title-link" itemprop="url">Demo code about how to create a new account by Steem JS SDK</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-03-27 13:25:31" itemprop="dateCreated datePublished" datetime="2023-03-27T13:25:31+08:00">2023-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/03/27/demo-code-about-how-to-create-a-new-account-by-steem-js-sdk.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/03/27/demo-code-about-how-to-create-a-new-account-by-steem-js-sdk.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Here is the demo code which displays how to create a new account with Steem JS SDK in two different ways ( by taking fee or by taking interests of claimed account).</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">const steem = require(&#x27;steem&#x27;)</span><br><span class="line"></span><br><span class="line">const creator = &#x27;test1&#x27;;</span><br><span class="line">const activeWif = &#x27;&#x27;;</span><br><span class="line">const newUsername = &#x27;test2&#x27;;</span><br><span class="line">const newPasswd = &#x27;P5KZS6bp8sVxxxxxxxxxD48jwBKxshpNZxsYnJ&#x27;;</span><br><span class="line">const fee = &#x27;3.000 STEEM&#x27;</span><br><span class="line"></span><br><span class="line">const newKeys = steem.auth.getPrivateKeys(newUsername, newPasswd, [&#x27;owner&#x27;, &#x27;active&#x27;, &#x27;posting&#x27;, &#x27;memo&#x27;]);</span><br><span class="line">console.log(newKeys);</span><br><span class="line"></span><br><span class="line">const weightThreshold = 1;</span><br><span class="line">const accountAuths = [];</span><br><span class="line">const owner = &#123;</span><br><span class="line">    weight_threshold: weightThreshold,</span><br><span class="line">    account_auths: accountAuths,</span><br><span class="line">    key_auths: [[newKeys.ownerPubkey, 1]],</span><br><span class="line">&#125;;</span><br><span class="line">const active = &#123;</span><br><span class="line">    weight_threshold: weightThreshold,</span><br><span class="line">    account_auths: accountAuths,</span><br><span class="line">    key_auths: [[newKeys.activePubkey, 1]],</span><br><span class="line">&#125;;</span><br><span class="line">const posting = &#123;</span><br><span class="line">    weight_threshold: weightThreshold,</span><br><span class="line">    account_auths: accountAuths,</span><br><span class="line">    key_auths: [[newKeys.postingPubkey, 1]],</span><br><span class="line">&#125;;</span><br><span class="line">const memoKey = newKeys.memoPubkey;</span><br><span class="line"></span><br><span class="line">// create a new user by creator with 3.000 STEEM fee</span><br><span class="line">steem.broadcast.accountCreate(activeWif, fee, creator, newUsername, owner, active, posting, memoKey, &#x27;&#123;&#125;&#x27;, function(err, result) &#123;</span><br><span class="line">    console.log(err, result);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// create a new user by creator with claimed account interests</span><br><span class="line">const op = [</span><br><span class="line">    &quot;create_claimed_account&quot;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;creator&quot;: creator,</span><br><span class="line">        &quot;new_account_name&quot;: newUsername,</span><br><span class="line">        &quot;owner&quot;: owner,</span><br><span class="line">        &quot;active&quot;: active,</span><br><span class="line">        &quot;posting&quot;: posting,</span><br><span class="line">        &quot;memo_key&quot;: memoKey,</span><br><span class="line">        &quot;json_metadata&quot;: &quot;&#123;&#125;&quot;</span><br><span class="line">    &#125;</span><br><span class="line">];</span><br><span class="line">const tx = &#123;</span><br><span class="line">    operations: [op],</span><br><span class="line">&#125;;</span><br><span class="line">steem.broadcast.send(tx, [activeWif], function(err, result) &#123;</span><br><span class="line">    console.log(err, result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1281,107 +1372,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html" class="post-title-link" itemprop="url">解决 Bad SMB2 (sign_algo_id=0) signature for message 问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-03-23 08:24:49" itemprop="dateCreated datePublished" datetime="2022-03-23T08:24:49+08:00">2022-03-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>解决 Bad SMB2 (sign_algo_id&#x3D;0) signature for message 问题<br>最近线下培训教育机构都停了，孩子报的班都改为了线上授课，教练和老师会把视频发过来，看着学。</p>
-<p>由于手机屏幕太小，所以打算把视频放到家里的服务器上，通过 samba 共享让投影可以读取。</p>
-<p>但是却遇到不能连接的问题，看了下服务器的日志，发现有报错：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[2022/03/23 00:57:09.728871,  0] ../../libcli/smb/smb2_signing.c:722(smb2_signing_check_pdu)</span><br><span class="line">  Bad SMB2 (sign_algo_id=0) signature for message</span><br><span class="line">[2022/03/23 00:57:09.729142,  0] ../../lib/util/util.c:570(dump_data)</span><br><span class="line">  [0000] 73 34 44 8A 28 41 5E 00   D4 5E 9D 5D 38 39 9B A0   s4D.(A^. .^.]89..</span><br><span class="line">[2022/03/23 00:57:09.729263,  0] ../../lib/util/util.c:570(dump_data)</span><br><span class="line">  [0000] 6C 38 C8 B5 93 51 16 95   12 2C 64 92 54 A0 E2 8E   l8...Q.. .,d.T...</span><br><span class="line">[2022/03/23 00:57:42.258662,  0] ../../source3/smbd/server.c:1734(main)</span><br></pre></td></tr></table></figure>
-
-<p>搜索了一下，似乎只有一个方案，就是降级协议，在 <code>/etc/samba/smb.conf</code> 文件的 <code>[global]</code> 中增加下面的配置：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server min protocol = LANMAN2</span><br></pre></td></tr></table></figure>
-
-<p>重启服务， <code>systemctl restart smb</code>。</p>
-<p>再次连接，成功！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -194,6 +194,125 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/06/15/js-callback.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2011/06/15/js-callback.html" class="post-title-link" itemprop="url">浅谈JavaScript的回调函数，附实例</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2011-06-15 08:05:16" itemprop="dateCreated datePublished" datetime="2011-06-15T08:05:16+08:00">2011-06-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2011/06/15/js-callback.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/06/15/js-callback.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>1、背景<br>Javascript中的回调函数，相信大家都不陌生，最明显的例子是做Ajax请求时，提供的回调函数，<br>实际上DOM节点的事件处理方法（onclick,ondblclick等）也是回调函数。</p>
+<p>在使用DWR的时候，回调函数可以作为第一个或者最后一个参数出现，如：</p>
+<p>function callBack(result){<br>}<br>myDwrService.doSomething(param1,param2,callBack);&#x2F;&#x2F;DWR的推荐方式<br>&#x2F;&#x2F;或者<br>myDwrService.doSomething(callBack,param1,param2);</p>
+<p>2、问题描述<br>最近在使用Dojo+Dwr的时候，碰到一个问题：<br>如果回调函数是属于某个对象（记为obj1）的方法，等到DWR执行该回调函数的时候，<br>上下文却不是obj1。<br>表现的现象就是在回调函数中访问obj1的任何属性都是undefined。</p>
+<p>版本：Dojo1.3.1和dwr2</p>
+<p>3、模拟问题的代码<br>下面的测试代码可以模拟这个问题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">var context=&quot;全局&quot;;</span><br><span class="line">var testObj=&#123;</span><br><span class="line">context:&quot;初始&quot;,</span><br><span class="line">callback:function (str)&#123;//回调函数</span><br><span class="line">alert(&quot;callback:我所处的上下文中，context=&quot;+this.context+&quot;，我被回调的方式：&quot;+str);</span><br><span class="line">&#125;</span><br><span class="line">&#125;;//创建一个对象，作为测试回调函数的上下文</span><br><span class="line">testObj.context=&quot;已设置&quot;;</span><br><span class="line"></span><br><span class="line">function testCall()&#123;</span><br><span class="line">callMethod(testObj.callback);</span><br><span class="line">callObjMethod(testObj,testObj.callback);</span><br><span class="line">&#125;</span><br><span class="line">function callObjMethod(obj,method)&#123;</span><br><span class="line">method.call(obj,&quot;指定显式对象上下文回调&quot;);</span><br><span class="line">&#125;</span><br><span class="line">function callMethod(method)&#123;</span><br><span class="line">method(&quot;通过默认上下文回调&quot;);</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;a href=&quot;javascript:void(0)&quot; onclick=&quot;testCall()&quot;&gt;调用测试&lt;/a&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在testCall方法中，我用了两种方式回调“testObj.callback”方法：<br>第一种方式：method(“通过默认上下文回调”);<br>没有指定上下文，我们发现回调函数内部访问context的值是全局变量的值，<br>这说明，执行该方法的默认上下文是全局上下文。</p>
+<p>第二种方式：method.call(obj,”指定显式对象上下文回调”);<br>指定obj为method执行的上下文，就能够访问到对象内部的context。</p>
+<p>4、研究DWR<br>因为06年使用DOJO+DWR(1.0)的时候，已经遇到过这个问题，当时没做太多功课，直接改了dwr的源代码。</p>
+<p>现在用dwr2，于是想先看看DWR是不是对这个问题有新的处理方式，<br>将dwr.jar中的engine.js拿出来，查看了有关回调的相关代码（<code>_remoteHandleCallback</code>和<code>_execute</code>)，<br>发现对回调的处理方式似乎比1.0更简单，没办法将对象和方法一起传过去。</p>
+<p>5、做进一步的研究<br>因为这次DWR在项目中的使用太广泛，而且我相信这样的需求应该是可以满足的，于是没有立刻修改源码，</p>
+<p>首先，在Google上搜Dojo+dwr，没有查到什么结论，可能Dojo的用户不是太多。</p>
+<p>于是又搜”javascript callback object context“，得到一篇文章专门介绍java回调函数的文章：<br><a target="_blank" rel="noopener" href="http://bitstructures.com/2007/11/javascript-method-callbacks">http://bitstructures.com/2007/11/javascript-method-callbacks</a><br>最重要的一句话：</p>
+<pre><code>When a function is called as a method on an object (obj.alertVal()),
+&quot;this&quot; is bound to the object that it is called on (obj).
+And when a function is called without an object (func()),
+&quot;this&quot; is bound to the JavaScript global object (window in web browsers.)
+</code></pre>
+<p>这篇文章也提供了解决方案，就是使用Closure和匿名方法，<br>javascript中，在function内部创建一个function的时候，会自动创建一个closure，<br>而这个closure就能记住对应的function创建时的上下文。</p>
+<p>所以，如果这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var closureFunc=function()&#123;</span><br><span class="line">testObj.callback();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么无论在什么地方，直接调用closureFunc()和调用testObj.callback()是等价的。</p>
+<p>详情参见上面提到的文章：<a target="_blank" rel="noopener" href="http://bitstructures.com/2007/11/javascript-method-callbacks%E3%80%82">http://bitstructures.com/2007/11/javascript-method-callbacks。</a></p>
+<p>6、改进模拟代码<br>在模拟代码中，我们再增加一种回调方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">var context=&quot;全局&quot;;</span><br><span class="line">var testObj=&#123;</span><br><span class="line">context:&quot;初始&quot;,</span><br><span class="line">callback:function (str)&#123;//回调函数</span><br><span class="line">alert(&quot;callback:我所处的上下文中，context=&quot;+this.context+&quot;，我被回调的方式：&quot;+str);</span><br><span class="line">&#125;</span><br><span class="line">&#125;;//创建一个对象，作为测试回调函数的上下文</span><br><span class="line">testObj.context=&quot;已设置&quot;;</span><br><span class="line"></span><br><span class="line">function testCall()&#123;</span><br><span class="line">callMethod(testObj.callback);</span><br><span class="line">callWithClosure(function(param)&#123;testObj.callback(param);&#125;);</span><br><span class="line">callObjMethod(testObj,testObj.callback);</span><br><span class="line">&#125;</span><br><span class="line">function callObjMethod(obj,method)&#123;</span><br><span class="line">method.call(obj,&quot;指定显式对象上下文回调&quot;);</span><br><span class="line">&#125;</span><br><span class="line">function callMethod(method)&#123;</span><br><span class="line">method(&quot;通过默认上下文回调&quot;);</span><br><span class="line">&#125;</span><br><span class="line">function callWithClosure(method)&#123;</span><br><span class="line">method(&quot;通过Closure保持上下文回调&quot;);</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;a href=&quot;javascript:void(0)&quot; onclick=&quot;testCall()&quot;&gt;调用测试&lt;/a&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>测试以上代码，我们可以发现，通过Closure和通过显示指定对象得到的效果一致。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -294,7 +413,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/05/12/my-works.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/05/13/my-works.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -312,7 +431,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2011/05/12/my-works.html" class="post-title-link" itemprop="url">今天手绘的一些表情</a>
+          <a href="/2011/05/13/my-works.html" class="post-title-link" itemprop="url">今天手绘的一些表情</a>
         </h2>
 
         <div class="post-meta-container">
@@ -342,8 +461,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2011/05/12/my-works.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/05/12/my-works.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2011/05/13/my-works.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/05/13/my-works.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -505,7 +624,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/05/01/my-blog-move-host.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/05/02/my-blog-move-host.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -523,7 +642,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2011/05/01/my-blog-move-host.html" class="post-title-link" itemprop="url">网站再一次搬家</a>
+          <a href="/2011/05/02/my-blog-move-host.html" class="post-title-link" itemprop="url">网站再一次搬家</a>
         </h2>
 
         <div class="post-meta-container">
@@ -553,8 +672,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2011/05/01/my-blog-move-host.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/05/01/my-blog-move-host.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2011/05/02/my-blog-move-host.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/05/02/my-blog-move-host.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -702,7 +821,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/04/23/vps-3-dollar.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/04/24/vps-3-dollar.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -720,7 +839,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2011/04/23/vps-3-dollar.html" class="post-title-link" itemprop="url">今天新发现3美刀每月的便宜VPS</a>
+          <a href="/2011/04/24/vps-3-dollar.html" class="post-title-link" itemprop="url">今天新发现3美刀每月的便宜VPS</a>
         </h2>
 
         <div class="post-meta-container">
@@ -750,8 +869,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2011/04/23/vps-3-dollar.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/04/23/vps-3-dollar.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2011/04/24/vps-3-dollar.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/04/24/vps-3-dollar.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -896,7 +1015,7 @@ SolumsVM控制面板
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/04/13/c-plus-pointer.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/04/14/c-plus-pointer.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -914,7 +1033,7 @@ SolumsVM控制面板
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2011/04/13/c-plus-pointer.html" class="post-title-link" itemprop="url">C++的指针和数组的复习</a>
+          <a href="/2011/04/14/c-plus-pointer.html" class="post-title-link" itemprop="url">C++的指针和数组的复习</a>
         </h2>
 
         <div class="post-meta-container">
@@ -944,8 +1063,8 @@ SolumsVM控制面板
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2011/04/13/c-plus-pointer.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/04/13/c-plus-pointer.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2011/04/14/c-plus-pointer.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/04/14/c-plus-pointer.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1071,113 +1190,8 @@ SolumsVM控制面板
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2011/04/08/c-plus-point.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2011/04/08/c-plus-point.html" class="post-title-link" itemprop="url">c++中指针数组的研究</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2011-04-08 12:33:28" itemprop="dateCreated datePublished" datetime="2011-04-08T12:33:28+08:00">2011-04-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2011/04/08/c-plus-point.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2011/04/08/c-plus-point.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>上次的C++实验课第二个题，我一直在调试，今天终于搞出来了。下面我把整个过程写一写。<br>题目：</p>
-<p>【题目2】编写程序，输入十个国家名称用字符指针数组实现排序输出。</p>
-<p>【要求】<br>    ① 程序的功能是实现字符串的排序输出，例如，输入10个国家的名字分别是”China”,”USA”,”Australia”,”Austria”,”Brazil”,”Japan”,”England”,”Canada”,”Italy”,”France”，则排序后输出的结果为<br>    “Australia”,”Austria”,”Brazil”,”Canada”,”China”,”England”,”France”,”Italy”,”Japan”,”USA”<br>    ② 设计一个独立的函数ccmp，实现相应的功能<br>    ③ 函数调用时，参数通过字符指针数组传递<br>    【提示】<br>    ① ccmp函数可按如下方式定义：<br>    void ccmp(char * a[]);;<br>    其中，字符指针数组a中的指针分别指向10个国家的名称字符串<br>    ② 程序可用中的 <code>strcmp(char *s1,char * s2)</code> 函数对两个字符串的先后顺序进行判定，当s1&lt;s2时，返回值&lt;0，当s1&#x3D;s2时，返回值&#x3D;0 当s1&gt;s2时，返回值&gt;0</p>
-<p>我写的成品代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;string.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">void ccmp(char *a[]);</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	int i=0;</span><br><span class="line">	char* num[10]; //申请一个指针数组</span><br><span class="line">	char a[][10]=&#123;&quot;China&quot;,&quot;USA&quot;,&quot;Australia&quot;,&quot;Austria&quot;,&quot;Brazil&quot;,&quot;Japan&quot;,&quot;England&quot;,&quot;Canada&quot;,&quot;Italy&quot;,&quot;France&quot;&#125;;//初始字符串</span><br><span class="line"></span><br><span class="line">	for(i=0;i&lt;10;i++)num[i]=a[i];//把字符串数组发给一个指针数组</span><br><span class="line"></span><br><span class="line">	ccmp(num);</span><br><span class="line"></span><br><span class="line">	for(i=0;i&lt;10;i++)cout&lt;&lt;num[i]&lt;&lt;endl;//输出结果</span><br><span class="line"></span><br><span class="line">	return 0;</span><br><span class="line">&#125;</span><br><span class="line">void ccmp(char* a[])</span><br><span class="line">&#123;</span><br><span class="line">	char *temp;</span><br><span class="line">	for(int i=0;i&lt;9;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		for(int j=0;j&lt;9-i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			if(strcmp(a[j],a[j+1])&gt;0)</span><br><span class="line">			&#123;</span><br><span class="line">				temp=a[j];</span><br><span class="line">				a[j]=a[j+1];</span><br><span class="line">				a[j+1]=temp;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>出现的第一个问题是</strong>，对于指针数组的理解刚开始有些模糊，不过现在已经算是明白了。先说一下什么是指针？指针就是一个存储地址的变量。比如说我们申请一个存储整型数据的空间来存储整数，那么这个空间的地址就是一个整型指针，申请方法如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//这里申请了一个整型指针，我习惯把*靠近int书写，这样更容易理解，这个下面会讲到</span><br><span class="line">int* p;</span><br><span class="line">int a=6;</span><br><span class="line">p=&amp;a;</span><br></pre></td></tr></table></figure>
-
-<p>上面这个小段程序，我们可以把变量a理解为一个小房子，这个小房子建设在内存里，而要找到这个房子需要有一个地址，这个地址就是平时我们所说的内存地址，而p也同样也是一个小房子，只是这个房子很特殊，只存储其他普通房子的地址，也就是变量a的地址。指针一直困惑人的地方就是<em>p和p到底是什么意思？其实</em>p在内存里面是没有空间的，也就是说<em>p根本不是房子，p才是房子，就好比一把打开房门的钥匙，只有</em>和p组合在一起成为<em>p，才能读取出p中存放地址所指向空间内的内容（这里就是数字6）。那为什么申请普通变量的时候是<code>int a;</code>而申请指针变量的时候是<code>int *p</code>呢？这里a的地位难道和</em>p不是一回事吗？很显然这不是一回事，但是就是这种书写导致了初学者的混淆，这也是为什么我习惯写成<code>int* p;</code>了，也就是说<code>int</code>和<code>int*</code>不是一回事，而<code>a</code>和<code>p</code>的地位是一样的，都是一个变量，只不过p只能用来存储地址。不知道我罗嗦这么多，大家是否看懂了，不过至少我现在明白了，嘿嘿～</p>
-<p>那说完指针，就来看看指针数组。所谓的指针数组，就是一组变量每个变量都是用来并且只能用来存储地址的。在我写的那段程序中，用来存储全部字符串的数组<code>a[][]</code>，第一维维数其实就是字符串的个数，第二维的维数即是每个字符串的最大字符个数。我出现的第一个错误就是在这里出现的。依照上面的分析，那么a[0]的值就是第一个字符串“China”的首字符的地址，如果用cout输出a[0]的话，得到的输出结果就是“China”，因此程序写出来的第一遍中没有那个num指针数组。我在第13行直接写的是  ccmp(a[]);  然后就是一系列的错误，后来发现不能这样写，而是应该把这些字符串的首字母的地址给一个指针数组，然后用这个指针数组进行传值。于是就有了num指针数组。但是在使用num时，又出现了很多错误，但是错误的本质都是相同的，都是出错在赋值运算上。<strong>也就是说从一个变量到另一个变量的赋值时出错，原因就是没有搞清楚你正在使用变量的类型，它里面存储的东西的类型，以及将要用来承接用的变量的类型和它能存储什么样的数据。前前后后调试了很多遍，把每一个变量的每种情形都搞明白了，这里的错误也就解决了。</strong></p>
-<p><strong>第二个问题出在了strcmp()的使用上</strong>。最开始第26行，我写的是if(strcmp(a[j],a[j+1]))，也就是没有那个”&gt;0”。依照题目的意思只要a[j]&gt;a[j+1]，那么strcmp的返回值就是大于0的值，那么在if中就是真，但是运行的时候，排序就是不对。这里我插一句我是如何发现问题出现在这里的，下面的代码就是我的调试代码（只粘贴了ccmp函数），注意第8、11、12、13、17行的输出代码。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">void ccmp(char* a[])</span><br><span class="line">&#123;</span><br><span class="line">	char *temp;</span><br><span class="line">	for(int i=0;i&lt;9;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		for(int j=0;j&lt;9-i;j++)</span><br><span class="line">		&#123;</span><br><span class="line">			cout&lt;&lt;&quot;wai:&quot;&lt;&lt;strcmp(a[j],a[j+1])&lt;&lt;endl;</span><br><span class="line">			if(strcmp(a[j],a[j+1])&gt;0)</span><br><span class="line">			&#123;</span><br><span class="line">				cout&lt;&lt;strcmp(a[j],a[j+1])&lt;&lt;endl;</span><br><span class="line">				cout&lt;&lt;&quot;a[j]&quot;&lt;&lt;a[j]&lt;&lt;&quot;::a[j+1]&quot;&lt;&lt;a[j+1]&lt;&lt;endl;</span><br><span class="line">				cout&lt;&lt;j&lt;&lt;endl;</span><br><span class="line">				temp=a[j];</span><br><span class="line">				a[j]=a[j+1];</span><br><span class="line">				a[j+1]=temp;</span><br><span class="line">				cout&lt;&lt;&quot;a[j]&quot;&lt;&lt;a[j]&lt;&lt;&quot;::a[j+1]&quot;&lt;&lt;a[j+1]&lt;&lt;endl;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>最初的时候，我只是添加了第12行的代码，输出了每次循环体中的a[j]和a[j+1]，观察结果发现i&#x3D;0时的所有循环结果输出，“China”字符串一直在a[j]的位置，也就是说它一直都是被当作最大值的。为了验证想法，于是我又添加了第13和17行，又输出了一遍，我的判断被验证了，那么问题就出在了if的判断条件上了。我又添加第11行的代码，发现i&#x3D;0时，这里输出的全是-1，然后我又添加了第9行代码，继续运行，结果使我很疑惑，因为我的概念搞混了。<code>我在写程序的时候，想成了大于0的数代表真，小于等于0的数代表假。直到我开始写这篇文章了，我才反应过来，非0值都是真，只有0才是假（我为我自己学的不牢固感到悲哀啊……=_=）。</code>问题找到，加上”&gt;0”就解决了。</p>
-<p>以上即为我的整个实验过程，希望对各位正在学习C的看客有所帮助吧。有理解不到位的地方，还请高人指点一二，小弟不胜感激～</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/40/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><span class="page-number current">41</span><a class="page-number" href="/page/42/">42</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/42/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/40/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><span class="page-number current">41</span><a class="page-number" href="/page/42/">42</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/42/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

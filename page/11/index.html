@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -203,7 +203,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/12/11/raspberrypi-3b-home-assistant-mi-2.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -221,7 +221,152 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html" class="post-title-link" itemprop="url">在树莓派3B上搭建Hass.io并接入米家和iOS（一）</a>
+          <a href="/2018/12/11/raspberrypi-3b-home-assistant-mi-2.html" class="post-title-link" itemprop="url">在树莓派3B上搭建Hass.io并接入米家和iOS（二）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-11 00:00:00" itemprop="dateCreated datePublished" datetime="2018-12-11T00:00:00+08:00">2018-12-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-02-26 14:44:45" itemprop="dateModified" datetime="2021-02-26T14:44:45+08:00">2021-02-26</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2018/12/11/raspberrypi-3b-home-assistant-mi-2.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/12/11/raspberrypi-3b-home-assistant-mi-2.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>这是这个系列的第二篇，主要讲一下各种设备接入配置。先放一张目前我已经配置好的管理界面图片</p>
+<p><img src="/upload/20181211/HDJ48ZxcSFTWAt0MaM43oYcTagO0EuGLxxUY0PvW.png"></p>
+<p>再放一张配置好的 HomeKit 截图</p>
+<p><img src="/upload/20181211/5UcdR3uIjaHSc2HhVxr4zDqbSJ0YSrGAPMEtxZwT.png"></p>
+<p><em>开始这篇之前，首先你要确保你已经安装了上一篇中提到的 <strong>SSH &amp; Web Terminal</strong> 插件。</em></p>
+<h2 id="如何修改配置文件"><a href="#如何修改配置文件" class="headerlink" title="如何修改配置文件"></a>如何修改配置文件</h2><p>如果已经安装好了 <strong>SSH &amp; Web Terminal</strong> 插件并启动了，那么直接在 <strong>Terminal</strong> 中执行下面的命令就可以连接到树莓派上了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh hassio@hassio.local</span><br></pre></td></tr></table></figure>
+
+<p>连接后 ，用 <code>ls</code> 查看目录</p>
+<p><img src="/upload/20181211/GQsHPHWOazBkCO9RHLjcxJVrFgSsf054nBPYCSwf.png"></p>
+<p>各个目录的作用如下：</p>
+<ul>
+<li>addons 存储自定义插件</li>
+<li>backup 备份目录</li>
+<li>config 配置文件目录已经自定义组件</li>
+<li>share 共享目录</li>
+<li>ssl 证书目录</li>
+</ul>
+<p>我们配置的时候，主要就是修改 <code>config</code> 目录下的 <code>configuration.yaml</code> 文件。每次修改保存后，要先在后台的“配置”&#x3D;&gt;“通用”中“检查配置”，配置检查通过后，再重载配置或者重启服务（有些配置的修改需要重启服务才能生效）。</p>
+<h2 id="接入小米多功能网关"><a href="#接入小米多功能网关" class="headerlink" title="接入小米多功能网关"></a>接入小米多功能网关</h2><p>打开 <code>config/configuration.yaml</code>，加入下面的配置（根据你的情况选择是多网关还是单网关配置）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 使用单网关前提下，可不填 mac, mac 不带冒号</span><br><span class="line">xiaomi_aqara:</span><br><span class="line">  gateways:</span><br><span class="line">    - mac:</span><br><span class="line">      key: xxxxxxxxxxxxxxxx</span><br><span class="line"># 多个网关必须填入 mac，mac 不带冒号</span><br><span class="line">xiaomi_aqara:</span><br><span class="line">  gateways:</span><br><span class="line">    - mac: xxxxxxxxxxxx</span><br><span class="line">      key: xxxxxxxxxxxxxxxx</span><br><span class="line">    - mac: xxxxxxxxxxxx</span><br><span class="line">      key: xxxxxxxxxxxxxxxx</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>key</code> 的获取，需要打开米家App，打开网关页面，点击右上角的三个点，打开菜单后，选择“关于”，之后“玩法教程”下面的空白处点击5次，就会出现新的列表选项，点击“局域网通信协议”，里面的密码就是 <code>key</code> 了，另外要把最上面的那个“局域网通信协议”的开关打开。</p>
+<p>保存重启，接入网关成功后，通过网关接入的各种 <strong>ZigBee</strong> 设备都会被 <strong>HomeAssistant</strong> 识别出来。<br>目前的支持情况参见这里：<a target="_blank" rel="noopener" href="https://home-assistant.cc/component/xiaomi/zigbee/">https://home-assistant.cc/component/xiaomi/zigbee/</a></p>
+<h2 id="接入小米Wifi设备"><a href="#接入小米Wifi设备" class="headerlink" title="接入小米Wifi设备"></a>接入小米Wifi设备</h2><p>插座类的配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">switch:</span><br><span class="line">  - platform: xiaomi_miio</span><br><span class="line">    name: Original Xiaomi Mi Smart WiFi Socket</span><br><span class="line">    host: 192.168.130.59</span><br><span class="line">    token: YOUR_TOKEN</span><br></pre></td></tr></table></figure>
+
+<p>其中 <strong>name</strong> 可以自定义，<strong>host</strong> 是插座的IP地址，<strong>token</strong>则是通信用的凭证。</p>
+<p>小米Wifi设备由于各个生产厂商的原因，并不像智能网关那么人性给提供设备的 <code>token</code>。获取 <code>wifi</code> 设备的 <code>token</code> 需要折腾一下。网上给出了几种方案，我使用的是用 <strong>Root</strong> 过的安卓手机。在手机上安装 <strong>5.0.19</strong> 版的米家（这是最后一个版本支持通过本地sqlite数据库查询 <strong>token</strong> 的版本），登陆米家，然后手机上打开文件管理器（比如ES文件管理器），把 <code>/data/data/com.xiaomi.smarthome/databases/miio2.db</code> 复制到电脑可访问的目录（比如SD卡），然后通过<code>USB</code> 把文件从手机转移到电脑上，用 <code>sqlite</code> 软件查询 <code>devicerecord</code> 表，其中有个 <code>token</code> 字段，那个就是了。</p>
+<p>其他的一些Wifi设备参考这里：<a target="_blank" rel="noopener" href="https://home-assistant.cc/component/xiaomi/wifi/">https://home-assistant.cc/component/xiaomi/wifi/</a></p>
+<h2 id="接入苹果HomeKit"><a href="#接入苹果HomeKit" class="headerlink" title="接入苹果HomeKit"></a>接入苹果HomeKit</h2><p>配置这个的好处是，可以使用 <strong>Siri</strong> 来控制你的家庭智能场景和设备。</p>
+<p>增加如下配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">homekit:</span><br></pre></td></tr></table></figure>
+
+<p>保存重启服务后，会在主面板看到一个PIN码，这时候打开iPhone，找到 <strong>Home</strong> ，“添加配件”，“没有代码或无法扫描”，“输入代码”，把刚才的PIN码输入进去即可。</p>
+<p>其他配置可参考这里：<a target="_blank" rel="noopener" href="https://home-assistant.cc/homekit/builtin/">https://home-assistant.cc/homekit/builtin/</a></p>
+<h2 id="接入路由器"><a href="#接入路由器" class="headerlink" title="接入路由器"></a>接入路由器</h2><p>我的是网件路由刷的华硕的固件，因此找到华硕的配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">asuswrt:</span><br><span class="line">  host: 路由器IP</span><br><span class="line">  username:  路由器账号</span><br><span class="line">  password: 路由器密码</span><br><span class="line">  protocol: 协议 ssh 或者 telnet</span><br><span class="line">  port: 端口，默认 22,telnet 模式为 23</span><br><span class="line">  mode: 模式，默认 router，可选 ap</span><br><span class="line">  ssh_key: ssh 秘钥路径，可选</span><br></pre></td></tr></table></figure>
+
+<p>其他路由参考：<a target="_blank" rel="noopener" href="https://home-assistant.cc/component/router/">https://home-assistant.cc/component/router/</a></p>
+<h2 id="自定义组件"><a href="#自定义组件" class="headerlink" title="自定义组件"></a>自定义组件</h2><p>有时候，有些设备可能自带的组件并不支持，那么需要去搜索安装下第三方组件，比如小米直流电风扇，就需要去下载 <a target="_blank" rel="noopener" href="https://github.com/syssi/xiaomi_fan">https://github.com/syssi/xiaomi_fan</a> 到 <code>config</code> 目录下面，</p>
+<p><img src="/upload/20181211/cuLXvbOSLqdzFzWvg8h8KqkTxjvb5UxWvb8KRBIZ.png"></p>
+<p>然后按照第三方插件给的说明增加配置即可。</p>
+<h2 id="位置和天气设置"><a href="#位置和天气设置" class="headerlink" title="位置和天气设置"></a>位置和天气设置</h2><p>查询下经纬度，可以把经纬度设置好，之后就能显示当地的日落日出时间了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">homeassistant:</span><br><span class="line">  # 名称，可为中文</span><br><span class="line">  name: 家</span><br><span class="line">  # 纬度</span><br><span class="line">  latitude: !secret latitude</span><br><span class="line">  # 经度</span><br><span class="line">  longitude: !secret longitude</span><br><span class="line">  # 海拔</span><br><span class="line">  elevation: 11</span><br><span class="line">  # 度量单位，这里选择“米”</span><br><span class="line">  unit_system: metric</span><br><span class="line">  # 时区</span><br><span class="line">  time_zone: Asia/Shanghai</span><br><span class="line">  # 设备个性化</span><br><span class="line">  customize: </span><br></pre></td></tr></table></figure>
+
+<p>我使用的是yahoo天气的数据，配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">weather:</span><br><span class="line">  - platform: ywether</span><br><span class="line">    woeid: 2168257</span><br><span class="line">    name: Zibo</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>woeid</code> 需要自己去 <a target="_blank" rel="noopener" href="https://www.yahoo.com/news/weather/">https://www.yahoo.com/news/weather/</a> 查询城市天气，URL中的id即为 <code>woeid</code>。</p>
+<h2 id="个性化设置"><a href="#个性化设置" class="headerlink" title="个性化设置"></a>个性化设置</h2><p>个性化设置在 “配置” -&gt; “自定义” 里面，在这里可以修改每个接入设备的名字等参数，并且可以设置是否隐藏（这个还是挺有用的，尤其是接入了路由器的情况下，会有很多的 <strong>device_tracker</strong> 类的设备，都显示在面板上显然是很乱的）。</p>
+<p>一些可以参考的参数：<a target="_blank" rel="noopener" href="https://home-assistant.cc/system/customize/">https://home-assistant.cc/system/customize/</a></p>
+<h2 id="智能语言"><a href="#智能语言" class="headerlink" title="智能语言"></a>智能语言</h2><p>配置这个的目的是为了能通过语音合成技术进行结果输出（播报）。</p>
+<p>直接参考这里即可： <a target="_blank" rel="noopener" href="https://home-assistant.cc/component/nlp/">https://home-assistant.cc/component/nlp/</a></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>基本的配置就这些，目前家里所有的智能设备都加入到了 <strong>Home Assistant</strong> 的管理中了，之后就是配置各种智能逻辑了，等我试验过后，会在下一篇写一下。</p>
+<p>Over！</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/12/06/raspberrypi-3b-home-assistant-mi-1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2018/12/06/raspberrypi-3b-home-assistant-mi-1.html" class="post-title-link" itemprop="url">在树莓派3B上搭建Hass.io并接入米家和iOS（一）</a>
         </h2>
 
         <div class="post-meta-container">
@@ -251,8 +396,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/12/05/raspberrypi-3b-home-assistant-mi-1.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/12/06/raspberrypi-3b-home-assistant-mi-1.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/12/06/raspberrypi-3b-home-assistant-mi-1.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -321,7 +466,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/12/04/raspberrypi-3b-home-assistant-mi.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/12/05/raspberrypi-3b-home-assistant-mi.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -339,7 +484,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/12/04/raspberrypi-3b-home-assistant-mi.html" class="post-title-link" itemprop="url">在树莓派3B上搭建Hass.io并接入米家和iOS（一）</a>
+          <a href="/2018/12/05/raspberrypi-3b-home-assistant-mi.html" class="post-title-link" itemprop="url">在树莓派3B上搭建Hass.io并接入米家和iOS（一）</a>
         </h2>
 
         <div class="post-meta-container">
@@ -369,8 +514,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/12/04/raspberrypi-3b-home-assistant-mi.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/12/04/raspberrypi-3b-home-assistant-mi.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/12/05/raspberrypi-3b-home-assistant-mi.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/12/05/raspberrypi-3b-home-assistant-mi.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -426,7 +571,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/11/22/coin-return-0.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/11/23/coin-return-0.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -444,7 +589,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/11/22/coin-return-0.html" class="post-title-link" itemprop="url">手里第一个归零的币 -- BlockCDN</a>
+          <a href="/2018/11/23/coin-return-0.html" class="post-title-link" itemprop="url">手里第一个归零的币 -- BlockCDN</a>
         </h2>
 
         <div class="post-meta-container">
@@ -474,8 +619,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/11/22/coin-return-0.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/22/coin-return-0.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/11/23/coin-return-0.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/23/coin-return-0.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -520,7 +665,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/11/09/docker-lnmp.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/11/10/docker-lnmp.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -538,7 +683,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/11/09/docker-lnmp.html" class="post-title-link" itemprop="url">命令行版的docker化lnmp搭建</a>
+          <a href="/2018/11/10/docker-lnmp.html" class="post-title-link" itemprop="url">命令行版的docker化lnmp搭建</a>
         </h2>
 
         <div class="post-meta-container">
@@ -568,8 +713,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/11/09/docker-lnmp.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/09/docker-lnmp.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/11/10/docker-lnmp.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/10/docker-lnmp.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -636,7 +781,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/11/03/php-steem-voting-power.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/11/04/php-steem-voting-power.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -654,7 +799,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/11/03/php-steem-voting-power.html" class="post-title-link" itemprop="url">用php如何获取当前Steem用户的Voting Power</a>
+          <a href="/2018/11/04/php-steem-voting-power.html" class="post-title-link" itemprop="url">用php如何获取当前Steem用户的Voting Power</a>
         </h2>
 
         <div class="post-meta-container">
@@ -684,8 +829,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/11/03/php-steem-voting-power.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/03/php-steem-voting-power.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/11/04/php-steem-voting-power.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/04/php-steem-voting-power.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -729,7 +874,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/11/03/php-upvote.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/11/04/php-upvote.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -747,7 +892,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/11/03/php-upvote.html" class="post-title-link" itemprop="url">PHP如何计算当前账号Upvote的价值</a>
+          <a href="/2018/11/04/php-upvote.html" class="post-title-link" itemprop="url">PHP如何计算当前账号Upvote的价值</a>
         </h2>
 
         <div class="post-meta-container">
@@ -777,8 +922,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/11/03/php-upvote.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/03/php-upvote.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/11/04/php-upvote.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/04/php-upvote.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -832,7 +977,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/10/31/docker-eth.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/11/01/docker-eth.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -850,7 +995,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/10/31/docker-eth.html" class="post-title-link" itemprop="url">利用docker搭建eth智能合约开发环境</a>
+          <a href="/2018/11/01/docker-eth.html" class="post-title-link" itemprop="url">利用docker搭建eth智能合约开发环境</a>
         </h2>
 
         <div class="post-meta-container">
@@ -880,8 +1025,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/10/31/docker-eth.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/31/docker-eth.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/11/01/docker-eth.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/11/01/docker-eth.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -955,7 +1100,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/10/27/php-steempermvests-or-get-newest-steempermvests-in-php.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/10/28/php-steempermvests-or-get-newest-steempermvests-in-php.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -973,7 +1118,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/10/27/php-steempermvests-or-get-newest-steempermvests-in-php.html" class="post-title-link" itemprop="url">在PHP中获取最新的 steem_per_mvests</a>
+          <a href="/2018/10/28/php-steempermvests-or-get-newest-steempermvests-in-php.html" class="post-title-link" itemprop="url">在PHP中获取最新的 steem_per_mvests</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1003,8 +1148,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/10/27/php-steempermvests-or-get-newest-steempermvests-in-php.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/27/php-steempermvests-or-get-newest-steempermvests-in-php.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/10/28/php-steempermvests-or-get-newest-steempermvests-in-php.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/28/php-steempermvests-or-get-newest-steempermvests-in-php.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1044,7 +1189,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/10/19/google-play.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/10/20/google-play.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1062,7 +1207,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/10/19/google-play.html" class="post-title-link" itemprop="url">原来最干净的安装谷歌套件的方法是这样</a>
+          <a href="/2018/10/20/google-play.html" class="post-title-link" itemprop="url">原来最干净的安装谷歌套件的方法是这样</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1092,8 +1237,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2018/10/19/google-play.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/19/google-play.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2018/10/20/google-play.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/20/google-play.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1127,134 +1272,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2018/10/18/4c-xposed.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2018/10/18/4c-xposed.html" class="post-title-link" itemprop="url">小米4c刷xposed</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2018-10-19 00:00:00" itemprop="dateCreated datePublished" datetime="2018-10-19T00:00:00+08:00">2018-10-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-02-26 14:44:45" itemprop="dateModified" datetime="2021-02-26T14:44:45+08:00">2021-02-26</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2018/10/18/4c-xposed.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/18/4c-xposed.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近为了研究 <code>xposed</code> 模块开发，我拿我的一块手机跟我妈换了下，把她手里的小米4C换过来，准备用这个作为开发机使用。折腾了一整天，终于是搞定了。</p>
-<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
-<li>解锁BL</li>
-<li>线刷包 libra_images_6.1.7_20151221.0000.11_5.1_cn_b09dac70a0.tgz</li>
-<li>cofface_twrp_recovery.img</li>
-<li>SuperSU-v2.79-SR2-20170103_automode_by_kane.apk</li>
-<li>XposedInstaller_3.0_alpha4.apk</li>
-<li>xposed-v86-sdk22-arm64-MIUI-edition-by-Solar_-20160710.zip</li>
-</ul>
-<h2 id="下载所需的资源"><a href="#下载所需的资源" class="headerlink" title="下载所需的资源"></a>下载所需的资源</h2><p>准备工作中列出的各种工具，都已放到百度云了，链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1GPumHzCjc89o-jZlKh1V3g">https://pan.baidu.com/s/1GPumHzCjc89o-jZlKh1V3g</a> 提取码: 25xf。其中 <code>cofface_twrp_recovery.img</code> 在 <code>小米4C刷第三方recovery工具2.8.7.3.zip</code> 中。</p>
-<h2 id="解锁BL"><a href="#解锁BL" class="headerlink" title="解锁BL"></a>解锁BL</h2><p>先去这里 <a target="_blank" rel="noopener" href="http://www.miui.com/unlock/index.html">http://www.miui.com/unlock/index.html</a> 申请解锁手机BL的资格。BL 就是 BootLoader，解锁后才能修改 BootLoader。</p>
-<p>获得解锁资格后如下图所示</p>
-<p><img src="/img/2018/10/UkRh6Ph10pIP7MGaLraCrD9AZcBuyEDTriIv5p9Z.png"></p>
-<p>然后下载解锁工具。解锁工具只有 Windows 版，因此如果你用的是非 Windows 系统，请自行准备 Windows 系统 或者虚拟机。启动解锁工具，会提示登陆</p>
-<p><img src="/img/2018/10/7qF2377KTb81yWPmvKza2LKu1KkFP0fWMvo2hPxP.png"></p>
-<p>登陆后，将手机关机进入Fastboot模式（同时按电源键及音量减键），手机上会出现米兔在维修机器人的图标，</p>
-<p><img src="/img/2018/10/Yn8HKdkbaOfiRuFIJMIUZayXYNLyizi7EBkMkJWp.png"></p>
-<p>然后这时用数据线连接电脑和手机，然后在电脑上点击“解锁”</p>
-<p><img src="/img/2018/10/bdHTi9xMCgEjE3geFVuunbaiPPuYu7PxvGNp60id.png"></p>
-<p>大约一分钟左右即可完成解锁，然后系统会自动重启。</p>
-<h2 id="刷入低版本系统"><a href="#刷入低版本系统" class="headerlink" title="刷入低版本系统"></a>刷入低版本系统</h2><p>目前已知 6.1.7 及以下的版本是没有任何锁的，之后的版本都对 <code>/system</code> 分区加锁了，因此我们需要先刷入低版本的系统。从 <code>http://www.miui.com/shuaji-393.html</code> 这里可以找到通用刷机工具，按照这个网页中的教程操作即可。</p>
-<p>刷完后，手机自动重启，第一次重启会很长时间，耐心等待直到进入系统。</p>
-<p>做完系统初始化配置后，进入到设置里，找到“关于手机”，一直点击 MIUI版本上 直到开启“开发者选项”，切回设置主菜单，“其他高级设置”里面找到“开发者选项”，打开“USB调试”。</p>
-<h2 id="刷入第三方Recovery"><a href="#刷入第三方Recovery" class="headerlink" title="刷入第三方Recovery"></a>刷入第三方Recovery</h2><p>再次进入 Fastboot 模式，手机线连接手机和电脑，在电脑上解压 <code>小米4C刷第三方recovery工具2.8.7.3.zip</code>，如果是 <code>windows</code> 系统，直接执行里面的一个 <code>bat</code> 脚本即可完成第三方 <code>Recovery</code> 刷入。</p>
-<p>由于我 Mac 下有 <code>ADB</code> 和 <code>Fastboot</code> 工具，因此我是手动刷入并引导进入 <code>Recovery</code> 的，如下图：</p>
-<p><img src="/img/2018/10/UDex969zG9hxmhoTV4LJts2mxhCWz52jzXvqy1hh.jpeg"></p>
-<h2 id="对系统进行ROOT"><a href="#对系统进行ROOT" class="headerlink" title="对系统进行ROOT"></a>对系统进行ROOT</h2><p>刷入第三方 <code>Recovery</code> 后，会自动重启进入 <code>Recovery</code>，界面如下图</p>
-<p><img src="/img/2018/10/I5Qas0Jcv8se42g1hIZ8XWlWGSjYnmKelbV9OweH.png"></p>
-<p>这时在我的电脑里应该能找到手机的SD卡的那个盘，把 <code>SuperSU-v2.79-SR2-20170103_automode_by_kane.apk</code> 拷贝进去，然后回到手机，点击“安装刷机包”，找到 <code>SuperSU-v2.79-SR2-20170103_automode_by_kane.apk</code>，并滑动滑块开始安装，等提示完成后，即可重启手机。进入系统后就能在桌面看到新安装的“超级授权”应用了。</p>
-<h2 id="安装-xposed"><a href="#安装-xposed" class="headerlink" title="安装 xposed"></a>安装 xposed</h2><p>从我的电脑里，把 <code>XposedInstaller_3.0_alpha4.apk</code> 和 <code>xposed-v86-sdk22-arm64-MIUI-edition-by-Solar_-20160710.zip</code> 复制进手机SD卡。在手机上安装 <code>XposedInstaller_3.0_alpha4.apk</code>。</p>
-<p>安装后，进入 <code>Recovery</code> 模式，即一直按住电源键和音量增键，直至出现开机Logo的时候，松开电源键，再等几秒后，进入 <code>Recovery</code>，这时松开音量增键。</p>
-<p>点击进入“安装刷机包”，选择 <code>xposed-v86-sdk22-arm64-MIUI-edition-by-Solar_-20160710.zip</code>，滑动进行确认后开始安装，完成后重启手机。进入系统后，打开 <code>xposed installer</code> 点击“框架”，就能看到如下的字样</p>
-<p><img src="/img/2018/10/roVYl0V9QEIrOv0knnKf0Qz3Yi3ENQHA326VpcFl.png"></p>
-<p>说明我们的 <code>xposed</code> 已经安装好了。</p>
-<p>为了测试下是否安装正确，我安装了一个微信机器人的模块，并且把微信机器人放到了群里测试了下，效果如下：</p>
-<p><img src="/img/2018/10/UYG0JYVq5CO0gNxEcNx3N8ZrrXWjoWISYCRv0QUR.png"></p>
-<p>至此，完成！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/12/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/12/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

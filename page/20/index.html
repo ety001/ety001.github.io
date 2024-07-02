@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -203,7 +203,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/03/13/get-err-lines-from-thinkphp-sae-log.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/03/30/raspberry-pi-resolved-volume-not-properly-unmounted.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -221,7 +221,109 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/03/13/get-err-lines-from-thinkphp-sae-log.html" class="post-title-link" itemprop="url">从Thinkphp框架Sae版Log中提取ERR日志</a>
+          <a href="/2015/03/30/raspberry-pi-resolved-volume-not-properly-unmounted.html" class="post-title-link" itemprop="url">解决树莓派Archlinux的Volume was not properly unmounted问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2015-03-30 00:00:00" itemprop="dateCreated datePublished" datetime="2015-03-30T00:00:00+08:00">2015-03-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-02-26 14:44:45" itemprop="dateModified" datetime="2021-02-26T14:44:45+08:00">2021-02-26</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/03/30/raspberry-pi-resolved-volume-not-properly-unmounted.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/30/raspberry-pi-resolved-volume-not-properly-unmounted.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>回到家后整理完所有的行李后，第一件事，就是把我的树莓派上电，但是系统起来后，发现分区是read-only的状态，<br>于是输入下面的命令，发现了错误：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">[root@alarmpi ~]# mount</span><br><span class="line">/dev/mmcblk0p2 on / type ext4 (ro,relatime,data=ordered)</span><br><span class="line">devtmpfs on /dev type devtmpfs (rw,relatime,size=217368k,nr_inodes=54342,mode=755)</span><br><span class="line">sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">securityfs on /sys/kernel/security type securityfs (rw,nosuid,nodev,noexec,relatime)</span><br><span class="line">tmpfs on /dev/shm type tmpfs (rw,nosuid,nodev)</span><br><span class="line">devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=000)</span><br><span class="line">tmpfs on /run type tmpfs (rw,nosuid,nodev,mode=755)</span><br><span class="line">tmpfs on /sys/fs/cgroup type tmpfs (ro,nosuid,nodev,noexec,mode=755)</span><br><span class="line">cgroup on /sys/fs/cgroup/systemd type cgroup (rw,nosuid,nodev,noexec,relatime,xattr,release_agent=/usr/lib/systemd/systemd-cgroups-agent,name=systemd)</span><br><span class="line">cgroup on /sys/fs/cgroup/net_cls,net_prio type cgroup (rw,nosuid,nodev,noexec,relatime,net_cls,net_prio)</span><br><span class="line">cgroup on /sys/fs/cgroup/devices type cgroup (rw,nosuid,nodev,noexec,relatime,devices)</span><br><span class="line">cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup (rw,nosuid,nodev,noexec,relatime,cpu,cpuacct)</span><br><span class="line">cgroup on /sys/fs/cgroup/freezer type cgroup (rw,nosuid,nodev,noexec,relatime,freezer)</span><br><span class="line">cgroup on /sys/fs/cgroup/perf_event type cgroup (rw,nosuid,nodev,noexec,relatime,perf_event)</span><br><span class="line">cgroup on /sys/fs/cgroup/bfqio type cgroup (rw,nosuid,nodev,noexec,relatime,bfqio)</span><br><span class="line">cgroup on /sys/fs/cgroup/blkio type cgroup (rw,nosuid,nodev,noexec,relatime,blkio)</span><br><span class="line">cgroup on /sys/fs/cgroup/cpuset type cgroup (rw,nosuid,nodev,noexec,relatime,cpuset)</span><br><span class="line">systemd-1 on /proc/sys/fs/binfmt_misc type autofs (rw,relatime,fd=22,pgrp=1,timeout=300,minproto=5,maxproto=5,direct)</span><br><span class="line">tmpfs on /tmp type tmpfs (rw)</span><br><span class="line">mqueue on /dev/mqueue type mqueue (rw,relatime)</span><br><span class="line">debugfs on /sys/kernel/debug type debugfs (rw,relatime)</span><br><span class="line">configfs on /sys/kernel/config type configfs (rw,relatime)</span><br><span class="line">/dev/mmcblk0p1 on /boot type vfat (rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,errors=remount-ro)</span><br><span class="line">/dev/sda1 on /pan type ext4 (rw,relatime,data=ordered)</span><br><span class="line">tmpfs on /run/user/0 type tmpfs (rw,nosuid,nodev,relatime,size=44324k,mode=700)</span><br><span class="line"></span><br><span class="line">[root@alarmpi ~]# dmesg | tail</span><br><span class="line">[    7.324417] systemd[1]: Started udev Coldplug all Devices.</span><br><span class="line">[    8.018313] systemd[1]: Started Journal Service.</span><br><span class="line">[    8.866288] systemd-journald[95]: Received request to flush runtime journal from PID 1</span><br><span class="line">[   10.234796] random: nonblocking pool is initialized</span><br><span class="line">[   10.244188] FAT-fs (mmcblk0p1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.</span><br><span class="line">[   11.250720] EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)</span><br><span class="line">[   12.784305] smsc95xx 1-1.1:1.0 eth0: hardware isn&#x27;t capable of remote wakeup</span><br><span class="line">[   12.793837] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready</span><br><span class="line">[   14.203803] smsc95xx 1-1.1:1.0 eth0: link up, 100Mbps, full-duplex, lpa 0x4DE1</span><br><span class="line">[   14.288086] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready</span><br></pre></td></tr></table></figure>
+
+<p>发现&#x2F;dev&#x2F;mmcblk0p2是以ro模式挂载的，而mmcblk0p1分区可能有数据corrupt。执行下面的命令，把根目录重新挂载，<br>然后安装下fsck.fat，并修复&#x2F;boot分区的data corrupt。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[root@alarmpi ~]# mount -o remount,rw /</span><br><span class="line"></span><br><span class="line">[root@alarmpi ~]# pacman -S dosfstools</span><br><span class="line">resolving dependencies...</span><br><span class="line">looking for conflicting packages...</span><br><span class="line"></span><br><span class="line">Packages (1) dosfstools-3.0.27-1</span><br><span class="line"></span><br><span class="line">Total Download Size:   0.07 MiB</span><br><span class="line">Total Installed Size:  0.24 MiB</span><br><span class="line"></span><br><span class="line">:: Proceed with installation? [Y/n] y</span><br><span class="line">:: Retrieving packages ...</span><br><span class="line"> dosfstools-3.0.27-1-armv6h                                                        69.1 KiB   691K/s 00:00 [################################################################] 100%</span><br><span class="line">(1/1) checking keys in keyring                                                                             [################################################################] 100%</span><br><span class="line">(1/1) checking package integrity                                                                           [################################################################] 100%</span><br><span class="line">(1/1) loading package files                                                                                [################################################################] 100%</span><br><span class="line">(1/1) checking for file conflicts                                                                          [################################################################] 100%</span><br><span class="line">(1/1) checking available disk space                                                                        [################################################################] 100%</span><br><span class="line">(1/1) installing dosfstools                                                                                [################################################################] 100%</span><br><span class="line"></span><br><span class="line">[root@alarmpi ~]# umount /boot</span><br><span class="line"></span><br><span class="line">[root@alarmpi ~]fsck.fat -V /dev/mmcblk0p1</span><br><span class="line">fsck.fat 3.0.27 (2014-11-12)</span><br><span class="line">Starting check/repair pass.</span><br><span class="line">Starting verification pass.</span><br><span class="line">/dev/mmcblk0p1: 130 files, 7556/51091 clusters</span><br><span class="line"></span><br><span class="line">[root@alarmpi ~]# fsck.fat -a /dev/mmcblk0p1</span><br><span class="line">fsck.fat 3.0.27 (2014-11-12)</span><br><span class="line">/dev/mmcblk0p1: 130 files, 7556/51091 clusters</span><br><span class="line"></span><br><span class="line">[root@alarmpi ~]# mount /boot/</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>修复后，重启，发现&#x2F;目录的挂载还是ro，于是看了下&#x2F;boot&#x2F;cmdline.txt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@alarmpi ~]# cat /boot/cmdline.txt</span><br><span class="line">selinux=0 plymouth.enable=0 smsc95xx.turbo_mode=N dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=noop rootwait</span><br></pre></td></tr></table></figure>
+
+<p>在该文件的mmcblk0p2后面加入rw，如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@alarmpi ~]# cat /boot/cmdline.txt</span><br><span class="line">selinux=0 plymouth.enable=0 smsc95xx.turbo_mode=N dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rw rootfstype=ext4 elevator=noop rootwait</span><br></pre></td></tr></table></figure>
+
+<p>重启后，一切正常了。不过这到底是啥原因导致的呢？经过google，发现是由于意外掉电频度太高，导致的数据损坏，<a target="_blank" rel="noopener" href="http://ruiabreu.org/2013-06-02-booting-raspberry-pi-in-readonly.html">参考这里</a>。貌似好几篇文章都提到了，要把分区做成read-only，需要升级的时候再打开。由于现在我的树莓派内的软件还都没有完全调好，<br>所以就先不做成read-only了。以后做好bt下载机和家庭数据中心后，再来设置下。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/03/14/get-err-lines-from-thinkphp-sae-log.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2015/03/14/get-err-lines-from-thinkphp-sae-log.html" class="post-title-link" itemprop="url">从Thinkphp框架Sae版Log中提取ERR日志</a>
         </h2>
 
         <div class="post-meta-container">
@@ -251,8 +353,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/03/13/get-err-lines-from-thinkphp-sae-log.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/13/get-err-lines-from-thinkphp-sae-log.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/03/14/get-err-lines-from-thinkphp-sae-log.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/14/get-err-lines-from-thinkphp-sae-log.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -298,7 +400,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/03/08/nginx-proxy-config.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/03/09/nginx-proxy-config.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -316,7 +418,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/03/08/nginx-proxy-config.html" class="post-title-link" itemprop="url">nginx反向代理配置</a>
+          <a href="/2015/03/09/nginx-proxy-config.html" class="post-title-link" itemprop="url">nginx反向代理配置</a>
         </h2>
 
         <div class="post-meta-container">
@@ -346,8 +448,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/03/08/nginx-proxy-config.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/08/nginx-proxy-config.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/03/09/nginx-proxy-config.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/09/nginx-proxy-config.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -393,7 +495,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/03/06/file-get-content-cannot-catch-the-webpage-but-explorer-can-get-it.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/03/07/file-get-content-cannot-catch-the-webpage-but-explorer-can-get-it.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -411,7 +513,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/03/06/file-get-content-cannot-catch-the-webpage-but-explorer-can-get-it.html" class="post-title-link" itemprop="url">file_get_content抓取数据为false，但浏览器可以访问</a>
+          <a href="/2015/03/07/file-get-content-cannot-catch-the-webpage-but-explorer-can-get-it.html" class="post-title-link" itemprop="url">file_get_content抓取数据为false，但浏览器可以访问</a>
         </h2>
 
         <div class="post-meta-container">
@@ -441,8 +543,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/03/06/file-get-content-cannot-catch-the-webpage-but-explorer-can-get-it.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/06/file-get-content-cannot-catch-the-webpage-but-explorer-can-get-it.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/03/07/file-get-content-cannot-catch-the-webpage-but-explorer-can-get-it.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/07/file-get-content-cannot-catch-the-webpage-but-explorer-can-get-it.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -483,7 +585,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/03/06/file-put-content-can-post.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/03/07/file-put-content-can-post.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -501,7 +603,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/03/06/file-put-content-can-post.html" class="post-title-link" itemprop="url">file_put_content也可以post提交数据</a>
+          <a href="/2015/03/07/file-put-content-can-post.html" class="post-title-link" itemprop="url">file_put_content也可以post提交数据</a>
         </h2>
 
         <div class="post-meta-container">
@@ -531,8 +633,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/03/06/file-put-content-can-post.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/06/file-put-content-can-post.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/03/07/file-put-content-can-post.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/07/file-put-content-can-post.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -675,7 +777,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/01/22/expand-raspberry-pi-sd-card-space.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/01/23/expand-raspberry-pi-sd-card-space.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -693,7 +795,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/01/22/expand-raspberry-pi-sd-card-space.html" class="post-title-link" itemprop="url">扩容树莓派SD卡分区空间</a>
+          <a href="/2015/01/23/expand-raspberry-pi-sd-card-space.html" class="post-title-link" itemprop="url">扩容树莓派SD卡分区空间</a>
         </h2>
 
         <div class="post-meta-container">
@@ -723,8 +825,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/01/22/expand-raspberry-pi-sd-card-space.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/22/expand-raspberry-pi-sd-card-space.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/01/23/expand-raspberry-pi-sd-card-space.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/23/expand-raspberry-pi-sd-card-space.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1091,7 +1193,7 @@ Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/01/16/when-click-bootstrap-modal-open-and-auto-close-immediately.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/01/17/when-click-bootstrap-modal-open-and-auto-close-immediately.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1109,7 +1211,7 @@ Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/01/16/when-click-bootstrap-modal-open-and-auto-close-immediately.html" class="post-title-link" itemprop="url">bootstrap的modal打开后立即自动关闭</a>
+          <a href="/2015/01/17/when-click-bootstrap-modal-open-and-auto-close-immediately.html" class="post-title-link" itemprop="url">bootstrap的modal打开后立即自动关闭</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1139,8 +1241,8 @@ Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2015/01/16/when-click-bootstrap-modal-open-and-auto-close-immediately.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/16/when-click-bootstrap-modal-open-and-auto-close-immediately.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2015/01/17/when-click-bootstrap-modal-open-and-auto-close-immediately.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/17/when-click-bootstrap-modal-open-and-auto-close-immediately.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1173,112 +1275,8 @@ Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2015/01/16/full-screen-background-img.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2015/01/16/full-screen-background-img.html" class="post-title-link" itemprop="url">背景图片拉伸</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2015-01-16 15:02:58" itemprop="dateCreated datePublished" datetime="2015-01-16T15:02:58+08:00">2015-01-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2015/01/16/full-screen-background-img.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/01/16/full-screen-background-img.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>需要做一个页面让背景图片能全屏平铺，对于现代浏览器来说很简单，使用下面的代码即可：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">body&#123;</span><br><span class="line">    background:url(../../img/user/user_bg_2.jpg) no-repeat center center fixed;</span><br><span class="line">    -webkit-background-size: cover;</span><br><span class="line">    -moz-background-size: cover;</span><br><span class="line">    -c-background-size: cover;</span><br><span class="line">    background-size: cover;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这个方式可以兼容的浏览器有</p>
-<pre><code>* Safari 3+
-* Chrome
-* IE 9+
-* Opera 10+ (Opera 9.5 支持background-size属性 但是不支持cover)
-* Firefox 3.6+
-</code></pre>
-<p>但是蛋疼的IE浏览器，就是不给你面子，当你的背景图片宽度小于当前的浏览器宽度的时候，就会有留白，<br>那么就需要再加上两句，如下</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">body&#123;</span><br><span class="line">    background:url(../../img/user/user_bg_2.jpg) no-repeat center center fixed;</span><br><span class="line">    -webkit-background-size: cover;</span><br><span class="line">    -moz-background-size: cover;</span><br><span class="line">    -c-background-size: cover;</span><br><span class="line">    background-size: cover;</span><br><span class="line"></span><br><span class="line">    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src=&#x27;/res/img/user/user_bg_2.jpg&#x27;, sizingMethod=&#x27;scale&#x27;);</span><br><span class="line">    -ms-filter: &quot;progid:DXImageTransform.Microsoft.AlphaImageLoader(src=&#x27;/res/img/user/user_bg_2.jpg&#x27;, sizingMethod=&#x27;scale&#x27;)&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>需要注意的是，需要使用绝对路径。用滤镜硬拉伸，可能需要图片做点高斯模糊，要不然效果会很糟糕。</p>
-<p>另外还有用img标签来实现的，可以参照<a target="_blank" rel="noopener" href="http://huilang.me/perfect-full-page-background-image/">这篇文章</a>。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/19/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/21/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/19/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><span class="page-number current">20</span><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/21/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

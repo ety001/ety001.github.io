@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -203,7 +203,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2010/12/26/apache-limit-ip-num-config.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2010/12/31/word-break-break-all-word-wrap-break-word.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -221,7 +221,103 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2010/12/26/apache-limit-ip-num-config.html" class="post-title-link" itemprop="url">apache限制并发数 IP 带宽设置教程</a>
+          <a href="/2010/12/31/word-break-break-all-word-wrap-break-word.html" class="post-title-link" itemprop="url">自动换行 word-break:break-all和word-wrap:break-word</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2010-12-31 17:04:10" itemprop="dateCreated datePublished" datetime="2010-12-31T17:04:10+08:00">2010-12-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2010/12/31/word-break-break-all-word-wrap-break-word.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2010/12/31/word-break-break-all-word-wrap-break-word.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>word-break:break-all和word-wrap:break-word都是能使其容器如DIV的内容自动换行。</p>
+<p>它们的区别就在于：</p>
+<p>1，word-break:break-all 例如div宽200px，它的内容就会到200px自动换行，如果该行末端有个英文单词很长（congratulation等），它会把单词截断，变成该行末端为conra(congratulation的前端部分)，下一行为tulation（conguatulation）的后端部分了。</p>
+<p>2，word-wrap:break-word 例子与上面一样，但区别就是它会把congratulation整个单词看成一个整体，如果该行末端宽度不够显示整个单词，它会自动把整个单词放到下一行，而不会把单词截断掉的。</p>
+<p>3，word-break;break-all 支持版本：IE5以上 该行为与亚洲语言的 normal 相同。也允许非亚洲语言文本行的任意字内断开。该值适合包含一些非亚洲文本的亚洲文本。 WORD-WRAP:break-word 支持版本：IE5.5以上 内容将在边界内换行。如果需要，词内换行( word-break )也将发生。表格自动换行，避免撑开。 word-break : normal | break-all | keep-all 参数： normal : 依照亚洲语言和非亚洲语言的文本规则，允许在字内换行 break-all : 该行为与亚洲语言的normal相同。也允许非亚洲语言文本行的任意字内断开。该值适合包含一些非亚洲文本的亚洲文本 keep-all : 与所有非亚洲语言的normal相同。对于中文，韩文，日文，不允许字断开。适合包含少量亚洲文本的非亚洲文本 语法： word-wrap : normal | break-word 参数： normal : 允许内容顶开指定的容器边界 break-word : 内容将在边界内换行。如果需要，词内换行（word-break）也行发生说明：设置或检索当当前行超过指定容器的边界时是否断开转行。</p>
+<p>对应的脚本特性为wordWrap。请参阅我编写的其他书目。 语法： table-layout : auto | fixed 参数： auto : 默认的自动算法。布局将基于各单元格的内容。表格在每一单元格读取计算之后才会显示出来。速度很慢 fixed : 固定布局的算法。在这算法中，水平布局是仅仅基于表格的宽度，表格边框的宽度，单元格间距，列的宽度，而和表格内容无关说明：设置或检索表格的布局算法。对应的脚本特性为tableLayout。</p>
+<p>建议：word-break 用3C检测会显示问题的，导致百度快照也会出问题-这个属性OPERA FIREFOX 浏览器也不支持 word-break属性可以用white-space:normal;来代替，这样在FireFox和IE下就都能正确换行，而且要注意，单词间的空格不能用 来代替，不然不能正确换行。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2010/12/27/apache-limit-ip-num-config.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2010/12/27/apache-limit-ip-num-config.html" class="post-title-link" itemprop="url">apache限制并发数 IP 带宽设置教程</a>
         </h2>
 
         <div class="post-meta-container">
@@ -251,8 +347,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2010/12/26/apache-limit-ip-num-config.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2010/12/26/apache-limit-ip-num-config.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2010/12/27/apache-limit-ip-num-config.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2010/12/27/apache-limit-ip-num-config.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -284,7 +380,7 @@
 <p><strong>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2010/12/26/apache-limit-ip-num-config.html#more" rel="contents">
+              <a class="btn" href="/2010/12/27/apache-limit-ip-num-config.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -518,7 +614,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2010/11/19/math-mu-the-champion.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2010/11/20/math-mu-the-champion.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -536,7 +632,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2010/11/19/math-mu-the-champion.html" class="post-title-link" itemprop="url">数学曼联--------------------迟到两年的冠军</a>
+          <a href="/2010/11/20/math-mu-the-champion.html" class="post-title-link" itemprop="url">数学曼联--------------------迟到两年的冠军</a>
         </h2>
 
         <div class="post-meta-container">
@@ -566,8 +662,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2010/11/19/math-mu-the-champion.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2010/11/19/math-mu-the-champion.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2010/11/20/math-mu-the-champion.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2010/11/20/math-mu-the-champion.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -584,7 +680,7 @@
           <h3 id="本文来自梁队的人人网"><a href="#本文来自梁队的人人网" class="headerlink" title="本文来自梁队的人人网"></a><strong>本文来自梁队的人人网</strong></h3><p>中午上班路上接到小师弟电话，电话那边欢声笑语，一听就知道数学系拿下了今年的足球赛冠军。电话挂掉，斯慨万千，说实话，这一届数学队已经不能算是学校里绝对意义上的强队，人员配置不是很好，赛前还有很多内部矛盾。杯赛前，我就觉得数学系可能要出问题，但是还是没想到问题在第一场小组赛中就出线了，竟然败给了交院，落到最后一场小组赛要死拼心理的地步。问题出现了反而对数学系起到了积极地作用，不过小伙子们也很争气，团结一致，一场一场硬仗打到决赛一直获得冠军。祝福这些小子，圆了老一代数学曼联球员的冠军梦。
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2010/11/19/math-mu-the-champion.html#more" rel="contents">
+              <a class="btn" href="/2010/11/20/math-mu-the-champion.html#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -839,7 +935,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2010/11/17/ip-address-caculating-way.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2010/11/18/ip-address-caculating-way.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -857,7 +953,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2010/11/17/ip-address-caculating-way.html" class="post-title-link" itemprop="url">关于IP地址计算方法</a>
+          <a href="/2010/11/18/ip-address-caculating-way.html" class="post-title-link" itemprop="url">关于IP地址计算方法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -887,8 +983,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2010/11/17/ip-address-caculating-way.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2010/11/17/ip-address-caculating-way.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2010/11/18/ip-address-caculating-way.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2010/11/18/ip-address-caculating-way.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1109,102 +1205,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2010/11/01/how-to-build-a-amateur-soccer-team.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2010/11/01/how-to-build-a-amateur-soccer-team.html" class="post-title-link" itemprop="url">如何打造一支成熟的业余球队</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2010-11-01 11:16:21" itemprop="dateCreated datePublished" datetime="2010-11-01T11:16:21+08:00">2010-11-01</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2010/11/01/how-to-build-a-amateur-soccer-team.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2010/11/01/how-to-build-a-amateur-soccer-team.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>    1、第一个原则：位置感原则——每一个场上队员时刻提醒自己不能把自己的位置丢了。清楚认识到“在其位谋其政”，队长安排你打什么位置就要履行该位置的进攻以及防守职责。助攻也好，跑位也罢，在进攻中失误被断球对方反击，应第一时间立即就地反抢，延缓对方进攻时间，给队友回撤的机会。一抢不成不可恋战，可迅速回到自己位置上再歇，除非你抽筋受伤倒地。没有体能，再怎么累至少回追三秒。给自己数数：一，二，三秒！如果不是有伤病，一丢球就泄气原地叉腰，慢慢走回来，这种态度坚决杜绝。<br>（个人体会：水平可以锻炼，态度决定一切，进球的不是一个人的功劳，丢球也绝对不是一个人的失误）</p>
-<p>   2、第二个原则：重心移动原则——球在左边，球队整体重心移到左边；球在右边整体重心移动到右边。防守的时候边前卫和边后卫往内收缩，进攻的时候往边扩散，充分利用球场宽度。只有全队一起移动，才能形成局部的以多打少。整体补位有多个好处，节省体力，易对敌人形成围抢，局域形成多打少的可能。就算对方控球，也是无效控球，没有形成威胁。</p>
-<p> <br>   3、第三个原则：跑动接应原则——所有队员都需要无球跑动起来。踢球最基本的接应意识就是迎球接应，其实，对于任何一个球员，迎球不等球，其实是一个最基本要求，这是意识问题，不是灵感，所以，是可以培养和积累的。接应的要点就在于跑动，三角进攻，三角接应，一个人拿球，相邻位置的三个人必须跑动起来接应。应轮番有一人回撤接应，做成一个动态三角形结构。必须明白：有时候，我们的接应，扯动未必是要球，而是为了给队友创造空挡和机会。<br>（个人体会：队友接应了并形成更加合理的机会，但是却没有及时分球，是对队友的不信任，是对队友不惜力跑动的不尊重，也会影响队友对你的信任，也许从此你就少了一个接应点）<br> <br>   4、战术要点之一：三角攻防——不同的进攻或防守的情况下，都要将双三角的站位进转化。一个原则，临近补位，整体移动。这样下来，攻防为整体化变动，千万不要认为，球离我很远，我不用留意它，到了临近队友时我再补位，往往这个时候已经来不及了，因为队友去补位了，而你没有跟上，形成了空位，会导致全军覆没的。</p>
-<p>   5、战术要点之二：套边和反插——当边前卫拿球，边后卫从其身后插上，是一个标准的边后卫套边；后腰拿球，前腰回撤接应，前锋前插，边前卫迅速绕到边路前插，也是一个标准的边前卫套边战术。套边和反插是足球比赛里面边路进攻最常用的战术。反插要求配合的球员只有两个人，套边则要求整体的协调跑位，不是一个人的套边，一次成功的套边战术需要队友配合。套边和反插的目的一个是为了插到对方空挡地区接球并借此扯开对方防线，另一个原因是为了纯属战术的扯动要求，目的是为了吸引对方防守人员，为队友拉出空挡。<br>     <br>   6、 战术要点之三：局部更多的2打1，2打2，直传斜插，斜传直插。局部的配合可以在任何两个相邻近位置的队员之间使用。局部的小配合＋大范围的转移，是每个成熟球队的基本功。<br>   <br>   7、 守门员：拿到球，你就是进攻的发起者，立即跑向大禁区角，两边的边后卫第一时间拉边，同时，后腰前腰开始迅速跑位接应。<br>（个人体会：每个人都应该主动的去做守门员，尝试用门将的眼神看待场上的变化，有利团队，有利个人）    <br>   8、中后卫：一个盯（顶）人，另一个清道夫。两人要互相配合，有人冲上去阻杀，另一个人负责清扫。盯人中卫不要害怕身体对抗和扑球，看准时机出脚要狠，及时封堵。清道夫要留意场上的形势，一旦出现漏洞第一时间反应做出补位。中后卫防守站位原则:1站在内侧，一防一的时候，应站在对方前锋与球门的直线中间；2距离保持在既能够靠近盯住防守对象,又能够首先从防守对象身后得球；3. 要抢断或者绕前防守所有传球不准和传球速度慢的来球；4.如果不能够抢断球,则要努力封堵逼抢球;5.如果不可能封堵逼抢,则要边退缩边防守延缓对手进攻,回撤并站位于对手与本方球门之间的空当. 6.出脚抢球的最好时机是当进攻者试图转身,即半转身的一刹那.此时进攻者既不能很好地用身体掩护球,同时身体重心又处于不稳定之中。</p>
-<p>   9、边后卫：边后卫防守的主要职能是：盯住进入本防区的进攻队员，不让对手个人运球突破或通过配合突破，保护中路防区。当球在异侧活动并且中卫队员靠向异侧时，及时向中路靠拢；当中路被突破时迅速补位，同其他后卫队员保持默契联系；当拖后中卫制造越位时，应同步行动。在对方边路进攻时要站在对方球员和球门的连线，防止对方球员远射。对方突破时要卡住内线的身位，将其迫向角旗区。对方反击时，不要轻易上扑。注意和中后相互补位。<br>（个人体会：边后卫有很多的机会参与第一波的进攻转化，无论自己的攻击性有多强，自己的本职还是后卫，队伍的荣誉和每个人都是密不可分的，优秀不一定体现在进球）      <br>   10、单后腰，双后腰：如果是单后腰，防守的时候与前腰平行站位，进攻时主要时固守中间枢纽地带。双后腰时呈左右平行站位，但二者要有分工，可以灵活换位，在边路出现空档的时候及时移动补位，但一定要保证有一个后腰在中间作为中卫前的屏障，避免对方球员直接面对中后卫。后腰要控制整个球队的攻防节奏，不能只会往前传，而要更多的跟后场和边前卫做呼应及配合。<br>（个人体会：球队的灵魂、屏障，球队攻防的指挥官）    <br>      <br>   11、 边前卫：在防守上必须具备以下能力： ①个人抢断和与同伴夹击、围抢的能力。 ②在整体和局部防守意识支配下的保护与补位能力，诸如前卫间的相互补位，与后卫间的保护与补位等。 ③迅速转入防守或进攻的往返奔跑体力和意识。阵地防守中，职责应该是盯防对方边卫压上助攻。并封堵其向心脏地带传球得线路。进攻时，可以区分两个体系： A&#x2F;反击时，此时对方防守体系空隙大，应迅速前插占领无人空白地带。在对手不及回防时给予其致命一击，强调的是时间差。持球者分球要果断，避免前插者越位。前插人选不要拘泥于前后场之分，任何最接近对方危险地带队员，都可迅速前插跑位以争取时间。<br>   B&#x2F;阵地进攻，应尽量利用场地宽度横向扯动，跑出持球队友可以传出球的线路。中锋和边锋不要在一条线路上重叠，应有意识地错位跑动，必要时相互换位。但是三个人的位置不要都急于顶上去，以至于形成一条直线，这样会造成前后脱节。应轮番有一人回撤接应，做成一个动态三角形结构。<br> <br> <br>   12、单前锋：单前锋战术里面的前锋的职责不是为了进球，而是起到更多的是做球和牵引对方中后卫的作用，为前腰和别的前插队员制造杀机，通常需要背对球门接球，而防守方只求破坏，且正对来球。因此进攻队员（尤其是策应型中锋）更需要有一个迎球的意识，无论是背对球门还是侧身。所以这个时候他作为一个前锋的回做球再反插就很重要。当由攻转守时，作为第一道防线，中锋应积极干扰破坏对方的进攻。如果对手进攻发动于自身附近，中锋应迅速跟上延缓时方推进速度，防止对方发动快速反击或见机行事，积极干扰和拼抢。一以迫使持球者无法组织进攻。双前锋：不能离得太远。两个前锋经常要做相互间的配合，才能有威胁。双前锋的职责还需要有时候往边路扯动，充当一个边锋的位置。防守的时候卡住对方两个后腰的传球路线。<br>   <br>   13、前锋的跑位：优秀的前锋经常会用横向扯动，突然前插的方法来摆脱后防线。接应边路传中，尽量抢前点。接球尽量往中路停球（这个很重要，一个优秀的前锋，他的每一次停球都是有目的的，停球往中路，为了争取更大的射门角度）。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/44/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><span class="page-number current">45</span><a class="page-number" href="/page/46/">46</a><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/46/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/44/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><span class="page-number current">45</span><a class="page-number" href="/page/46/">46</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/46/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

@@ -6,7 +6,7 @@
   <link href="https://akawa.ink/atom.xml" rel="self"/>
   
   <link href="https://akawa.ink/"/>
-  <updated>2024-04-14T18:51:25.453Z</updated>
+  <updated>2024-05-14T09:36:40.725Z</updated>
   <id>https://akawa.ink/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>xmodmap 的替代方案 keyd</title>
+    <link href="https://akawa.ink/2024/05/14/xmodmap-to-keyd.html"/>
+    <id>https://akawa.ink/2024/05/14/xmodmap-to-keyd.html</id>
+    <published>2024-05-14T09:21:15.000Z</published>
+    <updated>2024-05-14T09:36:40.725Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前尝试过好几次，使用 <code>xmodmap</code> 来修改键位，但是都是以失败告终。</p><p>每次都是以为懂了，结果都是失败。</p><p>最近在一台 Chromebook 上装了 Archlinux，再次尝试调换键位。</p><p>想把 Search 键和 左Control 键对换位置。</p><p>下面是按键对应的信息</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">--- xev 获取到两个按键的信息 ---</span><br><span class="line">keycode 133 (keysym 0xffeb Super_L)</span><br><span class="line">keycode  37 (keysym 0xffe3 Control_L)</span><br><span class="line"></span><br><span class="line">--- xmodmap -pke | grep Control_L 和 grep Super_L 的信息---</span><br><span class="line">keycode  37 = Control_L NoSymbol Control_L</span><br><span class="line">keycode 133 = Super_L Super_L Super_L Super_L Caps_Lock Super_L Caps_Lock</span><br><span class="line">keycode 206 = NoSymbol Super_L NoSymbol Super_L</span><br><span class="line"></span><br><span class="line">--- xmodmap -pm 的信息 ---</span><br><span class="line">shift       Shift_L (0x32),  Shift_R (0x3e)</span><br><span class="line">lock        Caps_Lock (0x42)</span><br><span class="line">control     Control_L (0x25),  Control_R (0x69)</span><br><span class="line">mod1        Alt_L (0x40),  Alt_L (0xcc),  Meta_L (0xcd)</span><br><span class="line">mod2        Num_Lock (0x4d)</span><br><span class="line">mod3        ISO_Level5_Shift (0xcb)</span><br><span class="line">mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)</span><br><span class="line">mod5        ISO_Level3_Shift (0x5c)</span><br></pre></td></tr></table></figure><p>尝试创建了一份 <code>.Xmodmap</code> 配置如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">remove control = Control_L</span><br><span class="line">remove mod4 = Super_L</span><br><span class="line">add mod4 = Control_L</span><br><span class="line">add control = Super_L</span><br><span class="line">keycode 37 = Super_L</span><br><span class="line">keycode 133 = Control_L</span><br></pre></td></tr></table></figure><p>结果失败了。</p><p>不过经过不懈搜索，发现了一个替代方案 – <a href="https://github.com/rvaiya/keyd">keyd</a>.</p><p>这个项目就是为了解决各种键盘问题的，非常感谢这个项目。</p><p>同时还找到了一份 <a href="https://github.com/WeirdTreeThing/cros-keyboard-map">针对 Chromebook 的 keyd 配置</a>，</p><p>通过下面的命令来获取一下按键的名字</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo keyd monitor</span><br></pre></td></tr></table></figure><p>根据得到的键位信息，在上面的那份配置的基础上，增加下面的内容</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[main]</span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">leftmeta = leftcontrol</span><br><span class="line">leftcontrol = leftmeta</span><br></pre></td></tr></table></figure><p>重新载入一下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo keyd reload</span><br></pre></td></tr></table></figure><p>搞定！</p><p>咱就说，Linux 下很多东西（iptables啊，X11啊）的配置也不知道为啥搞的很反人类，明明是可以搞的这么简单的啊！</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;之前尝试过好几次，使用 &lt;code&gt;xmodmap&lt;/code&gt; 来修改键位，但是都是以失败告终。&lt;/p&gt;
+&lt;p&gt;每次都是以为懂了，结果都是失败。&lt;/p&gt;
+&lt;p&gt;最近在一台 Chromebook 上装了 Archlinux，再次尝试调换键位。&lt;/p&gt;
+&lt;p&gt;想把 Searc</summary>
+      
+    
+    
+    
+    
+    <category term="经验" scheme="https://akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+  </entry>
   
   <entry>
     <title>关于 SPS 相关总结</title>
@@ -510,31 +535,6 @@
     <summary type="html">&lt;p&gt;今天才知道，原来 archlinux 的 makepkg 可以更换下载器啊。&lt;/p&gt;
 &lt;p&gt;按照 arch 官方文档的说明，修改一下 &lt;code&gt;/etc/makepkg.conf&lt;/code&gt; 的 &lt;code&gt;DLAGENTS&lt;/code&gt; 变量。&lt;/p&gt;
 &lt;figure</summary>
-      
-    
-    
-    
-    
-    <category term="Server&amp;OS" scheme="https://akawa.ink/tags/Server-OS/"/>
-    
-    <category term="经验" scheme="https://akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>解决 Bad SMB2 (sign_algo_id=0) signature for message 问题</title>
-    <link href="https://akawa.ink/2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html"/>
-    <id>https://akawa.ink/2022/03/23/bad-smb2-signalgoid-0-signature-for-message.html</id>
-    <published>2022-03-23T00:24:49.000Z</published>
-    <updated>2024-04-14T18:51:25.425Z</updated>
-    
-    <content type="html"><![CDATA[<p>解决 Bad SMB2 (sign_algo_id&#x3D;0) signature for message 问题<br>最近线下培训教育机构都停了，孩子报的班都改为了线上授课，教练和老师会把视频发过来，看着学。</p><p>由于手机屏幕太小，所以打算把视频放到家里的服务器上，通过 samba 共享让投影可以读取。</p><p>但是却遇到不能连接的问题，看了下服务器的日志，发现有报错：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[2022/03/23 00:57:09.728871,  0] ../../libcli/smb/smb2_signing.c:722(smb2_signing_check_pdu)</span><br><span class="line">  Bad SMB2 (sign_algo_id=0) signature for message</span><br><span class="line">[2022/03/23 00:57:09.729142,  0] ../../lib/util/util.c:570(dump_data)</span><br><span class="line">  [0000] 73 34 44 8A 28 41 5E 00   D4 5E 9D 5D 38 39 9B A0   s4D.(A^. .^.]89..</span><br><span class="line">[2022/03/23 00:57:09.729263,  0] ../../lib/util/util.c:570(dump_data)</span><br><span class="line">  [0000] 6C 38 C8 B5 93 51 16 95   12 2C 64 92 54 A0 E2 8E   l8...Q.. .,d.T...</span><br><span class="line">[2022/03/23 00:57:42.258662,  0] ../../source3/smbd/server.c:1734(main)</span><br></pre></td></tr></table></figure><p>搜索了一下，似乎只有一个方案，就是降级协议，在 <code>/etc/samba/smb.conf</code> 文件的 <code>[global]</code> 中增加下面的配置：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server min protocol = LANMAN2</span><br></pre></td></tr></table></figure><p>重启服务， <code>systemctl restart smb</code>。</p><p>再次连接，成功！</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;解决 Bad SMB2 (sign_algo_id&amp;#x3D;0) signature for message 问题&lt;br&gt;最近线下培训教育机构都停了，孩子报的班都改为了线上授课，教练和老师会把视频发过来，看着学。&lt;/p&gt;
-&lt;p&gt;由于手机屏幕太小，所以打算把视频放到家里的服</summary>
       
     
     

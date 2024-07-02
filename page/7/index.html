@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -203,7 +203,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/12/11/bitshares-ws-api-url-confuse.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/12/13/bitshares-js-init-promise-using-in-private-network.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -221,7 +221,116 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/12/11/bitshares-ws-api-url-confuse.html" class="post-title-link" itemprop="url">bitshares-ws 的 API 配置疑惑</a>
+          <a href="/2019/12/13/bitshares-js-init-promise-using-in-private-network.html" class="post-title-link" itemprop="url">在自有私链上使用bitshares-js库</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-12-13 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-13T00:00:00+08:00">2019-12-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2021-02-26 14:44:45" itemprop="dateModified" datetime="2021-02-26T14:44:45+08:00">2021-02-26</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2019/12/13/bitshares-js-init-promise-using-in-private-network.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/12/13/bitshares-js-init-promise-using-in-private-network.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>由于我正在搭建的测试网络属于私有链，在这两天的开发中，我发现使用 <code>bitshares-ws</code> 中的 <code>Apis</code> 进行初始化的时候，一直有下面截图中的问题</p>
+<p><img src="/upload/20191213/fOe22UYf8pNGrgze9EQ8MmBEfpMJyHYPpbzbusO7.png"></p>
+<p>我的代码是官方文档示例中的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123;Apis&#125; from &#x27;bitsharesjs-ws&#x27;;</span><br><span class="line">const apiUrl = &#x27;wss://api-testnet.61bts.com&#x27;;</span><br><span class="line">Apis.instance(apiUrl, true).init_promise.then((res) =&gt; &#123;</span><br><span class="line">    console.log(res);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>即返回值的第一个值一直是 <code>undefined</code>，目前还不确定这个会导致什么问题，不过有个 <code>undefined</code> 肯定是不对的。</p>
+<p>去看了下 <code>Apis.instance().init_promise</code> 的代码，我摘了关键部分如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">const newApis = () =&gt; (&#123;</span><br><span class="line">  connect: (</span><br><span class="line">    cs,</span><br><span class="line">    connectTimeout,</span><br><span class="line">    optionalApis = &#123; enableCrypto: false, enableOrders: false &#125;</span><br><span class="line">  ) =&gt; &#123;</span><br><span class="line">    ......</span><br><span class="line">    Apis.init_promise = Apis.ws_rpc</span><br><span class="line">      .login(rpc_user, rpc_password)</span><br><span class="line">      .then(() =&gt; &#123;</span><br><span class="line">        //console.log(&quot;Connected to API node:&quot;, cs);</span><br><span class="line">        Apis._db = new GrapheneApi(Apis.ws_rpc, &quot;database&quot;);</span><br><span class="line">        Apis._net = new GrapheneApi(Apis.ws_rpc, &quot;network_broadcast&quot;);</span><br><span class="line">        Apis._hist = new GrapheneApi(Apis.ws_rpc, &quot;history&quot;);</span><br><span class="line">        if (optionalApis.enableOrders)</span><br><span class="line">          Apis._orders = new GrapheneApi(Apis.ws_rpc, &quot;orders&quot;);</span><br><span class="line">        if (optionalApis.enableCrypto)</span><br><span class="line">          Apis._crypt = new GrapheneApi(Apis.ws_rpc, &quot;crypto&quot;);</span><br><span class="line">        var db_promise = Apis._db.init().then(() =&gt; &#123;</span><br><span class="line">          //https://github.com/cryptonomex/graphene/wiki/chain-locked-tx</span><br><span class="line">          return Apis._db.exec(&quot;get_chain_id&quot;, []).then(_chain_id =&gt; &#123;</span><br><span class="line">            Apis.chain_id = _chain_id;</span><br><span class="line">            return ChainConfig.setChainId(_chain_id);</span><br><span class="line">            //DEBUG console.log(&quot;chain_id1&quot;,this.chain_id)</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">        ......</span><br><span class="line">        let initPromises = [db_promise, Apis._net.init(), Apis._hist.init()];</span><br><span class="line"></span><br><span class="line">        if (optionalApis.enableOrders) initPromises.push(Apis._orders.init());</span><br><span class="line">        if (optionalApis.enableCrypto) initPromises.push(Apis._crypt.init());</span><br><span class="line">        return Promise.all(initPromises);</span><br><span class="line">      &#125;)</span><br><span class="line">      ......</span><br><span class="line">  &#125;,</span><br><span class="line">  ......</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 <code>Apis.init_promise</code> 最终是返回了一个 <code>Promise.all()</code>，其中索引 <code>0</code> 的值是 <code>db_promise</code>。</p>
+<p>再看了一下，<code>db_promise</code> 的结果由 <code>ChainConfig.setChainId()</code> 来决定。</p>
+<p>再找出 <code>ChainConfig</code> 的代码，这个文件代码不长，我就全部贴出来了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">var config = &#123;</span><br><span class="line">  core_asset: &quot;CORE&quot;,</span><br><span class="line">  address_prefix: &quot;GPH&quot;,</span><br><span class="line">  expire_in_secs: 15,</span><br><span class="line">  expire_in_secs_proposal: 24 * 60 * 60,</span><br><span class="line">  review_in_secs_committee: 24 * 60 * 60,</span><br><span class="line">  networks: &#123;</span><br><span class="line">    BitShares: &#123;</span><br><span class="line">      core_asset: &quot;BTS&quot;,</span><br><span class="line">      address_prefix: &quot;BTS&quot;,</span><br><span class="line">      chain_id:</span><br><span class="line">        &quot;4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    Muse: &#123;</span><br><span class="line">      core_asset: &quot;MUSE&quot;,</span><br><span class="line">      address_prefix: &quot;MUSE&quot;,</span><br><span class="line">      chain_id:</span><br><span class="line">        &quot;45ad2d3f9ef92a49b55c2227eb06123f613bb35dd08bd876f2aea21925a67a67&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    Test: &#123;</span><br><span class="line">      core_asset: &quot;TEST&quot;,</span><br><span class="line">      address_prefix: &quot;TEST&quot;,</span><br><span class="line">      chain_id:</span><br><span class="line">        &quot;39f5e2ede1f8bc1a3a54a7914414e3779e33193f1f5693510e73cb7a87617447&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    Obelisk: &#123;</span><br><span class="line">      core_asset: &quot;GOV&quot;,</span><br><span class="line">      address_prefix: &quot;FEW&quot;,</span><br><span class="line">      chain_id:</span><br><span class="line">        &quot;1cfde7c388b9e8ac06462d68aadbd966b58f88797637d9af805b4560b0e9661e&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  /** Set a few properties for known chain IDs. */</span><br><span class="line">  setChainId: chain_id =&gt; &#123;</span><br><span class="line">    let result = Object.entries(config.networks).find(</span><br><span class="line">      ([network_name, network]) =&gt; &#123;</span><br><span class="line">        if (network.chain_id === chain_id) &#123;</span><br><span class="line">          config.network_name = network_name;</span><br><span class="line"></span><br><span class="line">          if (network.address_prefix) &#123;</span><br><span class="line">            config.address_prefix = network.address_prefix;</span><br><span class="line">          &#125;</span><br><span class="line">          return true;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    if (result) return &#123; network_name: result[0], network: result[1] &#125;;</span><br><span class="line">    else console.log(&quot;Unknown chain id (this may be a testnet)&quot;, chain_id);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  reset: () =&gt; &#123;</span><br><span class="line">    config.core_asset = &quot;CORE&quot;;</span><br><span class="line">    config.address_prefix = &quot;GPH&quot;;</span><br><span class="line">    config.expire_in_secs = 15;</span><br><span class="line">    config.expire_in_secs_proposal = 24 * 60 * 60;</span><br><span class="line"></span><br><span class="line">    console.log(&quot;Chain config reset&quot;);</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  setPrefix: (prefix = &quot;GPH&quot;) =&gt; (config.address_prefix = prefix)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export default config;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到在 <code>ChainConfig</code> 对象中有个 <code>networks</code> 的值，在进行 <code>setChainId()</code> 操作的时候，会在这个 <code>networks</code> 里搜索，找不到符合条件的结果，就会进入 <code>else</code>，也就是这个 <code>setChainId()</code> 会返回 <code>undefined</code>。</p>
+<p>好了找到了问题所在，那么我们只需要在 <code>Apis.instance().init_promise</code> 之前，先配置下 <code>ChainConfig</code>。</p>
+<p>但是 <code>ChainConfig</code> 在 <code>init_promise</code> 中，我们怎么配置呢？</p>
+<p>结合上一篇文章 <a href="/2019/12/12/bitshares-ws-api-url-confuse.html">https://akawa.ink/2019/12/12/bitshares-ws-api-url-confuse.html</a> ，我们知道使用 <code>import</code> 可以引入库的引用，那么我们在调用前，先 <code>import ChainConfig</code> 配置好就OK了。</p>
+<p>最终代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import &#123;Apis, ChainConfig&#125; from &#x27;bitsharesjs-ws&#x27;;</span><br><span class="line">const apiUrl = &#x27;wss://api-testnet.61bts.com&#x27;;</span><br><span class="line">ChainConfig.networks[&#x27;LiuyeTest&#x27;] = &#123;</span><br><span class="line">    core_asset: &#x27;TEST&#x27;,</span><br><span class="line">    address_prefix: &#x27;TEST&#x27;,</span><br><span class="line">    chain_id: &#x27;d5dfe0da7cda9426dc4761752d889d44401c5f04f76c17970e90437b02c038d4&#x27;,</span><br><span class="line">&#125;;</span><br><span class="line">Apis.instance(apiUrl, true).init_promise.then((res) =&gt; &#123;</span><br><span class="line">    console.log(res);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/12/12/bitshares-ws-api-url-confuse.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2019/12/12/bitshares-ws-api-url-confuse.html" class="post-title-link" itemprop="url">bitshares-ws 的 API 配置疑惑</a>
         </h2>
 
         <div class="post-meta-container">
@@ -251,8 +360,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2019/12/11/bitshares-ws-api-url-confuse.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/12/11/bitshares-ws-api-url-confuse.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2019/12/12/bitshares-ws-api-url-confuse.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/12/12/bitshares-ws-api-url-confuse.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -310,7 +419,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/12/03/nginx-proxy-websocket-and-http-in-the-same-path.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/12/04/nginx-proxy-websocket-and-http-in-the-same-path.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -328,7 +437,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/12/03/nginx-proxy-websocket-and-http-in-the-same-path.html" class="post-title-link" itemprop="url">在同一个路径下反代 Websocket 和 HTTP 服务</a>
+          <a href="/2019/12/04/nginx-proxy-websocket-and-http-in-the-same-path.html" class="post-title-link" itemprop="url">在同一个路径下反代 Websocket 和 HTTP 服务</a>
         </h2>
 
         <div class="post-meta-container">
@@ -358,8 +467,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2019/12/03/nginx-proxy-websocket-and-http-in-the-same-path.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/12/03/nginx-proxy-websocket-and-http-in-the-same-path.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2019/12/04/nginx-proxy-websocket-and-http-in-the-same-path.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/12/04/nginx-proxy-websocket-and-http-in-the-same-path.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -413,7 +522,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/26/bitshares-testnet-1.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/27/bitshares-testnet-1.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -431,7 +540,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/11/26/bitshares-testnet-1.html" class="post-title-link" itemprop="url">快速搭建私有单节点 Bitshares Testnet（一）</a>
+          <a href="/2019/11/27/bitshares-testnet-1.html" class="post-title-link" itemprop="url">快速搭建私有单节点 Bitshares Testnet（一）</a>
         </h2>
 
         <div class="post-meta-container">
@@ -461,8 +570,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2019/11/26/bitshares-testnet-1.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/26/bitshares-testnet-1.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2019/11/27/bitshares-testnet-1.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/27/bitshares-testnet-1.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -573,7 +682,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/20/finish-trade-robot.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/21/finish-trade-robot.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -591,7 +700,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/11/20/finish-trade-robot.html" class="post-title-link" itemprop="url">将近两周，终于完工</a>
+          <a href="/2019/11/21/finish-trade-robot.html" class="post-title-link" itemprop="url">将近两周，终于完工</a>
         </h2>
 
         <div class="post-meta-container">
@@ -621,8 +730,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2019/11/20/finish-trade-robot.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/20/finish-trade-robot.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2019/11/21/finish-trade-robot.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/21/finish-trade-robot.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -673,7 +782,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/20/python-bitshares.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/21/python-bitshares.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -691,7 +800,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/11/20/python-bitshares.html" class="post-title-link" itemprop="url">如何使用Bitshares Python库一次下多个Fill or Kill单</a>
+          <a href="/2019/11/21/python-bitshares.html" class="post-title-link" itemprop="url">如何使用Bitshares Python库一次下多个Fill or Kill单</a>
         </h2>
 
         <div class="post-meta-container">
@@ -721,8 +830,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2019/11/20/python-bitshares.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/20/python-bitshares.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2019/11/21/python-bitshares.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/21/python-bitshares.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -772,7 +881,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/13/wireshark.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/14/wireshark.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -790,7 +899,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/11/13/wireshark.html" class="post-title-link" itemprop="url">使用 nsenter 配合 wireshark 来抓取容器数据包</a>
+          <a href="/2019/11/14/wireshark.html" class="post-title-link" itemprop="url">使用 nsenter 配合 wireshark 来抓取容器数据包</a>
         </h2>
 
         <div class="post-meta-container">
@@ -820,8 +929,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2019/11/13/wireshark.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/13/wireshark.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2019/11/14/wireshark.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/14/wireshark.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -883,7 +992,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/08/change-bitshares-api-url.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/09/change-bitshares-api-url.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -901,7 +1010,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/11/08/change-bitshares-api-url.html" class="post-title-link" itemprop="url">重新部署了我的 Bitshares API Node</a>
+          <a href="/2019/11/09/change-bitshares-api-url.html" class="post-title-link" itemprop="url">重新部署了我的 Bitshares API Node</a>
         </h2>
 
         <div class="post-meta-container">
@@ -931,8 +1040,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2019/11/08/change-bitshares-api-url.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/08/change-bitshares-api-url.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2019/11/09/change-bitshares-api-url.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/09/change-bitshares-api-url.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -982,7 +1091,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/08/change-es-to-single-node.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/09/change-es-to-single-node.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1000,7 +1109,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/11/08/change-es-to-single-node.html" class="post-title-link" itemprop="url">把 elasticsearch 又换回了单节点</a>
+          <a href="/2019/11/09/change-es-to-single-node.html" class="post-title-link" itemprop="url">把 elasticsearch 又换回了单节点</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1030,8 +1139,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2019/11/08/change-es-to-single-node.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/08/change-es-to-single-node.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2019/11/09/change-es-to-single-node.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/09/change-es-to-single-node.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1082,7 +1191,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/06/accident-by-memory.html">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/07/accident-by-memory.html">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/img/logo.jpg">
@@ -1100,7 +1209,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/11/06/accident-by-memory.html" class="post-title-link" itemprop="url">由四条内存引起的事故</a>
+          <a href="/2019/11/07/accident-by-memory.html" class="post-title-link" itemprop="url">由四条内存引起的事故</a>
         </h2>
 
         <div class="post-meta-container">
@@ -1130,8 +1239,8 @@
       </span>
       <span class="post-meta-item-text">Disqus：</span>
     
-    <a title="disqus" href="/2019/11/06/accident-by-memory.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/06/accident-by-memory.html" itemprop="commentCount"></span>
+    <a title="disqus" href="/2019/11/07/accident-by-memory.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/07/accident-by-memory.html" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -1241,111 +1350,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2019/11/04/huobi-docker-sdk.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/11/04/huobi-docker-sdk.html" class="post-title-link" itemprop="url">用Docker封装了火币的python sdk</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-11-05 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-05T00:00:00+08:00">2019-11-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2021-02-26 14:44:45" itemprop="dateModified" datetime="2021-02-26T14:44:45+08:00">2021-02-26</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2019/11/04/huobi-docker-sdk.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/11/04/huobi-docker-sdk.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>天天盯盘实在是有点吃不消了，有些工作还是需要用机器来完成。<br>由于已经习惯了靠 Docker 部署，所以先把基础工作做好，把火币<br>的 python sdk 环境封装个 Docker 基础包。</p>
-<h1 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">FROM alpine:3.9</span><br><span class="line">WORKDIR /app</span><br><span class="line">ARG TAG=1.0.5</span><br><span class="line">RUN apk --no-cache add git python3 &amp;&amp; \</span><br><span class="line">    git clone https://github.com/HuobiRDCenter/huobi_Python.git &amp;&amp; \</span><br><span class="line">    cd huobi_Python &amp;&amp; \</span><br><span class="line">    git checkout $&#123;TAG&#125; &amp;&amp; \</span><br><span class="line">    python3 setup.py install &amp;&amp; \</span><br><span class="line">    cd .. &amp;&amp; \</span><br><span class="line">    rm -rf huobi_Python</span><br><span class="line">CMD [&quot;pwd&quot;]</span><br></pre></td></tr></table></figure>
-
-<p>编译的时候，可以通过 ARG 来控制你要使用的版本。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build --build-arg TAG=1.0.5 -t ety001/huobi-lib:1.0.5 .</span><br></pre></td></tr></table></figure>
-
-<h1 id="测试一下"><a href="#测试一下" class="headerlink" title="测试一下"></a>测试一下</h1><p>在当前目录创建个测试文件 <code>a.py</code></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">from huobi import SubscriptionClient</span><br><span class="line">from huobi.model import *</span><br><span class="line">from huobi.exception.huobiapiexception import HuobiApiException</span><br><span class="line">from huobi import RequestClient</span><br><span class="line"></span><br><span class="line">request_client = RequestClient()</span><br><span class="line"></span><br><span class="line"># Get the timestamp from Huobi server and print on console</span><br><span class="line">timestamp = request_client.get_exchange_timestamp</span><br><span class="line">print(timestamp)</span><br><span class="line"></span><br><span class="line"># Get the latest btcusdt‘s candlestick data and print the highest price on console</span><br><span class="line">candlestick_list = request_client.get_latest_candlestick(&quot;btcusdt&quot;, CandlestickInterval.DAY1, 20)</span><br><span class="line">for item in candlestick_list:</span><br><span class="line">    print(item.high)</span><br></pre></td></tr></table></figure>
-
-<p>启动一个临时容器，测试一下我们的 SDK 是否安装正确</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm -v $(pwd):/app ety001/huobi-lib:1.0.5 python3 /app/a.py</span><br></pre></td></tr></table></figure>
-
-<p>如果环境正确，则会正常输出数据。</p>
-<p>OVER！接下来就要去研究下火币的各个 API 了。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/8/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/6/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/8/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

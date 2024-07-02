@@ -51,7 +51,7 @@
 
 
 
-
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -157,7 +157,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">470</span>
+          <span class="site-state-item-count">471</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -194,6 +194,114 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2024/05/14/xmodmap-to-keyd.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="undefined | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2024/05/14/xmodmap-to-keyd.html" class="post-title-link" itemprop="url">xmodmap 的替代方案 keyd</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2024-05-14 17:21:15 / 修改时间：17:36:40" itemprop="dateCreated datePublished" datetime="2024-05-14T17:21:15+08:00">2024-05-14</time>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2024/05/14/xmodmap-to-keyd.html#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2024/05/14/xmodmap-to-keyd.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>之前尝试过好几次，使用 <code>xmodmap</code> 来修改键位，但是都是以失败告终。</p>
+<p>每次都是以为懂了，结果都是失败。</p>
+<p>最近在一台 Chromebook 上装了 Archlinux，再次尝试调换键位。</p>
+<p>想把 Search 键和 左Control 键对换位置。</p>
+<p>下面是按键对应的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">--- xev 获取到两个按键的信息 ---</span><br><span class="line">keycode 133 (keysym 0xffeb Super_L)</span><br><span class="line">keycode  37 (keysym 0xffe3 Control_L)</span><br><span class="line"></span><br><span class="line">--- xmodmap -pke | grep Control_L 和 grep Super_L 的信息---</span><br><span class="line">keycode  37 = Control_L NoSymbol Control_L</span><br><span class="line">keycode 133 = Super_L Super_L Super_L Super_L Caps_Lock Super_L Caps_Lock</span><br><span class="line">keycode 206 = NoSymbol Super_L NoSymbol Super_L</span><br><span class="line"></span><br><span class="line">--- xmodmap -pm 的信息 ---</span><br><span class="line">shift       Shift_L (0x32),  Shift_R (0x3e)</span><br><span class="line">lock        Caps_Lock (0x42)</span><br><span class="line">control     Control_L (0x25),  Control_R (0x69)</span><br><span class="line">mod1        Alt_L (0x40),  Alt_L (0xcc),  Meta_L (0xcd)</span><br><span class="line">mod2        Num_Lock (0x4d)</span><br><span class="line">mod3        ISO_Level5_Shift (0xcb)</span><br><span class="line">mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)</span><br><span class="line">mod5        ISO_Level3_Shift (0x5c)</span><br></pre></td></tr></table></figure>
+
+<p>尝试创建了一份 <code>.Xmodmap</code> 配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">remove control = Control_L</span><br><span class="line">remove mod4 = Super_L</span><br><span class="line">add mod4 = Control_L</span><br><span class="line">add control = Super_L</span><br><span class="line">keycode 37 = Super_L</span><br><span class="line">keycode 133 = Control_L</span><br></pre></td></tr></table></figure>
+
+<p>结果失败了。</p>
+<p>不过经过不懈搜索，发现了一个替代方案 – <a target="_blank" rel="noopener" href="https://github.com/rvaiya/keyd">keyd</a>.</p>
+<p>这个项目就是为了解决各种键盘问题的，非常感谢这个项目。</p>
+<p>同时还找到了一份 <a target="_blank" rel="noopener" href="https://github.com/WeirdTreeThing/cros-keyboard-map">针对 Chromebook 的 keyd 配置</a>，</p>
+<p>通过下面的命令来获取一下按键的名字</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo keyd monitor</span><br></pre></td></tr></table></figure>
+
+<p>根据得到的键位信息，在上面的那份配置的基础上，增加下面的内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[main]</span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">leftmeta = leftcontrol</span><br><span class="line">leftcontrol = leftmeta</span><br></pre></td></tr></table></figure>
+
+<p>重新载入一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo keyd reload</span><br></pre></td></tr></table></figure>
+
+<p>搞定！</p>
+<p>咱就说，Linux 下很多东西（iptables啊，X11啊）的配置也不知道为啥搞的很反人类，明明是可以搞的这么简单的啊！</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1196,99 +1304,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://akawa.ink/2023/03/27/demo-code-about-how-to-create-a-new-account-by-steem-js-sdk.html">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/img/logo.jpg">
-      <meta itemprop="name" content="ETY001">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Akawa">
-      <meta itemprop="description" content="ETY001的博客">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="undefined | Akawa">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2023/03/27/demo-code-about-how-to-create-a-new-account-by-steem-js-sdk.html" class="post-title-link" itemprop="url">Demo code about how to create a new account by Steem JS SDK</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2023-03-27 13:25:31" itemprop="dateCreated datePublished" datetime="2023-03-27T13:25:31+08:00">2023-03-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2024-04-15 02:51:25" itemprop="dateModified" datetime="2024-04-15T02:51:25+08:00">2024-04-15</time>
-    </span>
-
-  
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2023/03/27/demo-code-about-how-to-create-a-new-account-by-steem-js-sdk.html#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/03/27/demo-code-about-how-to-create-a-new-account-by-steem-js-sdk.html" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Here is the demo code which displays how to create a new account with Steem JS SDK in two different ways ( by taking fee or by taking interests of claimed account).</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">const steem = require(&#x27;steem&#x27;)</span><br><span class="line"></span><br><span class="line">const creator = &#x27;test1&#x27;;</span><br><span class="line">const activeWif = &#x27;&#x27;;</span><br><span class="line">const newUsername = &#x27;test2&#x27;;</span><br><span class="line">const newPasswd = &#x27;P5KZS6bp8sVxxxxxxxxxD48jwBKxshpNZxsYnJ&#x27;;</span><br><span class="line">const fee = &#x27;3.000 STEEM&#x27;</span><br><span class="line"></span><br><span class="line">const newKeys = steem.auth.getPrivateKeys(newUsername, newPasswd, [&#x27;owner&#x27;, &#x27;active&#x27;, &#x27;posting&#x27;, &#x27;memo&#x27;]);</span><br><span class="line">console.log(newKeys);</span><br><span class="line"></span><br><span class="line">const weightThreshold = 1;</span><br><span class="line">const accountAuths = [];</span><br><span class="line">const owner = &#123;</span><br><span class="line">    weight_threshold: weightThreshold,</span><br><span class="line">    account_auths: accountAuths,</span><br><span class="line">    key_auths: [[newKeys.ownerPubkey, 1]],</span><br><span class="line">&#125;;</span><br><span class="line">const active = &#123;</span><br><span class="line">    weight_threshold: weightThreshold,</span><br><span class="line">    account_auths: accountAuths,</span><br><span class="line">    key_auths: [[newKeys.activePubkey, 1]],</span><br><span class="line">&#125;;</span><br><span class="line">const posting = &#123;</span><br><span class="line">    weight_threshold: weightThreshold,</span><br><span class="line">    account_auths: accountAuths,</span><br><span class="line">    key_auths: [[newKeys.postingPubkey, 1]],</span><br><span class="line">&#125;;</span><br><span class="line">const memoKey = newKeys.memoPubkey;</span><br><span class="line"></span><br><span class="line">// create a new user by creator with 3.000 STEEM fee</span><br><span class="line">steem.broadcast.accountCreate(activeWif, fee, creator, newUsername, owner, active, posting, memoKey, &#x27;&#123;&#125;&#x27;, function(err, result) &#123;</span><br><span class="line">    console.log(err, result);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// create a new user by creator with claimed account interests</span><br><span class="line">const op = [</span><br><span class="line">    &quot;create_claimed_account&quot;,</span><br><span class="line">    &#123;</span><br><span class="line">        &quot;creator&quot;: creator,</span><br><span class="line">        &quot;new_account_name&quot;: newUsername,</span><br><span class="line">        &quot;owner&quot;: owner,</span><br><span class="line">        &quot;active&quot;: active,</span><br><span class="line">        &quot;posting&quot;: posting,</span><br><span class="line">        &quot;memo_key&quot;: memoKey,</span><br><span class="line">        &quot;json_metadata&quot;: &quot;&#123;&#125;&quot;</span><br><span class="line">    &#125;</span><br><span class="line">];</span><br><span class="line">const tx = &#123;</span><br><span class="line">    operations: [op],</span><br><span class="line">&#125;;</span><br><span class="line">steem.broadcast.send(tx, [activeWif], function(err, result) &#123;</span><br><span class="line">    console.log(err, result);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/48/">48</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
