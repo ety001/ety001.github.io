@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一、字节序来自：http:&#x2F;&#x2F;ayazh.gjjblog.com&#x2F;archives&#x2F;1058846&#x2F; 谈到字节序的问题，必然牵涉到两大CPU派系。那就是Motorola的PowerPC系列CPU和Intel的x86系列CPU。PowerPC系列采用big endian方式存储数据，而x86系列则采用little endian方式存储数据。那么究竟什么是big endian，什么又是little e">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Big Endian 和 Little Endian">
+<meta property="og:url" content="https://blog.akawa.ink/2014/03/11/big-endian-and-little-endian.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="一、字节序来自：http:&#x2F;&#x2F;ayazh.gjjblog.com&#x2F;archives&#x2F;1058846&#x2F; 谈到字节序的问题，必然牵涉到两大CPU派系。那就是Motorola的PowerPC系列CPU和Intel的x86系列CPU。PowerPC系列采用big endian方式存储数据，而x86系列则采用little endian方式存储数据。那么究竟什么是big endian，什么又是little e">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2014-03-11T06:00:13.000Z">
+<meta property="article:modified_time" content="2024-04-09T19:23:15.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="编程语言">
+<meta property="article:tag" content="理论">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2014/03/11/big-endian-and-little-endian.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2014/03/11/big-endian-and-little-endian.html","path":"2014/03/11/big-endian-and-little-endian.html","title":"Big Endian 和 Little Endian"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Big Endian 和 Little Endian | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2014/03/11/big-endian-and-little-endian.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Big Endian 和 Little Endian | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Big Endian 和 Little Endian
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2014-03-11 14:00:13" itemprop="dateCreated datePublished" datetime="2014-03-11T14:00:13+08:00">2014-03-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-10 03:23:15" itemprop="dateModified" datetime="2024-04-10T03:23:15+08:00">2024-04-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>一、字节序<br>来自：<a target="_blank" rel="noopener" href="http://ayazh.gjjblog.com/archives/1058846/">http://ayazh.gjjblog.com/archives/1058846/</a></p>
+<p>谈到字节序的问题，必然牵涉到两大CPU派系。那就是Motorola的PowerPC系列CPU和Intel的x86系列CPU。PowerPC系列采用big endian方式存储数据，而x86系列则采用little endian方式存储数据。那么究竟什么是big endian，什么又是little endian呢？</p>
+<pre><code> 其实big endian是指低地址存放最高有效字节（MSB），而little endian则是低地址存放最低有效字节（LSB）。
+
+ 用文字说明可能比较抽象，下面用图像加以说明。比如数字0x12345678在两种不同字节序CPU中的存储顺序如下所示：
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Big Endian</span><br><span class="line"></span><br><span class="line">   低地址                                            高地址</span><br><span class="line">   -----------------------------------------&gt;</span><br><span class="line">   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">   |     12     |      34    |     56      |     78    |</span><br><span class="line">   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line"></span><br><span class="line">Little Endian</span><br><span class="line"></span><br><span class="line">   低地址                                            高地址</span><br><span class="line">   -----------------------------------------&gt;</span><br><span class="line">   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">   |     78     |      56    |     34      |     12    |</span><br><span class="line">   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<pre><code> 从上面两图可以看出，采用big endian方式存储数据是符合我们人类的思维习惯的。而little endian，!@#$%^&amp;，见鬼去吧 `-_-|||`
+
+ 为什么要注意字节序的问题呢？你可能这么问。当然，如果你写的程序只在单机环境下面运行，并且不和别人的程序打交道，那么你完全可以忽略字节序的存在。但是，如果你的程序要跟别人的程序产生交互呢？在这里我想说说两种语言。C/C++语言编写的程序里数据存储顺序是跟编译平台所在的CPU相关的，而JAVA编写的程序则唯一采用big endian方式来存储数据。试想，如果你用C/C++语言在x86平台下编写的程序跟别人的JAVA程序互通时会产生什么结果？就拿上面的0x12345678来说，你的程序传递给别人的一个数据，将指向0x12345678的指针传给了JAVA程序，由于JAVA采取big endian方式存储数据，很自然的它会将你的数据翻译为0x78563412。什么？竟然变成另外一个数字了？是的，就是这种后果。因此，在你的C程序传给JAVA程序之前有必要进行字节序的转换工作。
+
+ 无独有偶，所有网络协议也都是采用big endian的方式来传输数据的。所以有时我们也会把big endian方式称之为网络字节序。当两台采用不同字节序的主机通信时，在发送数据之前都必须经过字节序的转换成为网络字节序后再进行传输。ANSI C中提供了下面四个转换字节序的宏。
+</code></pre>
+<p>big endian：最高字节在地址最低位，最低字节在地址最高位，依次排列。<br>little endian：最低字节在最低位，最高字节在最高位，反序排列。</p>
+<p>endian指的是当物理上的最小单元比逻辑上的最小单元小时，逻辑到物理的单元排布关系。咱们接触到的物理单元最小都是byte，在通信领域中，这里往往是bit，不过原理也是类似的。</p>
+<p>一个例子：<br>如果我们将0x1234abcd写入到以0x0000开始的内存中，则结果为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">                big-endian     little-endian</span><br><span class="line">0x0000     0x12              0xcd</span><br><span class="line">0x0001     0x34              0xab</span><br><span class="line">0x0002     0xab              0x34</span><br><span class="line">0x0003     0xcd              0x12</span><br></pre></td></tr></table></figure>
+
+<p>目前应该little endian是主流，因为在数据类型转换的时候（尤其是指针转换）不用考虑地址问题。</p>
+<p>二、Big Endian 和 Little Endian名词的由来<br>这两个术语来自于 Jonathan Swift 的《《格利佛游记》其中交战的两个派别无法就应该从哪一端－－小端还是大端－－打开一个半熟的鸡蛋达成一致。：）<br>“endian”这个词出自《格列佛游记》。小人国的内战就源于吃鸡蛋时是究竟从大头(Big-Endian)敲开还是从小头(Little-Endian)敲开，由此曾发生过六次叛乱，其中一个皇帝送了命，另一个丢了王位。<br>我们一般将endian翻译成“字节序”，将big endian和little endian称作“大尾”和“小尾”。</p>
+<p>在那个时代，Swift是在讽刺英国和法国之间的持续冲突，Danny Cohen，一位网络协议的早期开创者，第一次使用这两个术语来指代字节顺序，后来这个术语被广泛接纳了</p>
+<p>三、Big Endian 和 Little Endian优劣<br>来自：Dr. William T. Verts, April 19, 1996<br>Big Endian<br>判别一个数的正负很容易，只要取offset0处的一个字节就能确认。<br>Little Endian<br>长度为1，2，4字节的数，排列方式都是一样的，数据类型转换非常方便。</p>
+<p>四、一些常见文件的字节序<br>来自：Dr. William T. Verts, April 19, 1996</p>
+<p>Common file formats and their endian order are as follows:<br>Adobe Photoshop – Big Endian<br>BMP (Windows and OS&#x2F;2 Bitmaps) – Little Endian<br>DXF (AutoCad) – Variable<br>GIF – Little Endian<br>IMG (GEM Raster) – Big Endian<br>JPEG – Big Endian<br>FLI (Autodesk Animator) – Little Endian<br>MacPaint – Big Endian<br>PCX (PC Paintbrush) – Little Endian<br>PostScript – Not Applicable (text!)<br>POV (Persistence of Vision ray-tracer) – Not Applicable (text!)<br>QTM (Quicktime Movies) – Little Endian (on a Mac!) （PeterLee注Big Endian in my opinion）<br>Microsoft RIFF (.WAV &amp; .AVI) – Both<br>Microsoft RTF (Rich Text Format) – Little Endian<br>SGI (Silicon Graphics) – Big Endian<br>Sun Raster – Big Endian<br>TGA (Targa) – Little Endian<br>TIFF – Both, Endian identifier encoded into file<br>WPG (WordPerfect Graphics Metafile) – Big Endian (on a PC!)<br>XWD (X Window Dump) – Both, Endian identifier encoded into file</p>
+<p>五、比特序<br>来自：<a target="_blank" rel="noopener" href="http://ayazh.gjjblog.com/archives/1058846/">http://ayazh.gjjblog.com/archives/1058846/</a></p>
+<p>我在8月9号的《Big Endian和Little Endian》一文中谈了字节序的问题。可是有朋友仍然会问，CPU存储一个字节的数据时其字节内的8个比特之间的顺序是否也有big endian和little endian之分？或者说是否有比特序的不同？</p>
+<pre><code> 实际上，这个比特序是同样存在的。下面以数字0xB4（10110100）用图加以说明。
+</code></pre>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Big Endian</span><br><span class="line"></span><br><span class="line">   msb                                                         lsb</span><br><span class="line">   ----------------------------------------------&gt;</span><br><span class="line">   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">   |   1  |   0  |   1  |   1  |   0  |   1  |   0  |   0  |</span><br><span class="line">   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line"></span><br><span class="line">Little Endian</span><br><span class="line"></span><br><span class="line">   lsb                                                         msb</span><br><span class="line">   ----------------------------------------------&gt;</span><br><span class="line">   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">   |   0  |   0  |   1  |   0  |   1  |   1  |   0  |   1  |</span><br><span class="line">   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br></pre></td></tr></table></figure>
+<pre><code> 实际上，由于CPU存储数据操作的最小单位是一个字节，其内部的比特序是什么样对我们的程序来说是一个黑盒子。也就是说，你给我一个指向0xB4这个数的指针，对于big endian方式的CPU来说，它是从左往右依次读取这个数的8个比特；而对于little endian方式的CPU来说，则正好相反，是从右往左依次读取这个数的8个比特。而我们的程序通过这个指针访问后得到的数就是0xB4，字节内部的比特序对于程序来说是不可见的，其实这点对于单机上的字节序来说也是一样的。
+
+ 那可能有人又会问，如果是网络传输呢？会不会出问题？是不是也要通过什么函数转换一下比特序？嗯，这个问题提得很好。假设little endian方式的CPU要传给big endian方式CPU一个字节的话，其本身在传输之前会在本地就读出这个8比特的数，然后再按照网络字节序的顺序来传输这8个比特，这样的话到了接收端不会出现任何问题。而假如要传输一个32比特的数的话，由于这个数在littel endian方存储时占了4个字节，而网络传输是以字节为单位进行的，little endian方的CPU读出第一个字节后发送，实际上这个字节是原数的LSB，到了接收方反倒成了MSB从而发生混乱。
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2014/03/11/big-endian-and-little-endian.html" title="Big Endian 和 Little Endian">https://blog.akawa.ink/2014/03/11/big-endian-and-little-endian.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag"># 编程语言</a>
+              <a href="/tags/%E7%90%86%E8%AE%BA/" rel="tag"># 理论</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2014/03/04/four-patterns-of-invocation-in-javascript.html" rel="prev" title="JavaScript函数调用模式">
+                  <i class="fa fa-angle-left"></i> JavaScript函数调用模式
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2014/03/11/mac-rulers.html" rel="next" title="MAC规则">
+                  MAC规则 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

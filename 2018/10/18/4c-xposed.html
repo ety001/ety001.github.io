@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="最近为了研究 xposed 模块开发，我拿我的一块手机跟我妈换了下，把她手里的小米4C换过来，准备用这个作为开发机使用。折腾了一整天，终于是搞定了。 准备工作 解锁BL 线刷包 libra_images_6.1.7_20151221.0000.11_5.1_cn_b09dac70a0.tgz cofface_twrp_recovery.img SuperSU-v2.79-SR2-20170103_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小米4c刷xposed">
+<meta property="og:url" content="https://blog.akawa.ink/2018/10/18/4c-xposed.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="最近为了研究 xposed 模块开发，我拿我的一块手机跟我妈换了下，把她手里的小米4C换过来，准备用这个作为开发机使用。折腾了一整天，终于是搞定了。 准备工作 解锁BL 线刷包 libra_images_6.1.7_20151221.0000.11_5.1_cn_b09dac70a0.tgz cofface_twrp_recovery.img SuperSU-v2.79-SR2-20170103_">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.akawa.ink/img/2018/10/UkRh6Ph10pIP7MGaLraCrD9AZcBuyEDTriIv5p9Z.png">
+<meta property="og:image" content="https://blog.akawa.ink/img/2018/10/7qF2377KTb81yWPmvKza2LKu1KkFP0fWMvo2hPxP.png">
+<meta property="og:image" content="https://blog.akawa.ink/img/2018/10/Yn8HKdkbaOfiRuFIJMIUZayXYNLyizi7EBkMkJWp.png">
+<meta property="og:image" content="https://blog.akawa.ink/img/2018/10/bdHTi9xMCgEjE3geFVuunbaiPPuYu7PxvGNp60id.png">
+<meta property="og:image" content="https://blog.akawa.ink/img/2018/10/UDex969zG9hxmhoTV4LJts2mxhCWz52jzXvqy1hh.jpeg">
+<meta property="og:image" content="https://blog.akawa.ink/img/2018/10/I5Qas0Jcv8se42g1hIZ8XWlWGSjYnmKelbV9OweH.png">
+<meta property="og:image" content="https://blog.akawa.ink/img/2018/10/roVYl0V9QEIrOv0knnKf0Qz3Yi3ENQHA326VpcFl.png">
+<meta property="og:image" content="https://blog.akawa.ink/img/2018/10/UYG0JYVq5CO0gNxEcNx3N8ZrrXWjoWISYCRv0QUR.png">
+<meta property="article:published_time" content="2018-10-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="配置">
+<meta property="article:tag" content="Xposed">
+<meta property="article:tag" content="刷机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.akawa.ink/img/2018/10/UkRh6Ph10pIP7MGaLraCrD9AZcBuyEDTriIv5p9Z.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2018/10/18/4c-xposed.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2018/10/18/4c-xposed.html","path":"2018/10/18/4c-xposed.html","title":"小米4c刷xposed"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>小米4c刷xposed | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E7%9A%84%E8%B5%84%E6%BA%90"><span class="nav-number">2.</span> <span class="nav-text">下载所需的资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E9%94%81BL"><span class="nav-number">3.</span> <span class="nav-text">解锁BL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%B7%E5%85%A5%E4%BD%8E%E7%89%88%E6%9C%AC%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.</span> <span class="nav-text">刷入低版本系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%B7%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9Recovery"><span class="nav-number">5.</span> <span class="nav-text">刷入第三方Recovery</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E7%B3%BB%E7%BB%9F%E8%BF%9B%E8%A1%8CROOT"><span class="nav-number">6.</span> <span class="nav-text">对系统进行ROOT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-xposed"><span class="nav-number">7.</span> <span class="nav-text">安装 xposed</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2018/10/18/4c-xposed.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="小米4c刷xposed | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          小米4c刷xposed
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-10-19 00:00:00" itemprop="dateCreated datePublished" datetime="2018-10-19T00:00:00+08:00">2018-10-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>最近为了研究 <code>xposed</code> 模块开发，我拿我的一块手机跟我妈换了下，把她手里的小米4C换过来，准备用这个作为开发机使用。折腾了一整天，终于是搞定了。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><ul>
+<li>解锁BL</li>
+<li>线刷包 libra_images_6.1.7_20151221.0000.11_5.1_cn_b09dac70a0.tgz</li>
+<li>cofface_twrp_recovery.img</li>
+<li>SuperSU-v2.79-SR2-20170103_automode_by_kane.apk</li>
+<li>XposedInstaller_3.0_alpha4.apk</li>
+<li>xposed-v86-sdk22-arm64-MIUI-edition-by-Solar_-20160710.zip</li>
+</ul>
+<h2 id="下载所需的资源"><a href="#下载所需的资源" class="headerlink" title="下载所需的资源"></a>下载所需的资源</h2><p>准备工作中列出的各种工具，都已放到百度云了，链接: <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1GPumHzCjc89o-jZlKh1V3g">https://pan.baidu.com/s/1GPumHzCjc89o-jZlKh1V3g</a> 提取码: 25xf。其中 <code>cofface_twrp_recovery.img</code> 在 <code>小米4C刷第三方recovery工具2.8.7.3.zip</code> 中。</p>
+<h2 id="解锁BL"><a href="#解锁BL" class="headerlink" title="解锁BL"></a>解锁BL</h2><p>先去这里 <a target="_blank" rel="noopener" href="http://www.miui.com/unlock/index.html">http://www.miui.com/unlock/index.html</a> 申请解锁手机BL的资格。BL 就是 BootLoader，解锁后才能修改 BootLoader。</p>
+<p>获得解锁资格后如下图所示</p>
+<p><img src="/img/2018/10/UkRh6Ph10pIP7MGaLraCrD9AZcBuyEDTriIv5p9Z.png"></p>
+<p>然后下载解锁工具。解锁工具只有 Windows 版，因此如果你用的是非 Windows 系统，请自行准备 Windows 系统 或者虚拟机。启动解锁工具，会提示登陆</p>
+<p><img src="/img/2018/10/7qF2377KTb81yWPmvKza2LKu1KkFP0fWMvo2hPxP.png"></p>
+<p>登陆后，将手机关机进入Fastboot模式（同时按电源键及音量减键），手机上会出现米兔在维修机器人的图标，</p>
+<p><img src="/img/2018/10/Yn8HKdkbaOfiRuFIJMIUZayXYNLyizi7EBkMkJWp.png"></p>
+<p>然后这时用数据线连接电脑和手机，然后在电脑上点击“解锁”</p>
+<p><img src="/img/2018/10/bdHTi9xMCgEjE3geFVuunbaiPPuYu7PxvGNp60id.png"></p>
+<p>大约一分钟左右即可完成解锁，然后系统会自动重启。</p>
+<h2 id="刷入低版本系统"><a href="#刷入低版本系统" class="headerlink" title="刷入低版本系统"></a>刷入低版本系统</h2><p>目前已知 6.1.7 及以下的版本是没有任何锁的，之后的版本都对 <code>/system</code> 分区加锁了，因此我们需要先刷入低版本的系统。从 <code>http://www.miui.com/shuaji-393.html</code> 这里可以找到通用刷机工具，按照这个网页中的教程操作即可。</p>
+<p>刷完后，手机自动重启，第一次重启会很长时间，耐心等待直到进入系统。</p>
+<p>做完系统初始化配置后，进入到设置里，找到“关于手机”，一直点击 MIUI版本上 直到开启“开发者选项”，切回设置主菜单，“其他高级设置”里面找到“开发者选项”，打开“USB调试”。</p>
+<h2 id="刷入第三方Recovery"><a href="#刷入第三方Recovery" class="headerlink" title="刷入第三方Recovery"></a>刷入第三方Recovery</h2><p>再次进入 Fastboot 模式，手机线连接手机和电脑，在电脑上解压 <code>小米4C刷第三方recovery工具2.8.7.3.zip</code>，如果是 <code>windows</code> 系统，直接执行里面的一个 <code>bat</code> 脚本即可完成第三方 <code>Recovery</code> 刷入。</p>
+<p>由于我 Mac 下有 <code>ADB</code> 和 <code>Fastboot</code> 工具，因此我是手动刷入并引导进入 <code>Recovery</code> 的，如下图：</p>
+<p><img src="/img/2018/10/UDex969zG9hxmhoTV4LJts2mxhCWz52jzXvqy1hh.jpeg"></p>
+<h2 id="对系统进行ROOT"><a href="#对系统进行ROOT" class="headerlink" title="对系统进行ROOT"></a>对系统进行ROOT</h2><p>刷入第三方 <code>Recovery</code> 后，会自动重启进入 <code>Recovery</code>，界面如下图</p>
+<p><img src="/img/2018/10/I5Qas0Jcv8se42g1hIZ8XWlWGSjYnmKelbV9OweH.png"></p>
+<p>这时在我的电脑里应该能找到手机的SD卡的那个盘，把 <code>SuperSU-v2.79-SR2-20170103_automode_by_kane.apk</code> 拷贝进去，然后回到手机，点击“安装刷机包”，找到 <code>SuperSU-v2.79-SR2-20170103_automode_by_kane.apk</code>，并滑动滑块开始安装，等提示完成后，即可重启手机。进入系统后就能在桌面看到新安装的“超级授权”应用了。</p>
+<h2 id="安装-xposed"><a href="#安装-xposed" class="headerlink" title="安装 xposed"></a>安装 xposed</h2><p>从我的电脑里，把 <code>XposedInstaller_3.0_alpha4.apk</code> 和 <code>xposed-v86-sdk22-arm64-MIUI-edition-by-Solar_-20160710.zip</code> 复制进手机SD卡。在手机上安装 <code>XposedInstaller_3.0_alpha4.apk</code>。</p>
+<p>安装后，进入 <code>Recovery</code> 模式，即一直按住电源键和音量增键，直至出现开机Logo的时候，松开电源键，再等几秒后，进入 <code>Recovery</code>，这时松开音量增键。</p>
+<p>点击进入“安装刷机包”，选择 <code>xposed-v86-sdk22-arm64-MIUI-edition-by-Solar_-20160710.zip</code>，滑动进行确认后开始安装，完成后重启手机。进入系统后，打开 <code>xposed installer</code> 点击“框架”，就能看到如下的字样</p>
+<p><img src="/img/2018/10/roVYl0V9QEIrOv0knnKf0Qz3Yi3ENQHA326VpcFl.png"></p>
+<p>说明我们的 <code>xposed</code> 已经安装好了。</p>
+<p>为了测试下是否安装正确，我安装了一个微信机器人的模块，并且把微信机器人放到了群里测试了下，效果如下：</p>
+<p><img src="/img/2018/10/UYG0JYVq5CO0gNxEcNx3N8ZrrXWjoWISYCRv0QUR.png"></p>
+<p>至此，完成！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2018/10/18/4c-xposed.html" title="小米4c刷xposed">https://blog.akawa.ink/2018/10/18/4c-xposed.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E9%85%8D%E7%BD%AE/" rel="tag"># 配置</a>
+              <a href="/tags/Xposed/" rel="tag"># Xposed</a>
+              <a href="/tags/%E5%88%B7%E6%9C%BA/" rel="tag"># 刷机</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/10/11/cordova.html" rel="prev" title="最近折腾 cordova 遇到的问题">
+                  <i class="fa fa-angle-left"></i> 最近折腾 cordova 遇到的问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/10/19/google-play.html" rel="next" title="原来最干净的安装谷歌套件的方法是这样">
+                  原来最干净的安装谷歌套件的方法是这样 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

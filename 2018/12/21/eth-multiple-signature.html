@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="前言ETH的多签是依靠智能合约实现的，也就是说持币的是智能合约，通过在智能合约里设置条件，来使转账之类的权限通过多人签名来集体控制。 从网上找到了一段简单的多签智能合约，代码如下： 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ETH多签测试">
+<meta property="og:url" content="https://blog.akawa.ink/2018/12/21/eth-multiple-signature.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="前言ETH的多签是依靠智能合约实现的，也就是说持币的是智能合约，通过在智能合约里设置条件，来使转账之类的权限通过多人签名来集体控制。 从网上找到了一段简单的多签智能合约，代码如下： 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/L4Eyix0wrf4gIollkxdHytVyd5cgbCdXI3kvcZP9.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/5cE6alqJv6QxCd25lESLhFuxeeZQRrVAiFWtj40h.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/jY43d1c4RtY1pGlwO7dl0KizQJWql8aGzAhXnCN1.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/k6OPqJvJys4K69lcKHn4BshSUYtXWLAsdcl1QZKL.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/S8aVs938m7ft7bxlmVTRmk9mwyyHomyXPUbCamwz.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/YnjFibmHTTEV1g0fD8LVpltCwUz1XB1PTRRwXUBq.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/UeCYGKvH71KR9rglfytM804vtEPhujdRTyI8Lh6T.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/MPimqby4mz4E5Na5klyh1V5j8mdmS524tUYAi8eB.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/iE2U7iMdDcVZsTRxrCaC0RV7mL0UFZdYMfsxWmE8.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/A9w0zfyJdUyEhmZQLffBCVMGsQxd2Nm8dG4FoMr6.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/TJgxy72QO6CEOZ6BmOCvz2GLPCtl9FtM9h0uoueH.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181222/oOACWaJc1OkPG4XOfeEAlCP62tS0h5ihc4hClikr.png">
+<meta property="article:published_time" content="2018-12-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="ethereum">
+<meta property="article:tag" content="数字货币">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.akawa.ink/upload/20181222/L4Eyix0wrf4gIollkxdHytVyd5cgbCdXI3kvcZP9.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2018/12/21/eth-multiple-signature.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2018/12/21/eth-multiple-signature.html","path":"2018/12/21/eth-multiple-signature.html","title":"ETH多签测试"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ETH多签测试 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E5%90%88%E7%BA%A6"><span class="nav-number">2.</span> <span class="nav-text">部署合约</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E5%90%88%E7%BA%A6%E7%AE%A1%E7%90%86%E5%91%98"><span class="nav-number">3.</span> <span class="nav-text">增加合约管理员</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%99%E5%90%88%E7%BA%A6%E5%86%85%E8%BD%AC%E8%B4%A6"><span class="nav-number">4.</span> <span class="nav-text">给合约内转账</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E7%AD%BE%E4%BB%8E%E5%90%88%E7%BA%A6%E5%86%85%E8%BD%AC%E5%87%BA%E9%87%91%E9%A2%9D"><span class="nav-number">5.</span> <span class="nav-text">多签从合约内转出金额</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2018/12/21/eth-multiple-signature.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="ETH多签测试 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ETH多签测试
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-22 00:00:00" itemprop="dateCreated datePublished" datetime="2018-12-22T00:00:00+08:00">2018-12-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>ETH的多签是依靠智能合约实现的，也就是说持币的是智能合约，通过在智能合约里设置条件，来使转账之类的权限通过多人签名来集体控制。</p>
+<p>从网上找到了一段简单的多签智能合约，代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line">pragma solidity ^0.4.21;</span><br><span class="line"></span><br><span class="line">contract MultiSigWallet&#123;</span><br><span class="line">    address private owner;</span><br><span class="line">    mapping (address =&gt; uint8) private managers;</span><br><span class="line">    </span><br><span class="line">    modifier isOwner&#123;</span><br><span class="line">        require(owner == msg.sender);</span><br><span class="line">        _;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    modifier isManager&#123;</span><br><span class="line">        require(</span><br><span class="line">            msg.sender == owner || managers[msg.sender] == 1);</span><br><span class="line">        _;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    uint constant MIN_SIGNATURES = 3;</span><br><span class="line">    uint private transactionIdx;</span><br><span class="line">    </span><br><span class="line">    struct Transaction &#123;</span><br><span class="line">        address from;</span><br><span class="line">        address to;</span><br><span class="line">        uint amount;</span><br><span class="line">        uint8 signatureCount;</span><br><span class="line">        mapping (address =&gt; uint8) signatures;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    mapping (uint =&gt; Transaction) private transactions;</span><br><span class="line">    uint[] private pendingTransactions;</span><br><span class="line">    </span><br><span class="line">    function MultiSigWallet() public&#123;</span><br><span class="line">        owner = msg.sender;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    event DepositFunds(address from, uint amount);</span><br><span class="line">    event TransferFunds(address to, uint amount);</span><br><span class="line">    event TransactionCreated(</span><br><span class="line">        address from,</span><br><span class="line">        address to,</span><br><span class="line">        uint amount,</span><br><span class="line">        uint transactionId</span><br><span class="line">        );</span><br><span class="line">    </span><br><span class="line">    function addManager(address manager) public isOwner&#123;</span><br><span class="line">        managers[manager] = 1;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    function removeManager(address manager) public isOwner&#123;</span><br><span class="line">        managers[manager] = 0;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    function () public payable&#123;</span><br><span class="line">        emit DepositFunds(msg.sender, msg.value);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    function withdraw(uint amount) isManager public&#123;</span><br><span class="line">        transferTo(msg.sender, amount);</span><br><span class="line">    &#125;</span><br><span class="line">    function transferTo(address to,  uint amount) isManager public&#123;</span><br><span class="line">        require(address(this).balance &gt;= amount);</span><br><span class="line">        uint transactionId = transactionIdx++;</span><br><span class="line">        </span><br><span class="line">        Transaction memory transaction;</span><br><span class="line">        transaction.from = msg.sender;</span><br><span class="line">        transaction.to = to;</span><br><span class="line">        transaction.amount = amount;</span><br><span class="line">        transaction.signatureCount = 0;</span><br><span class="line">        transactions[transactionId] = transaction;</span><br><span class="line">        pendingTransactions.push(transactionId);</span><br><span class="line">        emit TransactionCreated(msg.sender, to, amount, transactionId);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    function getPendingTransactions() public isManager view returns(uint[])&#123;</span><br><span class="line">        return pendingTransactions;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    function signTransaction(uint transactionId) public isManager&#123;</span><br><span class="line">        Transaction storage transaction = transactions[transactionId];</span><br><span class="line">        require(0x0 != transaction.from);</span><br><span class="line">        require(msg.sender != transaction.from);</span><br><span class="line">        require(transaction.signatures[msg.sender]!=1);</span><br><span class="line">        transaction.signatures[msg.sender] = 1;</span><br><span class="line">        transaction.signatureCount++;</span><br><span class="line">        </span><br><span class="line">        if(transaction.signatureCount &gt;= MIN_SIGNATURES)&#123;</span><br><span class="line">            require(address(this).balance &gt;= transaction.amount);</span><br><span class="line">            transaction.to.transfer(transaction.amount);</span><br><span class="line">            emit TransferFunds(transaction.to, transaction.amount);</span><br><span class="line">            deleteTransactions(transactionId);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    function deleteTransactions(uint transacionId) public isManager&#123;</span><br><span class="line">        uint8 replace = 0;</span><br><span class="line">        for(uint i = 0; i&lt; pendingTransactions.length; i++)&#123;</span><br><span class="line">            if(1==replace)&#123;</span><br><span class="line">                pendingTransactions[i-1] = pendingTransactions[i];</span><br><span class="line">            &#125;else if(transacionId == pendingTransactions[i])&#123;</span><br><span class="line">                replace = 1;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; </span><br><span class="line">        delete pendingTransactions[pendingTransactions.length - 1];</span><br><span class="line">        pendingTransactions.length--;</span><br><span class="line">        delete transactions[transacionId];</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    function walletBalance() public isManager view returns(uint)&#123;</span><br><span class="line">        return address(this).balance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="部署合约"><a href="#部署合约" class="headerlink" title="部署合约"></a>部署合约</h2><p>我本地的测试网络是使用 <a target="_blank" rel="noopener" href="https://truffleframework.com/ganache"><strong>Ganache</strong></a> 搭建的，如下图</p>
+<p><img src="/upload/20181222/L4Eyix0wrf4gIollkxdHytVyd5cgbCdXI3kvcZP9.png"></p>
+<p>我修改了我的 <strong>Ganache</strong> 的端口为 <strong>8545</strong>。</p>
+<p>然后打开 <a target="_blank" rel="noopener" href="http://remix.ethereum.org/#"><strong>Remix</strong></a>，在右边栏选择 <strong>Run</strong>，在 <strong>Environment</strong> 中选择 <strong>Web3 Provider</strong>，如下图</p>
+<p><img src="/upload/20181222/5cE6alqJv6QxCd25lESLhFuxeeZQRrVAiFWtj40h.png"></p>
+<p>在弹出的层中，输入本地地址和刚才配置的8545端口，就可以连接到 <strong>Ganache</strong> 的环境了，如下图</p>
+<p><img src="/upload/20181222/jY43d1c4RtY1pGlwO7dl0KizQJWql8aGzAhXnCN1.png"></p>
+<p>连接成功后，会看到在 <strong>Environment</strong> 下面的 <strong>Account</strong> 栏中会列出所有 <strong>Ganache</strong> 中的测试账号。</p>
+<p>我们选择第一个账号作为部署合约的主账号，即合约的 <strong>owner</strong>。</p>
+<p>在编辑器中创建一个新的合约文件，把上面的合约代码复制进编辑器，右边栏选择 <strong>Compile</strong> ，<br>在 <strong>Select new compiler version</strong> 中选择 <strong>0.4.21</strong> 版本的编译器，等待编译完成。<br>完成后，最下面出现绿色的提示信息，如下图</p>
+<p><img src="/upload/20181222/k6OPqJvJys4K69lcKHn4BshSUYtXWLAsdcl1QZKL.png"></p>
+<p>再切换回 <strong>Run</strong> 标签，点击 <strong>Deploy</strong> 就可以部署了。<br>部署成功后，在 <strong>Deployed Contracts</strong> 中就能看到新部署的合约了，下拉打开可以看到合约的各个接口，如图</p>
+<p><img src="/upload/20181222/S8aVs938m7ft7bxlmVTRmk9mwyyHomyXPUbCamwz.png"></p>
+<h2 id="增加合约管理员"><a href="#增加合约管理员" class="headerlink" title="增加合约管理员"></a>增加合约管理员</h2><p>在右边栏找到合约的 <strong>addManager</strong> 接口，下拉打开输入一个以太钱包地址，然后点击 <strong>transact</strong> 即完成添加。<br>这里我把 <strong>Ganache</strong> 的第 2 到 4 的地址加入进管理员中。</p>
+<p><img src="/upload/20181222/YnjFibmHTTEV1g0fD8LVpltCwUz1XB1PTRRwXUBq.png"></p>
+<h2 id="给合约内转账"><a href="#给合约内转账" class="headerlink" title="给合约内转账"></a>给合约内转账</h2><p>切换回 <strong>Ganache</strong>，在 <strong>Transactions</strong> 中找到我们刚才部署的合约地址，<code>0x08ea5409922D4204C0E03d17243E77c3810C0CCe</code>，</p>
+<p><img src="/upload/20181222/UeCYGKvH71KR9rglfytM804vtEPhujdRTyI8Lh6T.png"></p>
+<p>使用任意的其他账号转账任意个 <strong>ETH</strong> 进合约里。<br>我用的是 <a target="_blank" rel="noopener" href="https://www.myetherwallet.com/"><strong>MyEtherWallet</strong></a>进行的转账，只需要把节点设置成本地网络，<br>然后用私钥模式登陆转账即可，这里就略过不说了。</p>
+<p><img src="/upload/20181222/MPimqby4mz4E5Na5klyh1V5j8mdmS524tUYAi8eB.png"></p>
+<p>转完账后，在 <strong>Remix</strong> 的 <strong>Run</strong> 标签下，找到合约的 <strong>walletBalance</strong> 接口，<br>点击调用即可显示当前合约的余额，注意单位！</p>
+<p><img src="/upload/20181222/iE2U7iMdDcVZsTRxrCaC0RV7mL0UFZdYMfsxWmE8.png"></p>
+<h2 id="多签从合约内转出金额"><a href="#多签从合约内转出金额" class="headerlink" title="多签从合约内转出金额"></a>多签从合约内转出金额</h2><p>回到 <strong>Remix</strong>，在右边栏的 <strong>Run</strong> 标签下，先确认 <strong>Account</strong> 选择的是合约的 <strong>owner</strong>，<br>这个例子里就是第一个测试地址了。</p>
+<p>在合约中找到 <strong>transferTo</strong>，下拉打开，输入一个本地测试网络中的以太钱包地址，输入待转账的金额，点击 <strong>transact</strong>。这里注意单位，下图为转 5 ETH，</p>
+<p><img src="/upload/20181222/A9w0zfyJdUyEhmZQLffBCVMGsQxd2Nm8dG4FoMr6.png"></p>
+<p>成功执行后，就会有一个等待多签的 <strong>transaction</strong> 在 <strong>pendingTransactions</strong> 这个数组里。<br>点击 <strong>getPendingTransactions</strong> 可以得到当前等待多签的 <strong>transaction</strong> 在数组中的索引值。<br>下图则代表当前等待多签的 <strong>transaction</strong> 的索引值是 0 。</p>
+<p><img src="/upload/20181222/TJgxy72QO6CEOZ6BmOCvz2GLPCtl9FtM9h0uoueH.png"></p>
+<p>这时，在 <strong>Run</strong> 标签页的顶部，把 <strong>Account</strong> 依次切换为其他几个管理员，分别执行合约的 <strong>signTransaction</strong> 接口即可完成多签，其中 <strong>transactionId</strong> 就是上一步中的索引值，如下图</p>
+<p><img src="/upload/20181222/oOACWaJc1OkPG4XOfeEAlCP62tS0h5ihc4hClikr.png"></p>
+<p>目前这个合约代码中，是当签名管理员的数量大于等于3个，就正式完成多签并发送交易。<br>所以当第三个管理执行完 <strong>signTransaction</strong> 后，查一下合约的余额就发现已经转出去 5ETH了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>目前这个例子中的合约代码还是比较简单的，没有各个用户的权重关系。这个就可以根据自己的需要来写合约了。</p>
+<p>Over！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2018/12/21/eth-multiple-signature.html" title="ETH多签测试">https://blog.akawa.ink/2018/12/21/eth-multiple-signature.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/ethereum/" rel="tag"># ethereum</a>
+              <a href="/tags/%E6%95%B0%E5%AD%97%E8%B4%A7%E5%B8%81/" rel="tag"># 数字货币</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/12/10/raspberrypi-3b-home-assistant-mi-2.html" rel="prev" title="在树莓派3B上搭建Hass.io并接入米家和iOS（二）">
+                  <i class="fa fa-angle-left"></i> 在树莓派3B上搭建Hass.io并接入米家和iOS（二）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/12/28/wechat-jpg-detect.html" rel="next" title="微信扫一扫相册无法显示图片的原因">
+                  微信扫一扫相册无法显示图片的原因 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

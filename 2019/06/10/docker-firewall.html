@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="最近接了一个运维 cybex 节点的任务，过程甚是坎坷。首先，我的客户提供的服务器上有一个在运行的 eos 侧链节点，其次，cybex 节点的搭建，官方要求要做严格的防火墙设置，即入站规则中只允许指定的 IP 访问本地的指定端口，出站规则中只允许本地访问指定IP的指定端口。 这样就防火墙要求就有些棘手了。由于目前服务器上的 eos 侧链节点并没有什么防火墙配置，所以要是把 cybex 的出站白名单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 Docker 和 Firewalld 实现高度防护">
+<meta property="og:url" content="https://blog.akawa.ink/2019/06/10/docker-firewall.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="最近接了一个运维 cybex 节点的任务，过程甚是坎坷。首先，我的客户提供的服务器上有一个在运行的 eos 侧链节点，其次，cybex 节点的搭建，官方要求要做严格的防火墙设置，即入站规则中只允许指定的 IP 访问本地的指定端口，出站规则中只允许本地访问指定IP的指定端口。 这样就防火墙要求就有些棘手了。由于目前服务器上的 eos 侧链节点并没有什么防火墙配置，所以要是把 cybex 的出站白名单">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://steemeditor.com/storage/images/JtTZMLQZLKqcFjL4baLqyxsSZ8N4LYcFmyDBZDrm.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/I3d5w4nJSBbIu20reYo7QscJFoESVMO2XTKGbxpn.png">
+<meta property="article:published_time" content="2019-06-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="Server&amp;OS">
+<meta property="article:tag" content="Docker">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://steemeditor.com/storage/images/JtTZMLQZLKqcFjL4baLqyxsSZ8N4LYcFmyDBZDrm.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2019/06/10/docker-firewall.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2019/06/10/docker-firewall.html","path":"2019/06/10/docker-firewall.html","title":"用 Docker 和 Firewalld 实现高度防护"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>用 Docker 和 Firewalld 实现高度防护 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2019/06/10/docker-firewall.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="用 Docker 和 Firewalld 实现高度防护 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          用 Docker 和 Firewalld 实现高度防护
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-06-11 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-11T00:00:00+08:00">2019-06-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>最近接了一个运维 <strong>cybex</strong> 节点的任务，过程甚是坎坷。首先，我的客户提供的服务器上有一个在运行的 <strong>eos</strong> 侧链节点，其次，<strong>cybex</strong> 节点的搭建，官方要求要做严格的防火墙设置，即入站规则中只允许指定的 <strong>IP</strong> 访问本地的指定端口，出站规则中只允许本地访问指定IP的指定端口。</p>
+<p>这样就防火墙要求就有些棘手了。由于目前服务器上的 <strong>eos</strong> 侧链节点并没有什么防火墙配置，所以要是把 <strong>cybex</strong> 的出站白名单机制做上了，<strong>eos</strong> 侧链要想正常工作，也需要配置一份出站白名单，否则 <strong>eos</strong> 侧链节点将拿不到其他节点的同步数据了。</p>
+<p>思前想后，觉得可以把 <strong>cybex</strong> 节点使用 <strong>docker</strong> 容器运行，这样 <strong>cybex</strong> 节点就有独立的 <strong>IP</strong> 和隔离的环境了，我只需要在宿主机，使用 <strong>cybex</strong> 容器的 <strong>IP</strong> 作为标示来过滤进出站数据包即可。</p>
+<p>思路定下来后，开始准备实施。</p>
+<p>由于宿主机操作系统是 <strong>CentOS7</strong>，也就是系统默认安装的是 <strong>Firewalld</strong>。经过一番学习，写出了入站规则，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --zone=public --add-rich-rule &#x27;rule family=&quot;ipv4&quot; source address=&quot;IP1&quot; forward-port port=&quot;5000&quot; protocol=&quot;tcp&quot; to-port=&quot;5000&quot; to-addr=&quot;172.20.0.2&quot;&#x27; --permanent</span><br><span class="line">firewall-cmd --zone=public --add-rich-rule &#x27;rule family=&quot;ipv4&quot; source address=&quot;IP2&quot; destination address=&quot;172.20.0.2&quot; accept&#x27; --permanent</span><br></pre></td></tr></table></figure>
+
+<p>以上只是规则的一部分，重复语法的规则就不再写了。入站主要是两种规则，一种规则是指定来源IP，访问指定端口，就像第一条，来源 <strong>IP</strong> 是<code>IP1</code>，访问宿主机 <code>5000</code> 端口，直接转发到容器 <code>172.20.0.2</code> 的 <code>5000</code> 端口，即这是一条 <code>FORWARD</code> 链的规则。另外一种规则就是指定来源 <strong>IP</strong> 可以访问容器的所有端口，即这是一条 <code>INPUT</code> 链的规则。</p>
+<p>这里需要注意，由于我们需要容器的高度隔离，所以，在启动容器的时候，就不再使用 <code>-p</code> 参数来绑定端口了。原因我们通过 <code>iptables -L FORWORD --line-number</code> 可以看到如下信息，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@li1677-102 ~]# iptables -L FORWARD --line-number</span><br><span class="line">Chain FORWARD (policy ACCEPT)</span><br><span class="line">num  target     prot opt source               destination</span><br><span class="line">1    DOCKER-USER  all  --  anywhere             anywhere</span><br><span class="line">2    DOCKER-ISOLATION-STAGE-1  all  --  anywhere             anywhere</span><br><span class="line">3    ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED</span><br><span class="line">4    DOCKER     all  --  anywhere             anywhere</span><br><span class="line">5    ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">6    ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">7    ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED</span><br><span class="line">8    DOCKER     all  --  anywhere             anywhere</span><br><span class="line">9    ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">10   ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">11   ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED</span><br><span class="line">12   DOCKER     all  --  anywhere             anywhere</span><br><span class="line">13   ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">14   ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">15   ACCEPT     all  --  anywhere             anywhere             ctstate RELATED,ESTABLISHED</span><br><span class="line">16   ACCEPT     all  --  anywhere             anywhere</span><br><span class="line">17   FORWARD_direct  all  --  anywhere             anywhere</span><br><span class="line">18   FORWARD_IN_ZONES_SOURCE  all  --  anywhere             anywhere</span><br><span class="line">19   FORWARD_IN_ZONES  all  --  anywhere             anywhere</span><br><span class="line">20   FORWARD_OUT_ZONES_SOURCE  all  --  anywhere             anywhere</span><br><span class="line">21   FORWARD_OUT_ZONES  all  --  anywhere             anywhere</span><br><span class="line">22   DROP       all  --  anywhere             anywhere             ctstate INVALID</span><br><span class="line">23   REJECT     all  --  anywhere             anywhere             reject-with icmp-host-prohibited</span><br></pre></td></tr></table></figure>
+
+<p>结合 <code>iptables</code> 的结构流程图（<a target="_blank" rel="noopener" href="http://www.zsythink.net/archives/1199/">http://www.zsythink.net/archives/1199/</a>），</p>
+<p><img src="https://steemeditor.com/storage/images/JtTZMLQZLKqcFjL4baLqyxsSZ8N4LYcFmyDBZDrm.png"></p>
+<p>所有 <strong>Docker</strong> 容器的流量都是通过 <strong>FORWARD</strong> 链转发的，我们能看到上面第1\2\4\8\12行都是 <strong>Docker</strong> 产生的自定义链，并且通过 <strong>Docker</strong> 的官方文档了解到，官方不建议用户去修改 <strong>DOCKER</strong> 命名的自定义链，而是把需要增加的自定义内容放到 <strong>DOCKER-USER</strong> 这个自定义链中。而我们平时启动容器的时候，使用 <code>-p</code> 参数的时候，其实是把过滤规则写入了 <strong>DOCKER</strong> 链中。这就意味着，使用 <code>-p</code> 参数设置的转发过滤规则的优先级最高，无法用 <strong>Firewalld</strong> 来限制（17–21行是 <strong>Firewalld</strong> 产生的自定义链）。这也是我最初尝试的方案，用 <code>-p</code> 把容器端口映射到宿主机，然后再在宿主机配置端口策略，<strong>这个方法是不行的</strong>！</p>
+<p>写完入站规则后，也想用入站的规则改一下成出站规则，发现 <strong>Firewalld</strong> 的 <strong>rich rules</strong> 无法做到（至少目前我是绕不出来）。于是继续看文档，发现 <strong>Firewalld</strong> 有一个 <strong>–direct</strong> 的参数可以直接使用 <strong>iptables</strong> 的语法来写入规则到 <strong>iptables</strong> 中。</p>
+<p>又经过若干时间的学习和本地虚拟机实验，最终总结出的出站规则如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -p tcp -s 172.20.0.2 -d IP1 --dport 5000 -j ACCEPT</span><br><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -d IP2 -j ACCEPT</span><br><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -j REJECT</span><br></pre></td></tr></table></figure>
+
+<p>同样，这里也是捡出来关键的几条来展示。</p>
+<p>这里就涉及到刚才说的，如果你要添加针对 <strong>Docker</strong> 的防火墙规则，就要把规则写入到 <strong>DOCKER-USER</strong> 中，因为 <strong>DOCKER-USER</strong> 的优先级最高。这几条规则的思路就是写出要放行的是哪些，然后最后把其他的<strong>所有的</strong>出站数据都禁掉。</p>
+<p>这个地方，我踩到了一个还没有填的坑。</p>
+<p>由于 <strong>Docker</strong> 和 <strong>Firewalld</strong> 都是通过修改 <strong>iptables</strong> 来实现其相应的功能的。而 <strong>Docker</strong> 的 <strong>DOCKER-USER</strong> 链 <strong>Firewalld</strong> 无法管理。具体表现就是上面的规则，你执行后，由于加了 <code>--permanent</code> 参数，需要重载配置才能生效，但是重载配置的时候，会报错，并且新增配置并不能生效。</p>
+<p>经过两天的搜索，最终找到了一个临时的解决方案（ <a target="_blank" rel="noopener" href="https://github.com/moby/moby/issues/35043#issuecomment-356036671">https://github.com/moby/moby/issues/35043#issuecomment-356036671</a> ） 。</p>
+<p>这个方案的原理大概是这样的：<strong>Docker</strong> 启动的时候会去检查有没有 <strong>DOCKER-USER</strong> 链，如果没有就创建一个，如果有就不再操作了，只是检查该链的最后，是不是放行所有规则。由于 <strong>Docker</strong> 的这个特性，那么我们就手动删掉 <strong>DOCKER-USER</strong> 链，用 <strong>Firewalld</strong> 来创建并管理这个链，这样并不影响 <strong>Docker</strong> 的正常使用，且 <strong>Firewalld</strong> 也可以正常重启或者重载配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># Removing DOCKER-USER CHAIN (it won&#x27;t exist at first)</span><br><span class="line">firewall-cmd --permanent --direct --remove-chain ipv4 filter DOCKER-USER</span><br><span class="line"></span><br><span class="line"># Flush rules from DOCKER-USER chain (again, these won&#x27;t exist at first; firewalld seems to remember these even if the chain is gone)</span><br><span class="line">firewall-cmd --permanent --direct --remove-rules ipv4 filter DOCKER-USER</span><br><span class="line"></span><br><span class="line"># Add the DOCKER-USER chain to firewalld</span><br><span class="line">firewall-cmd --permanent --direct --add-chain ipv4 filter DOCKER-USER</span><br></pre></td></tr></table></figure>
+
+<p>所以，先执行上面这三条命令，用 <strong>Firewalld</strong> 重建 <strong>DOCKER-USER</strong> 链，然后再执行写好的出站规则，重载配置。进入容器测试了下，出站规则生效了。</p>
+<p>到这里，我本来以为已经完美配置结束了。正要欢呼的时候，<strong>cybex</strong> 那边的技术小哥说，我的 <strong>5000</strong> 端口为啥不通？</p>
+<p>WTF？！</p>
+<p>考虑了下，感觉应该是后加的出站规则影响了入站规则。我也用 <code>nc -zv server_ip 5000</code> 测试了下，发现会一直卡到连接超时。我猜测可能是 <code>firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -j REJECT</code> 这条规则影响的，于是手动删除掉这条规则，再用 <strong>nc</strong> 测试就正常了。</p>
+<p>思考了下，这个过程应该是，白名单中的外部主机向我的服务器的 <strong>5000</strong> 端口发送了握手包要建立连接，而外部主机肯定是系统随机了一个高位的端口来连接我的 <strong>5000</strong> 端口，虽然入站规则符合了，但是我回应给他的握手包却不符合我设置的出站规则，导致握手不成功。</p>
+<p>这个思路确定后，就继续去翻 <strong>iptables</strong> 的教程，去看看这种关联性的数据包怎么处理。最终还真让我发现了，<a target="_blank" rel="noopener" href="http://www.zsythink.net/archives/1597">http://www.zsythink.net/archives/1597</a></p>
+<p><img src="https://steemeditor.com/storage/images/I3d5w4nJSBbIu20reYo7QscJFoESVMO2XTKGbxpn.png"></p>
+<p>也就是，我可以在出站规则中先加上放行这些 <strong>state</strong> 的数据包的规则，所以修改后的出站规则如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -m state --state RELATED,ESTABLISHED -j ACCEPT</span><br><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -d IP2 -j ACCEPT</span><br><span class="line">firewall-cmd  --permanent --direct --add-rule ipv4 filter DOCKER-USER 0 -s 172.20.0.2 -j REJECT</span><br></pre></td></tr></table></figure>
+
+<p>这样配置后，再测试，所有配置都已达到预期，完工！</p>
+<p>这里再补充下这种出站策略对于节点的保护的意义。</p>
+<p>很早之前，还是 <strong>webshell</strong> 盛行的时代，有见过类似这样配置的主机。由于 <strong>webshell</strong> 的运行权限一般不是 <strong>Administrator</strong> 或者 <strong>root</strong>，所以入侵者通过 <strong>web</strong> 网站拿到 <strong>webshell</strong> 后的权限比较低，会想通过上传本地溢出漏洞代码的方式，拿到最高权限。而有时候，管理员会配置上传文件的大小或者扩展名，所以直接通过 <strong>webshell</strong> 上传是受限的，所以入侵者想到了一个曲线救国的方案，就是用 <strong>webshell</strong> 指定一个下载路径，让服务器自己去指定的下载路径下载溢出漏洞的执行代码。这时候出站规则就排上用途了，如果管理员配置了禁止所有出站链接，除了 <strong>RELATED,ESTABLISHED</strong> 这样的数据包外，那么入侵者的这个方案就不可行了。另外还有就是如果入侵者通过 <strong>webshell</strong> 成功上传了被动链接式的木马程序，出站规则一样可以拦截掉。</p>
+<p>这就是我之前对于出站规则的理解，就是防止内鬼从外部获取数据。</p>
+<p>但是这次这种分布式节点，为什么还要这么设置呢？在咨询了 @abit 后豁然开朗。那就是这种配置，可以避免自己服务器的 <strong>IP</strong> 暴露给不信任的节点。不过我还是觉得这种规则的必要性并不是很强。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2019/06/10/docker-firewall.html" title="用 Docker 和 Firewalld 实现高度防护">https://blog.akawa.ink/2019/06/10/docker-firewall.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Server-OS/" rel="tag"># Server&OS</a>
+              <a href="/tags/Docker/" rel="tag"># Docker</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/05/21/bts-trade-bots.html" rel="prev" title="做了个非常精简的BTS内盘做市机器人">
+                  <i class="fa fa-angle-left"></i> 做了个非常精简的BTS内盘做市机器人
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/06/16/remote-work-4-years.html" rel="next" title="远程工作的四年">
+                  远程工作的四年 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

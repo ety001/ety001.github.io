@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="php-fpm目前主要又两个分支，分别对应于php-5.2.x的版本和php-5.3.x的版本。在5.2.x的版本中，php-fpm.conf使用的是xml格式，而在新的5.3.x版本中，则是和php.ini一样的配置风格。 在5.2.x版本中，php-fpm.conf中对于进程管理号称是有两种风格，一种是静态(static)的，一种是类似于apache风格(apache-like)的。 Proc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP FPM设置">
+<meta property="og:url" content="https://blog.akawa.ink/2013/04/24/php-fpm-config.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="php-fpm目前主要又两个分支，分别对应于php-5.2.x的版本和php-5.3.x的版本。在5.2.x的版本中，php-fpm.conf使用的是xml格式，而在新的5.3.x版本中，则是和php.ini一样的配置风格。 在5.2.x版本中，php-fpm.conf中对于进程管理号称是有两种风格，一种是静态(static)的，一种是类似于apache风格(apache-like)的。 Proc">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2013-04-24T02:06:23.000Z">
+<meta property="article:modified_time" content="2024-04-09T19:23:15.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="Server&amp;OS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2013/04/24/php-fpm-config.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2013/04/24/php-fpm-config.html","path":"2013/04/24/php-fpm-config.html","title":"PHP FPM设置"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PHP FPM设置 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2013/04/24/php-fpm-config.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="PHP FPM设置 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PHP FPM设置
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2013-04-24 10:06:23" itemprop="dateCreated datePublished" datetime="2013-04-24T10:06:23+08:00">2013-04-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-10 03:23:15" itemprop="dateModified" datetime="2024-04-10T03:23:15+08:00">2024-04-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>php-fpm目前主要又两个分支，分别对应于php-5.2.x的版本和php-5.3.x的版本。在5.2.x的版本中，php-fpm.conf使用的是xml格式，而在新的5.3.x版本中，则是和php.ini一样的配置风格。</p>
+<p>在5.2.x版本中，php-fpm.conf中对于进程管理号称是有两种风格，一种是静态(static)的，一种是类似于apache风格(apache-like)的。</p>
+<p><code>Process manager settings</code></p>
+<value name=”pm”>
+
+<p>Sets style of controling worker process count.<br>Valid values are ’static’ and ‘apache-like’<br><value name=”style”>static</value></p>
+<p>按照文档的说明，如果pm的style采用apache-like，启动的进程数应该是和StartServers指定的一样。不过经过数次的尝 试，会发 现，实际上在这里将pm的style配置成apache-like没有起任何作用。也就是说，这里的apache-like并没有被实现。</p>
+<p>不过，在最新的5.3.x的配套php-fpm中，apache风格的进程管理已经被实现了。</p>
+<p><code>; Choose how the process manager will control the number of child processes. ; Possible Values: ; static - a fixed number (pm.max_children) of child processes; ; dynamic - the number of child processes are set dynamically based on the ; following directives: ; pm.max_children - the maximum number of children that can ; be alive at the same time. ; pm.start_servers - the number of children created on startup. ; pm.min_spare_servers - the minimum number of children in &#39;idle&#39; ; state (waiting to process). If the number ; of &#39;idle&#39; processes is less than this ; number then some children will be created. ; pm.max_spare_servers - the maximum number of children in &#39;idle&#39; ; state (waiting to process). If the number ; of &#39;idle&#39; processes is greater than this ; number then some children will be killed. ; Note: This value is mandatory. ;pm = dynamic pm = static </code></p>
+<p>由上面一段文字可知，对于进程的管理存在两种风格——static和dynamic。和之前的版本的进程管理其实还是一样的，只是将apache-like改成了dynamic，这样更容易理解。</p>
+<p>如果设置成static，php-fpm进程数自始至终都是pm.max_children指定的数量，不再增加或减少。如果设置成 dynamic，则php-fpm进程数是动态的，最开始是pm.start_servers指定的数量，如果请求较多，则会自动增加， 保证空闲的进程数不小于pm.min_spare_servers，如果进程数较多，也会进行相应清理，保证多余的进程数不多于 pm.max_spare_servers。</p>
+<p><strong>这两种不同的进程管理方式，可以根据服务器的实际需求来进行调整。</strong></p>
+<p>这里先说一下涉及到这个的几个参数，他们分别是<strong>pm、pm.max_children、pm.start_servers、pm.min_spare_servers</strong>和<strong>pm.max_spare_servers</strong>。</p>
+<p>pm表示使用那种方式，有两个值可以选择，就是static（静态）或者dynamic（动态）。在更老一些的版本中，dynamic被称作apache-like。这个要注意看配置文件的说明。</p>
+<p>下面4个参数的意思分别为：<br>pm.max_children：静态方式下开启的php-fpm进程数量。<br>pm.start_servers：动态方式下的起始php-fpm进程数量。<br>pm.min_spare_servers：动态方式下的最小php-fpm进程数量。<br>pm.max_spare_servers：动态方式下的最大php-fpm进程数量。</p>
+<p>如果dm设置为static，那么其实只有pm.max_children这个参数生效。系统会开启设置数量的php-fpm进程。如果dm设置为 dynamic，那么pm.max_children参数失效，后面3个参数生效。系统会在php-fpm运行开始 的时候启动pm.start_servers个php-fpm进程，然后根据系统的需求动态在pm.min_spare_servers和 pm.max_spare_servers之间调整php-fpm进程数。</p>
+<p>那么，对于我们的服务器，选择哪种执行方式比较好呢？事实上，跟Apache一样，运行的PHP程序在执行完成后，或多或少会有内存泄露的问题。这也是为什么开始的时候一个php-fpm进程只占用3M左右内存，运行一段时间后就会上升到20-30M的原因了。</p>
+<p>对于内存大的服务器（比如8G以上）来说，指定静态的max_children实际上更为妥当，因为这样不需要进行额外的进程数目控制，会提高效 率。因为频繁开关php-fpm进程也会有时滞，所以内存够大的情况下开静态效果会更好。数量也可以根据 内存&#x2F;30M 得到，比如8GB内存可以设置为100，那么php-fpm耗费的内存就能控制在 2G-3G的样子。如果内存稍微小点，比如1G，那么指定静态的进程数量更加有利于服务器的稳定。这样可以保证php-fpm只获取够用的内存，将不多的 内存分配给其他应用去使用，会使系统的运行更加畅通。</p>
+<p>对于小内存的服务器来说，比如256M内存的VPS，即使按照一个20M的内存量来算，10个php-cgi进程就将耗掉200M内存，那系统的崩 溃就应该很正常了。因此应该尽量地控制php-fpm进程的数量，大体明确其他应用占用的内存后，给它指定一个静态的小数量，会让系统更加平稳一些。或者 使用动态方式，因为动态方式会结束掉多余的进程，可以回收释放一些内存，所以推荐在内存较少的服务器或VPS上使用。具体最大数量根据 内存&#x2F;20M 得到。比如说512M的VPS，建议pm.max_spare_servers设置为20。至于pm.min_spare_servers，则建议根据服 务器的负载情况来设置，比较合适的值在5~10之间。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2013/04/24/php-fpm-config.html" title="PHP FPM设置">https://blog.akawa.ink/2013/04/24/php-fpm-config.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%90%8E%E7%AB%AF/" rel="tag"># 后端</a>
+              <a href="/tags/Server-OS/" rel="tag"># Server&OS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2013/04/07/centos5-x-ext4.html" rel="prev" title="centos5.x格式化ext4">
+                  <i class="fa fa-angle-left"></i> centos5.x格式化ext4
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2013/05/10/three-day-promotion-experience-and-thinking.html" rel="next" title="三天的推廣經歷與思考">
+                  三天的推廣經歷與思考 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

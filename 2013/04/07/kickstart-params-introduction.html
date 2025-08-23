@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Kickstart文件中的主要项目及参数介绍： 每个项目都由关键字来识别；关键字可跟一个或多个参数；如果某选项后面跟随了一个等号（&#x3D;），它后面就必须指定一个值。 install   (可选)明确指定系统次次进行的是全新安装系统；是默认项； cdrom  （可选）以本地CD-ROM为源安装系统； harddrive  (可选)以硬盘分区中包含的镜像为源（安装树）安装新系统；当以该种方式安装">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kickstart文件中的主要项目及参数介绍">
+<meta property="og:url" content="https://blog.akawa.ink/2013/04/07/kickstart-params-introduction.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="Kickstart文件中的主要项目及参数介绍： 每个项目都由关键字来识别；关键字可跟一个或多个参数；如果某选项后面跟随了一个等号（&#x3D;），它后面就必须指定一个值。 install   (可选)明确指定系统次次进行的是全新安装系统；是默认项； cdrom  （可选）以本地CD-ROM为源安装系统； harddrive  (可选)以硬盘分区中包含的镜像为源（安装树）安装新系统；当以该种方式安装">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2013-04-07T05:51:46.000Z">
+<meta property="article:modified_time" content="2024-04-09T19:23:15.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="Server&amp;OS">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2013/04/07/kickstart-params-introduction.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2013/04/07/kickstart-params-introduction.html","path":"2013/04/07/kickstart-params-introduction.html","title":"Kickstart文件中的主要项目及参数介绍"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kickstart文件中的主要项目及参数介绍 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2013/04/07/kickstart-params-introduction.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kickstart文件中的主要项目及参数介绍 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kickstart文件中的主要项目及参数介绍
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2013-04-07 13:51:46" itemprop="dateCreated datePublished" datetime="2013-04-07T13:51:46+08:00">2013-04-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-10 03:23:15" itemprop="dateModified" datetime="2024-04-10T03:23:15+08:00">2024-04-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Kickstart文件中的主要项目及参数介绍：</p>
+<p>每个项目都由关键字来识别；关键字可跟一个或多个参数；如果某选项后面跟随了一个等号（&#x3D;），它后面就必须指定一个值。</p>
+<p>install   (可选)<br>明确指定系统次次进行的是全新安装系统；是默认项；</p>
+<p>cdrom  （可选）<br>以本地CD-ROM为源安装系统；</p>
+<p>harddrive  (可选)<br>以硬盘分区中包含的镜像为源（安装树）安装新系统；当以该种方式安装系统时，即使指定clearpart –all项，源所在分区也不会被重新抹去；<br>–partition&#x3D;    指定分区<br>–dir&#x3D;        指定包含镜像的目录<br>例：<br>harddrive  –partition&#x3D;&#x2F;dev&#x2F;sdb2  –dir&#x3D;&#x2F;data&#x2F;iso</p>
+<span id="more"></span>
+<p>nfs   (可选)<br>指定从NFS服务器上获取安装树；<br>–server&#x3D;    指定NFS服务器，主机名称或IP<br>–dir&#x3D;        包含安装树的目录<br>–opts&#x3D;        可以指定挂载NFS的目录时的挂载选项<br>例：<br>nfs  –server&#x3D;192.168.1.254  –dir&#x3D;&#x2F;data&#x2F;iso</p>
+<p>url   (可选)<br>指定通过FTP或HTTP从网络获取安装树；<br>–url    指定资源位置<br>例：<br>url  –url  ftp:&#x2F;&#x2F;<username>:<password>@install.example.com&#x2F;iso<br>url  –url  <a target="_blank" rel="noopener" href="http://install.example.com/iso">http://install.example.com/iso</a></p>
+<p>bootloader （必需）<br>设定boot loader安装选项；<br>–append&#x3D;        可以指定内核参数<br>–driveorder&#x3D;    设定设备BIOS中的开机设备启动顺序<br>–location&#x3D;        设定引导记录的位置； mbr：默认值；partition：将boot loader安装于包含kernel的分区超级快中；none：不安装boot loder。<br>示例：<br>bootloader  –location&#x3D;mbr  –append&#x3D;“rhgb quiet” –driveorder&#x3D;sda,sdb</p>
+<p>clearpart （可选）<br>在建立新分区前清空系统上原有的分区表，默认不删除分区；<br>–all      擦除系统上原有所有分区；<br>–drives    删除指定驱动器上的分区<br>–initlabel    初始化磁盘卷标为系统架构的默认卷标<br>–linux        擦除所有的linux分区<br>–none（default）不移除任何分区<br>例：<br>clearpart  –drives&#x3D;hda,hdb –all  –initlabel</p>
+<p>zerombr  （可选）<br>清除mbr信息，会同时清空系统用原有分区表</p>
+<p>drivedisk （可选）<br>如果使用特殊存储方式时，需要指定驱动程序盘位置以便加载存储驱动；<br>1.  将驱动盘拷贝到本地硬盘某分区根目录：<br>drivedisk <partition> [ –type&#x3D;<fstype> ]<br>2.  也可以指定一个网络位置加载驱动程序盘<br>drivedisk  –source&#x3D;<a href="ftp://path/to/drive.img">ftp://path/to/drive.img</a><br>drivedisk  –source&#x3D;<a target="_blank" rel="noopener" href="http://path/to/drive.img">http://path/to/drive.img</a><br>drivedisk  –source&#x3D;nfs:host:&#x2F;&#x2F;path&#x2F;to&#x2F;drive.img</p>
+<p>firewall （可选）<br>配置系统防火墙选项；<br>firewall –enable|–disable  [ –trust ] <device> [ –port&#x3D; ]<br>–enable        拒绝外部发起的任何主动连接；<br>–disable        不配置任何iptables防御规则；<br>–trust        指定完全信任网卡设备；<br>–port        使用port:protocol格式指定可以通过防火墙的服务；<br>示例：<br>firewall –enable –trust eth0  –trust eth1  –port&#x3D;80:tcp</p>
+<p>selinux （可选）<br>设置系统selinux状态；默认为启用并处于enforcing模式；<br>selinux [ –disabled|–enforcing|–premissive ]</p>
+<p>reboot （可选）<br>在系统成功安装完成后默认自动重启系统（kickstart方法时）；在收到你敢装系统完成后，会提示按任意键进行重启；<br>在本文件中没有明确指明其他方法时就默认完成方式为reboot；<br>使用 reboot 选项可能会导致安装的死循环，这依赖于安装介质和方法。需要特别注意；</p>
+<p>halt  （可选）<br>在系统成功安装完成后关机；默认为reboot；<br>其他选项还有shutdown、poweroff，需要使用请自行参考官方文档。</p>
+<p>graphical （可选）<br>默认值，在图形模式下进行kickstart方式安装；</p>
+<p>text （可选）<br>以文本方式进行kickstart安装；默认为图形界面</p>
+<p>key  (可选)<br>设置一个安装码(installration number)，用于获取redhat官方的支持服务；<br>–skip    跳过key设置，不进行设置；如果不设置可能跳转到交互模式让用户选取动作；</p>
+<p>keyboard （必需）<br>设置键盘类型；一般设置为us；</p>
+<p>lang （必需）<br>设置安装过程使用的语言及系统的缺省语言；文本模式安装时可能不支持某些语言（中、韩…），所以可能仍以默认的英文方式安装；默认en_us，装中文时，需要后期%packages部分装上中文支持组件；<br>例：<br>lang en_US</p>
+<p>timezone （可选）<br>设置系统的时区；<br>timezone  [ –utc ]  <timezone><br>例：<br>timezone  –utc  Asia&#x2F;Shanghai</p>
+<p>auth&#x2F;authconfig  (必需)<br>设置系统的认证方式；默认为加密但不隐藏(shadow)；<br>–enablemd5    使用MD5加密方式<br>–useshadow或—enableshadow    使用隐藏密码；<br>–enablenis&#x3D;     使用NIS认证方式<br>–nisdomain&#x3D;    NIS域<br>–nisserver&#x3D;       NIS服务器<br>还可以设置LDAP、SMB及Kerberos 5认证方式，详细请参考官方文档；<br>例：<br>authconfig  –useshadow  –enablemd5</p>
+<p>rootpw （必需）<br>设置系统root账号的密码；<br>rootpw [ –iscrypted ]  <passwd><br>–iscrypted    表示设置的密码为加密过的串；<br>例：<br>rootpw  pa4word<br>rootpw –iscrypted  $1$RPYyxobb$&#x2F;LtxMNLJC7euEARg2Vu2s1</p>
+<p>network （可选）<br>配置网络信息；在网络安装（NFS&#x2F;HTTP&#x2F;FTP）时必须指定；<br>–bootproto&#x3D;dhcp|bootp|static    指定ip获取方式，默认为dhcp&#x2F;bootp;<br>–device&#x3D;    设置安装时激活来进行系统安装的网卡设备；该参数只在kickstart文件为本地文件时有效；若kickstart配置文件在网络上，安装程序会先初始化网卡然后去寻找kickstart文件；<br>–ip&#x3D;    ip设置<br>–gateway&#x3D;   网关<br>–nameserver&#x3D;  DNS设置<br>–nodns         不设置DNS<br>–netmask&#x3D;   掩码<br>–hostname&#x3D; 设置安装后主机名称<br>–onboot&#x3D;    设置是否在系统启动时激活网卡<br>–class&#x3D;        设置DHCP的class值<br>–noipv4        禁用该设备的ipv4功能<br>–noipv6        禁用该设备的ipv6功能<br>如将网络模式设置为静态模式，则必须在一行内写上ip，netmask、dns、gateway等信息；<br>例：<br>network –bootproto&#x3D;static –ip&#x3D;1.1.1.1 –metmask&#x3D;255.0.0.0 –gateway&#x3D;1.1.1.254 –nameserver&#x3D;1.1.1.2<br>netmask –bootproto&#x3D;dhcp  –device&#x3D;eth0</p>
+<p>skipx （可选）<br>如果该项存在，就不对系统的X进行设置；</p>
+<p>xconfig （可选）<br>配置X window ；如果不给出选项，在安装过程中需要手动调整设置；当然不安装X时不应该添加该项；<br>–driver            为显卡设置X驱动<br>–videoram&#x3D;    设置显卡的RAM大小<br>–defaultdesktop&#x3D;    设置GNOME&#x2F;KDE作为默认桌面；假定这两个桌面环境在%packages例已经安装<br>–startxonboot   使用图形界面登录系统<br>–resolution&#x3D;     设置图形界面的分辨率；可用值有640<em>480、800</em>600、1024<em>768等；确保设置指适合于显示卡及显示器；<br>–depth&#x3D;           设置显示色深；可用值有8&#x2F;16&#x2F;24&#x2F;32；确保设置值适合于显示设备；<br>例:<br>xconfig    –startxonboot  –resolution&#x3D;800</em>600 –depth&#x3D;16</p>
+<p>services （可选）<br>设置禁用或允许列出的服务；<br>–disabled 设置服务为禁用<br>–enabled  启动服务<br>例：<br>services –disabled autid,cups,smartd,nfslock  服务之间用逗号隔开，不能有空格</p>
+<p>iscsi（可选）<br>指定额外的ISCSI设备；<br>issci –ipaddr&#x3D; ipaddr  [options].<br>–target<br>–port&#x3D;<br>–user&#x3D;<br>–password&#x3D;</p>
+<p>part&#x2F;partition  （install模式必须）<br>建立新分区；<br>part  <mntpoint>|swap|pv.id|rdid.id  options<br>mntpoint:挂载点，是在创建普通分区时指定新分区挂载位置的项；挂载点需要格式正确<br>swap： 创建swap分区；<br>raid.id:  表示创建的分区类型为raid型；必须用id号进行唯一区别；<br>pv.id：  表示所创建的分区类型为LVM型；必须用唯一id号进行区别；<br>–size&#x3D;  设置分区的最小值，默认单位为M，但是不能写单位；<br>–grow  让分区自动增长利用可用的磁盘空间，或是增长到设置的maxsize值；<br>–maxsize 设置分区自动增长(grow)时的最大容量值，以M为单位，但不能写单位；<br>–onpart&#x3D;&#x2F;–usepart&#x3D;     设置使用原有的分区；<br>–noformat    设置不格式化指定的分区，在跟—onpart一同使用时，可以避免删除原有分区上的数据，在新安装的系统中保留使用数据；<br>–asprimary    强制制定该分区为主分区；若指定失败，分区会失败，导致安装停止；<br>–fstype&#x3D;    新增普通分区时指定分区的类型，可以为ext2、ext3、ext4、swap、vfat及hfs；<br>–ondisk&#x3D;&#x2F;–ondrive&#x3D;     设定该分区创建在一个具体的磁盘上；<br>–start   指定分区以磁盘上那个磁道开始；需要跟–ondisk参数一块使用；<br>–end    指定分区以磁盘上那个磁道结束；需要跟上述两个参数一起使用；<br>–recommended：让系统自行决定分区的大小；在创建swap分区时，若RAM&lt;2G，则分区大小为2*RAM；若RAM&gt;&#x3D;2G时，分区大小为RAM+2G；<br>–bytes-pre-inode&#x3D;    指定分区格式化时inode的大小；默认值为4096<br>–fsoptions&#x3D;    指定创建fstab文件时该分区挂载参数项；<br>例：<br>part  &#x2F;boot  –fstype&#x3D;“ext3” –size&#x3D;100<br>part  swap  –fstype&#x3D;“swap” –size&#x3D;512<br>part  &#x2F;  –bytes-pre-inode&#x3D;4096  –fstype&#x3D;“ext4”–size&#x3D;10000<br>part  &#x2F;data    –onpart&#x3D;&#x2F;dev&#x2F;sdb1  –noformat<br>part  raid.100  –size&#x3D;2000<br>part  pv.100     –size&#x3D;1000</p>
+<p>raid  (可选)<br>设置RAID。<br>raid 挂载点  –level&#x3D;<level>  –device&#x3D;<mddevices_name>  &lt;raid组成分区&gt;<br>挂载点：    选取根&#x2F;时，注意尽量避免&#x2F;boot在RAID内，除非为RAID1；<br>–level&#x3D;     设置RAID级别<br>–device&#x3D;  RAID设备名称，如md0，md1…<br>–byte-pre-inode&#x3D;    设置该RAID分区上inode大小；若分区文件系统类型不支持该参数，会静默忽略参数；<br>–spares&#x3D;  设置RAID的热备盘<br>–fstype&#x3D;  设置文件系统类型<br>–fsoptions&#x3D;  设置挂载该文件系统时自定义的一些参数，参数写入fstab文件；<br>–useexisting  使用现有的RAID设备并且重新格式化原设备<br>–noformat     在使用现有的RAID设备时不格式化原有RAID设备<br>例：完整创建一个RAID1设备示例；<br>part  raid.10  –size&#x3D;1000  –ondisk&#x3D;&#x2F;dev&#x2F;sdb<br>part  raid.11  –size&#x3D;1000  –ondisk&#x3D;&#x2F;dev&#x2F;sdc<br>raid  &#x2F;data  –level&#x3D;1  –device&#x3D;md0  raid.10  raid.11</p>
+<p>volgroup  (可选)<br>创建一个LVM卷组VG；<br>volgroup  vg_name  partition  [options]<br>–useexiting   使用现有的VG并且重新格式化<br>–noformat    使用现有的VG时不做格式化<br>–pesize          设置PE（physical extents）块大小<br>例：<br>part pv.11  –size&#x3D;2000<br>volgroup  myvg  pv.11</p>
+<p>logvol  (可选)<br>创建一个LVM逻辑卷LV；<br>logvel  mnt_point  –vgname&#x3D;vg_name  –size&#x3D;lv_size  –name&#x3D;lv_name  [options]<br>–useexiting  使用现有的LV并且重新格式化<br>–noformat   使用现有的LV时不做格式化<br>–fstype&#x3D;      指定RAID分区类型<br>–fsoptions&#x3D;  设置挂载该文件系统时自定义的一些参数，参数写入fstab文件；<br>–byte-pre-inode&#x3D;    设置该RAID分区上inode大小；<br>–precent&#x3D;    设定LV大小为VG可用空间的比例；<br>例：<br>part pv.20  –size&#x3D;5000<br>volgroup  mvvg  pv.20<br>logvol    &#x2F;data  –vgname&#x3D;myvg  –size&#x3D;3000  –name&#x3D;mydata</p>
+<p>原文地址：<a target="_blank" rel="noopener" href="http://www.qianshoublog.com/post/7528.html"><strong>http://www.qianshoublog.com/post/7528.html</strong></a><br>本文标题：<a target="_blank" rel="noopener" href="http://www.qianshoublog.com/post/7528.html"><strong>ks.cfg 文件，参数讲解</strong></a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2013/04/07/kickstart-params-introduction.html" title="Kickstart文件中的主要项目及参数介绍">https://blog.akawa.ink/2013/04/07/kickstart-params-introduction.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Server-OS/" rel="tag"># Server&OS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2013/04/02/ffmpeg-parameters.html" rel="prev" title="ffmpeg参数">
+                  <i class="fa fa-angle-left"></i> ffmpeg参数
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2013/04/07/centos5-x-ext4.html" rel="next" title="centos5.x格式化ext4">
+                  centos5.x格式化ext4 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

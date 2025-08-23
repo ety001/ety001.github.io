@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="25天前填完 LightDB 的坑以后，就开始研究 alt 留下的那个 btsbots 的 代码 了。之前也有团队在修复这套代码 ，但是考虑到这么重要的一个设施，还是把核心技术握在自己手里比较好，要不然哪天那个团队歇菜了，又要凉。 代码断断续续的看了将近一个月了，总的感受就是崩溃。 从我开始参加工作开始，接的活都是半路加入救火的，没有人指导，只有代码，基本上是靠分析输出数据和看代码来逆向梳理需求的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对于btsbots修复进程的阶段性总结">
+<meta property="og:url" content="https://blog.akawa.ink/2018/07/16/summary-of-fixing-btsbots.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="25天前填完 LightDB 的坑以后，就开始研究 alt 留下的那个 btsbots 的 代码 了。之前也有团队在修复这套代码 ，但是考虑到这么重要的一个设施，还是把核心技术握在自己手里比较好，要不然哪天那个团队歇菜了，又要凉。 代码断断续续的看了将近一个月了，总的感受就是崩溃。 从我开始参加工作开始，接的活都是半路加入救火的，没有人指导，只有代码，基本上是靠分析输出数据和看代码来逆向梳理需求的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://steemeditor.com/storage/images/Nch5576DeiraOIHgnlm6TV0jZylxGfTFM7CYNGsv.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/oOX8LmuGG982GhBZg9tcBkixpcJQPyEVztDOl3Gf.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/tsQErm0jNo9E8696zGG1lh0KuMywInXe9oeEEiAr.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/yO62x3OpZuFbLEl5V03q0VNfHvzIwNyPn5HXKgol.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/IhKwYQ8xhNHLoAOLMQGfF9oIdqsxIK14qoiAxNAV.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/acKGEdCdTl7bePOxqz3z2hkG5XrWJf6AvsoQ2vEL.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/Cgrg1g3FiSB4jsBuKHx5xHO5X22YXWcgjfOwMeQq.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/wTy4zQxaCv5efixHejOjxU8jtJ71Nbi9u2WKCXGI.png">
+<meta property="og:image" content="https://steemeditor.com/storage/images/CBQGHbM8uTVwJiqCmuf45N07MXwOIIoaaduZ6lUx.png">
+<meta property="article:published_time" content="2018-07-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="经验">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://steemeditor.com/storage/images/Nch5576DeiraOIHgnlm6TV0jZylxGfTFM7CYNGsv.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2018/07/16/summary-of-fixing-btsbots.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2018/07/16/summary-of-fixing-btsbots.html","path":"2018/07/16/summary-of-fixing-btsbots.html","title":"对于btsbots修复进程的阶段性总结"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>对于btsbots修复进程的阶段性总结 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2018/07/16/summary-of-fixing-btsbots.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="对于btsbots修复进程的阶段性总结 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          对于btsbots修复进程的阶段性总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-07-17 00:00:00" itemprop="dateCreated datePublished" datetime="2018-07-17T00:00:00+08:00">2018-07-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>25天前填完 <a target="_blank" rel="noopener" href="https://steemit.com/utopian-io/@ety001/lightdb-v0-0-2-has-been-released">LightDB</a> 的坑以后，就开始研究 <strong>alt</strong> 留下的那个 <strong>btsbots</strong> 的 <a target="_blank" rel="noopener" href="https://github.com/pch957/btsbots-demo-2016">代码</a> 了。之前也有<a target="_blank" rel="noopener" href="https://steemit.com/notbtsbots/@aperson/introducing-not-btsbots">团队在修复这套代码</a> ，但是考虑到这么重要的一个设施，还是把核心技术握在自己手里比较好，要不然哪天那个团队歇菜了，又要凉。</p>
+<p>代码断断续续的看了将近一个月了，总的感受就是崩溃。</p>
+<p>从我开始参加工作开始，接的活都是半路加入救火的，没有人指导，只有代码，基本上是靠分析输出数据和看代码来逆向梳理需求的。但是这次修复 <strong>btsbots</strong> 的难度加大了，因为不会 *C++*，只能对着各种输出数据去逆向推理 <strong>btsbots</strong> 的代码到底想要做什么，为什么这么做。所以等这个 <strong>btsbots</strong> 修好，还是要找时间去学 <strong>C++</strong> 了。</p>
+<p>目前并没有什么实质的代码修改，还停留在分析代码的阶段，该文就是基于目前我对于 <strong>btsbots</strong> 的理解进行的总结。</p>
+<p>最简单的做市需要的数据无非就是当前账户内各种币剩多少，交易对是否满足下单要求，是否有订单需要取消。<strong>btsbots</strong> 的思路其实很简单，就是基于 <strong>1.11.x</strong> 这个 <strong>operation history object</strong> 来把链上的所有操作 <strong>replay</strong> 一遍，然后得到所有用户的 <strong>balance</strong> 和所有的交易对深度数据。</p>
+<p><strong>btsbots</strong> 项目使用 <strong>python</strong> 来完成从链上取数据并 <strong>replay</strong> 的操作，然后存入 <strong>MongoDB</strong>，最后基于 <strong>Meteor</strong> 开发了应用界面来读取 <strong>MongoDB</strong> 中的数据并展示，用户可以设置自己的做市逻辑并在浏览器本地完成下单和取消订单的签名操作。</p>
+<p>思路很明确，但是比较让人恶心的就是数据和需求的分析了。</p>
+<p>目前几乎所有的时间都在分析 <strong>scripts</strong> 目录下的 <strong>python</strong> 代码的逻辑，因为这一块之前在试跑的时候，数据一直有问题。</p>
+<p><strong>scripts</strong> 目录下主要就是 <strong>correct-balance.py</strong> , <strong>monitor.py</strong>, <strong>statistics.py</strong> 这三个文件。</p>
+<p>这三个文件中，<strong>monitor.py</strong> 和 <strong>statistics.py</strong> 这两个的目的我是最明确的了，<strong>correct-balance.py</strong> 的目的一直很糊涂。</p>
+<p>之前忘记在哪里看到的部署文档说，第一次运行 <strong>btsbots</strong> 的时候，要先运行  <strong>correct-balance.py</strong> 进行 <strong>balance</strong> 和 <strong>order</strong> 的初始化。然而看 <strong>correct-balance.py</strong> 的代码中，只是去获取 <strong>1.8.x</strong> 这一种类型的订单的数据和 <strong>2.5.x</strong> 的 <strong>balance</strong> 数据。在代码的头部，你需要指定 <strong>x</strong> 的上限，如下图</p>
+<p><img src="https://steemeditor.com/storage/images/Nch5576DeiraOIHgnlm6TV0jZylxGfTFM7CYNGsv.png"></p>
+<p>然后循环获取从 <strong>1.8.0</strong> 到 <strong>1.8.x</strong> 获取订单数据并插入数据库，从 <strong>2.5.0</strong> 到 <strong>2.5.x</strong> 获取 <strong>balance</strong> 数据并插入数据库。完成这两步以后，会再遍历一遍已经插入数据库的订单数据，然后去更新数据库里已经存下来的 <strong>balance</strong>，如图：</p>
+<p><img src="https://steemeditor.com/storage/images/oOX8LmuGG982GhBZg9tcBkixpcJQPyEVztDOl3Gf.png"></p>
+<p><img src="https://steemeditor.com/storage/images/tsQErm0jNo9E8696zGG1lh0KuMywInXe9oeEEiAr.png"></p>
+<p><img src="https://steemeditor.com/storage/images/yO62x3OpZuFbLEl5V03q0VNfHvzIwNyPn5HXKgol.png"></p>
+<p><img src="https://steemeditor.com/storage/images/IhKwYQ8xhNHLoAOLMQGfF9oIdqsxIK14qoiAxNAV.png"></p>
+<p>这里我就有疑问了!!!</p>
+<p>首先是为什么第一次获取数据只获取 <strong>1.8.x</strong> 这一种类型的订单，而在下面的 <strong>add_b_from_o</strong> 函数中却有 <strong>1.4.x</strong> 和 <strong>1.7.x</strong> 的处理逻辑？</p>
+<p>其次就是获取到的 <strong>2.5.x</strong> 是最新的 <strong>balance</strong> 数据，而拿着订单中的 <strong>amount</strong> 在最新 <strong>balance</strong> 上加减是不是错误的？我通过自己手动从 <strong>API</strong> 获取到的 <strong>2.5.x</strong> 的数据来看，拿到的这些 <strong>balance</strong> 数据都是刨除掉未成交订单额度后的，而在 <strong>btsbots</strong> 中却又在 <strong>2.5.x</strong> 的数据的基础上去刨除订单额度貌似是不对的，但是现在我又不敢确定，因为我不确定 <strong>1.4.x</strong>, <strong>1.7.x</strong>, <strong>1.8.x</strong>这些数据是代表的是未成交的订单，还是所有的订单。</p>
+<p>最后就是感觉这里处理 <strong>balance</strong> 的方法跟 <strong>monitor.py</strong> 的处理方法是冲突的，这里先按下不表。我们先去看 <strong>monitor.py</strong> 的代码。</p>
+<p>在 <strong>monitor.py</strong> 中，思路很简单，就是获取 <strong>1.11.x</strong>，然后根据各种不同的 <strong>operation type</strong> 来分别处理数据，最后把数据更新进数据库。这个脚本里的疑问也是有不少。</p>
+<p>首先是怎么触发的问题，先看下图的代码，</p>
+<p><img src="https://steemeditor.com/storage/images/acKGEdCdTl7bePOxqz3z2hkG5XrWJf6AvsoQ2vEL.png"></p>
+<p>其中 63 行是我补上的代码。与第 63 行类似的代码其实在这个类初始化的时候已经执行过了，这个在<a target="_blank" rel="noopener" href="https://github.com/pch957/python-bts/blob/master/bts/ws/base_protocol.py#L87">这里</a>可以看到。在 <strong>python-bts</strong> 库里，默认是把 <strong>clear_filter</strong> 置为 <strong>false</strong> 了，这意味着只有你发送了 <strong>get_object</strong> 的指令，服务端才会推送你刚才获取的那个 <strong>object</strong> 的变动。</p>
+<p>在没有我补上的 63 行的代码之前，执行 <strong>monitor.py</strong> 其实是没有任何数据进数据库的，因为所有的插入数据库的操作都在 <strong>onOperation</strong> 里面，而 <strong>onOperation</strong> 的触发是在用户订阅的 <strong>1.11.x</strong> 的 <strong>object</strong> 有变动的时候才会触发，而程序代码从开始运行，就没有 <strong>get_object</strong> 的操作，所以服务端并不知道你想要获取哪个 <strong>object</strong> 的变动信息。加上 63 行后，把 <strong>clear_filter</strong> 置为 <strong>true</strong>，那么服务端就会推送所有的 <strong>object</strong> 的变动信息了。</p>
+<p>其次就是语言方面的问题了，如下图</p>
+<p><img src="https://steemeditor.com/storage/images/Cgrg1g3FiSB4jsBuKHx5xHO5X22YXWcgjfOwMeQq.png"></p>
+<p>由于我写 <strong>python</strong> 的时间不久，这里并不明白加锁的意义。如果加锁是为了保证共享资源的修改顺序的话，为啥还要用协程来异步？这里我还需要再多看看这方面的文章去了解下协程中的锁的目的。</p>
+<p>然后这里第 41 行的代码在执行的时候也有问题。在这个类的父类中，看到作者最早是把 <strong>op_id_begin</strong> 置为 <strong>1.11.0</strong> 的，在从数据库中取不到数据的时候（也就是说第一次运行的时候），但是现在注释掉了，改为了置为 <strong>None</strong>，这就导致这里的代码如果按照作者原先的逻辑，就是从当前程序执行的时刻起，开始数据的同步。这也是之前那个团队修复的 <strong>btsbots</strong> 为何不支持老账户的原因。这里我改回到 <strong>1.11.0</strong> 后，运行程序跑了一天多后，发现有报错，大致意思就是插入的数据的索引有重复导致插入失败。这个问题现在还没有去深究原因。</p>
+<p>最后为解决的难点就是这个 <strong>monitor.py</strong> 对 <strong>operation</strong> 的处理了。先看下面两个截图感受下</p>
+<p><img src="https://steemeditor.com/storage/images/wTy4zQxaCv5efixHejOjxU8jtJ71Nbi9u2WKCXGI.png"></p>
+<p><img src="https://steemeditor.com/storage/images/CBQGHbM8uTVwJiqCmuf45N07MXwOIIoaaduZ6lUx.png"></p>
+<p>第一个截图中，是初始化了所有类型的 <strong>op</strong>，从 <strong>btsbots</strong> 的代码里看，截止到这份代码的最后修改时间，一共有 44 个类型，这里比较蛋疼的就是之后的 <strong>bitshares-core</strong> 中是否有再新增类型吗？由于我看不懂 **C++**，所以这里就会不确定。这 44 个类型里，有些没有手续费的类型，就去掉了没有处理，因为这个对于 <strong>balance</strong> 不产生影响，剩下的类型由 16 个 <strong>handler</strong> 处理，这里就有疑问了。大致扫过这些 <strong>handler</strong>，里面也有对数据库中的 <strong>balance</strong> 的操作，那么这里通过 <strong>1.11.x</strong> 对 <strong>balance</strong> 进行的操作与 <strong>correct-balance.py</strong> 文件中，通过 <strong>1.8.x</strong> 对 <strong>balance</strong> 的操作会不会有冲突？这个问题现在我一直在里面绕着出不来。现在的打算是，最好能确认 <strong>correct-balance.py</strong> 的意义，然后把这个文件中的逻辑整合进 <strong>monitor.py</strong> 中。</p>
+<p>目前还没有深入看 <strong>statistics.py</strong> 这个文件，这个文件的主要作用就是通过 <strong>1.2.9952</strong> 发布的喂价来更新数据库里的交易对的交易价格，另外就是统计一下交易数据。</p>
+<p>纵观这三个文件，还有个疑问就是三个文件都在获取 <strong>global properties</strong>，且都更新数据库，那么这里面到底会不会有问题有冲突，这个还没有细看。</p>
+<p>以上就是现有的收获了。接下来有两个方向，一个是继续看所有的 <strong>handler</strong>，把具体的处理逻辑都看完，然后再修复，另一个方向就是跳过细看 <strong>handler</strong>，直接去看看那个索引冲突的问题，强行把程序跑起来看看。</p>
+<p>最后再附上一份我搜集的 <strong>object id</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Object Type</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.1.x</td>
+<td>base object</td>
+</tr>
+<tr>
+<td>1.2.x</td>
+<td>account object</td>
+</tr>
+<tr>
+<td>1.3.x</td>
+<td>asset object</td>
+</tr>
+<tr>
+<td>1.4.x</td>
+<td>force settlement object</td>
+</tr>
+<tr>
+<td>1.5.x</td>
+<td>committee member object</td>
+</tr>
+<tr>
+<td>1.6.x</td>
+<td>witness object</td>
+</tr>
+<tr>
+<td>1.7.x</td>
+<td>limit order object</td>
+</tr>
+<tr>
+<td>1.8.x</td>
+<td>call order object</td>
+</tr>
+<tr>
+<td>1.9.x</td>
+<td>custom object</td>
+</tr>
+<tr>
+<td>1.10.x</td>
+<td>proposal object</td>
+</tr>
+<tr>
+<td>1.11.x</td>
+<td>operation history object</td>
+</tr>
+<tr>
+<td>1.12.x</td>
+<td>withdraw permission object</td>
+</tr>
+<tr>
+<td>1.13.x</td>
+<td>vesting balance object</td>
+</tr>
+<tr>
+<td>1.14.x</td>
+<td>worker object</td>
+</tr>
+<tr>
+<td>1.15.x</td>
+<td>balance object</td>
+</tr>
+<tr>
+<td>2.0.x</td>
+<td>global_property_object</td>
+</tr>
+<tr>
+<td>2.1.x</td>
+<td>dynamic_global_property_object</td>
+</tr>
+<tr>
+<td>2.3.x</td>
+<td>asset_dynamic_data</td>
+</tr>
+<tr>
+<td>2.4.x</td>
+<td>asset_bitasset_data</td>
+</tr>
+<tr>
+<td>2.5.x</td>
+<td>account_balance_object</td>
+</tr>
+<tr>
+<td>2.6.x</td>
+<td>account_statistics_object</td>
+</tr>
+<tr>
+<td>2.7.x</td>
+<td>transaction_object</td>
+</tr>
+<tr>
+<td>2.8.x</td>
+<td>block_summary_object</td>
+</tr>
+<tr>
+<td>2.9.x</td>
+<td>account_transaction_history_object</td>
+</tr>
+<tr>
+<td>2.10.x</td>
+<td>blinded_balance_object</td>
+</tr>
+<tr>
+<td>2.11.x</td>
+<td>chain_property_object</td>
+</tr>
+<tr>
+<td>2.12.x</td>
+<td>witness_schedule_object</td>
+</tr>
+<tr>
+<td>2.13.x</td>
+<td>budget_record_object</td>
+</tr>
+<tr>
+<td>2.14.x</td>
+<td>special_authority_object</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2018/07/16/summary-of-fixing-btsbots.html" title="对于btsbots修复进程的阶段性总结">https://blog.akawa.ink/2018/07/16/summary-of-fixing-btsbots.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E7%BB%8F%E9%AA%8C/" rel="tag"># 经验</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/05/30/pymysql-has-an-bug-in-mutiple-threadings.html" rel="prev" title="PyMysql 在多线程下的问题">
+                  <i class="fa fa-angle-left"></i> PyMysql 在多线程下的问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/08/21/rebuild-my-steem-witness-server.html" rel="next" title="见证人服务器重做系统中">
+                  见证人服务器重做系统中 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

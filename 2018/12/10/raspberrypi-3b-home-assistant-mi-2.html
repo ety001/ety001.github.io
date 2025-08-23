@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这是这个系列的第二篇，主要讲一下各种设备接入配置。先放一张目前我已经配置好的管理界面图片  再放一张配置好的 HomeKit 截图  开始这篇之前，首先你要确保你已经安装了上一篇中提到的 SSH &amp; Web Terminal 插件。 如何修改配置文件如果已经安装好了 SSH &amp; Web Terminal 插件并启动了，那么直接在 Terminal 中执行下面的命令就可以连接到树莓派">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在树莓派3B上搭建Hass.io并接入米家和iOS（二）">
+<meta property="og:url" content="https://blog.akawa.ink/2018/12/10/raspberrypi-3b-home-assistant-mi-2.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="这是这个系列的第二篇，主要讲一下各种设备接入配置。先放一张目前我已经配置好的管理界面图片  再放一张配置好的 HomeKit 截图  开始这篇之前，首先你要确保你已经安装了上一篇中提到的 SSH &amp; Web Terminal 插件。 如何修改配置文件如果已经安装好了 SSH &amp; Web Terminal 插件并启动了，那么直接在 Terminal 中执行下面的命令就可以连接到树莓派">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181211/HDJ48ZxcSFTWAt0MaM43oYcTagO0EuGLxxUY0PvW.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181211/5UcdR3uIjaHSc2HhVxr4zDqbSJ0YSrGAPMEtxZwT.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181211/GQsHPHWOazBkCO9RHLjcxJVrFgSsf054nBPYCSwf.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181211/cuLXvbOSLqdzFzWvg8h8KqkTxjvb5UxWvb8KRBIZ.png">
+<meta property="article:published_time" content="2018-12-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="HomeAssistant">
+<meta property="article:tag" content="家庭智能">
+<meta property="article:tag" content="米家">
+<meta property="article:tag" content="树莓派">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.akawa.ink/upload/20181211/HDJ48ZxcSFTWAt0MaM43oYcTagO0EuGLxxUY0PvW.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2018/12/10/raspberrypi-3b-home-assistant-mi-2.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2018/12/10/raspberrypi-3b-home-assistant-mi-2.html","path":"2018/12/10/raspberrypi-3b-home-assistant-mi-2.html","title":"在树莓派3B上搭建Hass.io并接入米家和iOS（二）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>在树莓派3B上搭建Hass.io并接入米家和iOS（二） | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">如何修改配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%85%A5%E5%B0%8F%E7%B1%B3%E5%A4%9A%E5%8A%9F%E8%83%BD%E7%BD%91%E5%85%B3"><span class="nav-number">2.</span> <span class="nav-text">接入小米多功能网关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%85%A5%E5%B0%8F%E7%B1%B3Wifi%E8%AE%BE%E5%A4%87"><span class="nav-number">3.</span> <span class="nav-text">接入小米Wifi设备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%85%A5%E8%8B%B9%E6%9E%9CHomeKit"><span class="nav-number">4.</span> <span class="nav-text">接入苹果HomeKit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%85%A5%E8%B7%AF%E7%94%B1%E5%99%A8"><span class="nav-number">5.</span> <span class="nav-text">接入路由器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6"><span class="nav-number">6.</span> <span class="nav-text">自定义组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E7%BD%AE%E5%92%8C%E5%A4%A9%E6%B0%94%E8%AE%BE%E7%BD%AE"><span class="nav-number">7.</span> <span class="nav-text">位置和天气设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AA%E6%80%A7%E5%8C%96%E8%AE%BE%E7%BD%AE"><span class="nav-number">8.</span> <span class="nav-text">个性化设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%99%BA%E8%83%BD%E8%AF%AD%E8%A8%80"><span class="nav-number">9.</span> <span class="nav-text">智能语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">10.</span> <span class="nav-text">结语</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2018/12/10/raspberrypi-3b-home-assistant-mi-2.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="在树莓派3B上搭建Hass.io并接入米家和iOS（二） | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在树莓派3B上搭建Hass.io并接入米家和iOS（二）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-11 00:00:00" itemprop="dateCreated datePublished" datetime="2018-12-11T00:00:00+08:00">2018-12-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>这是这个系列的第二篇，主要讲一下各种设备接入配置。先放一张目前我已经配置好的管理界面图片</p>
+<p><img src="/upload/20181211/HDJ48ZxcSFTWAt0MaM43oYcTagO0EuGLxxUY0PvW.png"></p>
+<p>再放一张配置好的 HomeKit 截图</p>
+<p><img src="/upload/20181211/5UcdR3uIjaHSc2HhVxr4zDqbSJ0YSrGAPMEtxZwT.png"></p>
+<p><em>开始这篇之前，首先你要确保你已经安装了上一篇中提到的 <strong>SSH &amp; Web Terminal</strong> 插件。</em></p>
+<h2 id="如何修改配置文件"><a href="#如何修改配置文件" class="headerlink" title="如何修改配置文件"></a>如何修改配置文件</h2><p>如果已经安装好了 <strong>SSH &amp; Web Terminal</strong> 插件并启动了，那么直接在 <strong>Terminal</strong> 中执行下面的命令就可以连接到树莓派上了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh hassio@hassio.local</span><br></pre></td></tr></table></figure>
+
+<p>连接后 ，用 <code>ls</code> 查看目录</p>
+<p><img src="/upload/20181211/GQsHPHWOazBkCO9RHLjcxJVrFgSsf054nBPYCSwf.png"></p>
+<p>各个目录的作用如下：</p>
+<ul>
+<li>addons 存储自定义插件</li>
+<li>backup 备份目录</li>
+<li>config 配置文件目录已经自定义组件</li>
+<li>share 共享目录</li>
+<li>ssl 证书目录</li>
+</ul>
+<p>我们配置的时候，主要就是修改 <code>config</code> 目录下的 <code>configuration.yaml</code> 文件。每次修改保存后，要先在后台的“配置”&#x3D;&gt;“通用”中“检查配置”，配置检查通过后，再重载配置或者重启服务（有些配置的修改需要重启服务才能生效）。</p>
+<h2 id="接入小米多功能网关"><a href="#接入小米多功能网关" class="headerlink" title="接入小米多功能网关"></a>接入小米多功能网关</h2><p>打开 <code>config/configuration.yaml</code>，加入下面的配置（根据你的情况选择是多网关还是单网关配置）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 使用单网关前提下，可不填 mac, mac 不带冒号</span><br><span class="line">xiaomi_aqara:</span><br><span class="line">  gateways:</span><br><span class="line">    - mac:</span><br><span class="line">      key: xxxxxxxxxxxxxxxx</span><br><span class="line"># 多个网关必须填入 mac，mac 不带冒号</span><br><span class="line">xiaomi_aqara:</span><br><span class="line">  gateways:</span><br><span class="line">    - mac: xxxxxxxxxxxx</span><br><span class="line">      key: xxxxxxxxxxxxxxxx</span><br><span class="line">    - mac: xxxxxxxxxxxx</span><br><span class="line">      key: xxxxxxxxxxxxxxxx</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>key</code> 的获取，需要打开米家App，打开网关页面，点击右上角的三个点，打开菜单后，选择“关于”，之后“玩法教程”下面的空白处点击5次，就会出现新的列表选项，点击“局域网通信协议”，里面的密码就是 <code>key</code> 了，另外要把最上面的那个“局域网通信协议”的开关打开。</p>
+<p>保存重启，接入网关成功后，通过网关接入的各种 <strong>ZigBee</strong> 设备都会被 <strong>HomeAssistant</strong> 识别出来。<br>目前的支持情况参见这里：<a target="_blank" rel="noopener" href="https://home-assistant.cc/component/xiaomi/zigbee/">https://home-assistant.cc/component/xiaomi/zigbee/</a></p>
+<h2 id="接入小米Wifi设备"><a href="#接入小米Wifi设备" class="headerlink" title="接入小米Wifi设备"></a>接入小米Wifi设备</h2><p>插座类的配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">switch:</span><br><span class="line">  - platform: xiaomi_miio</span><br><span class="line">    name: Original Xiaomi Mi Smart WiFi Socket</span><br><span class="line">    host: 192.168.130.59</span><br><span class="line">    token: YOUR_TOKEN</span><br></pre></td></tr></table></figure>
+
+<p>其中 <strong>name</strong> 可以自定义，<strong>host</strong> 是插座的IP地址，<strong>token</strong>则是通信用的凭证。</p>
+<p>小米Wifi设备由于各个生产厂商的原因，并不像智能网关那么人性给提供设备的 <code>token</code>。获取 <code>wifi</code> 设备的 <code>token</code> 需要折腾一下。网上给出了几种方案，我使用的是用 <strong>Root</strong> 过的安卓手机。在手机上安装 <strong>5.0.19</strong> 版的米家（这是最后一个版本支持通过本地sqlite数据库查询 <strong>token</strong> 的版本），登陆米家，然后手机上打开文件管理器（比如ES文件管理器），把 <code>/data/data/com.xiaomi.smarthome/databases/miio2.db</code> 复制到电脑可访问的目录（比如SD卡），然后通过<code>USB</code> 把文件从手机转移到电脑上，用 <code>sqlite</code> 软件查询 <code>devicerecord</code> 表，其中有个 <code>token</code> 字段，那个就是了。</p>
+<p>其他的一些Wifi设备参考这里：<a target="_blank" rel="noopener" href="https://home-assistant.cc/component/xiaomi/wifi/">https://home-assistant.cc/component/xiaomi/wifi/</a></p>
+<h2 id="接入苹果HomeKit"><a href="#接入苹果HomeKit" class="headerlink" title="接入苹果HomeKit"></a>接入苹果HomeKit</h2><p>配置这个的好处是，可以使用 <strong>Siri</strong> 来控制你的家庭智能场景和设备。</p>
+<p>增加如下配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">homekit:</span><br></pre></td></tr></table></figure>
+
+<p>保存重启服务后，会在主面板看到一个PIN码，这时候打开iPhone，找到 <strong>Home</strong> ，“添加配件”，“没有代码或无法扫描”，“输入代码”，把刚才的PIN码输入进去即可。</p>
+<p>其他配置可参考这里：<a target="_blank" rel="noopener" href="https://home-assistant.cc/homekit/builtin/">https://home-assistant.cc/homekit/builtin/</a></p>
+<h2 id="接入路由器"><a href="#接入路由器" class="headerlink" title="接入路由器"></a>接入路由器</h2><p>我的是网件路由刷的华硕的固件，因此找到华硕的配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">asuswrt:</span><br><span class="line">  host: 路由器IP</span><br><span class="line">  username:  路由器账号</span><br><span class="line">  password: 路由器密码</span><br><span class="line">  protocol: 协议 ssh 或者 telnet</span><br><span class="line">  port: 端口，默认 22,telnet 模式为 23</span><br><span class="line">  mode: 模式，默认 router，可选 ap</span><br><span class="line">  ssh_key: ssh 秘钥路径，可选</span><br></pre></td></tr></table></figure>
+
+<p>其他路由参考：<a target="_blank" rel="noopener" href="https://home-assistant.cc/component/router/">https://home-assistant.cc/component/router/</a></p>
+<h2 id="自定义组件"><a href="#自定义组件" class="headerlink" title="自定义组件"></a>自定义组件</h2><p>有时候，有些设备可能自带的组件并不支持，那么需要去搜索安装下第三方组件，比如小米直流电风扇，就需要去下载 <a target="_blank" rel="noopener" href="https://github.com/syssi/xiaomi_fan">https://github.com/syssi/xiaomi_fan</a> 到 <code>config</code> 目录下面，</p>
+<p><img src="/upload/20181211/cuLXvbOSLqdzFzWvg8h8KqkTxjvb5UxWvb8KRBIZ.png"></p>
+<p>然后按照第三方插件给的说明增加配置即可。</p>
+<h2 id="位置和天气设置"><a href="#位置和天气设置" class="headerlink" title="位置和天气设置"></a>位置和天气设置</h2><p>查询下经纬度，可以把经纬度设置好，之后就能显示当地的日落日出时间了。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">homeassistant:</span><br><span class="line">  # 名称，可为中文</span><br><span class="line">  name: 家</span><br><span class="line">  # 纬度</span><br><span class="line">  latitude: !secret latitude</span><br><span class="line">  # 经度</span><br><span class="line">  longitude: !secret longitude</span><br><span class="line">  # 海拔</span><br><span class="line">  elevation: 11</span><br><span class="line">  # 度量单位，这里选择“米”</span><br><span class="line">  unit_system: metric</span><br><span class="line">  # 时区</span><br><span class="line">  time_zone: Asia/Shanghai</span><br><span class="line">  # 设备个性化</span><br><span class="line">  customize: </span><br></pre></td></tr></table></figure>
+
+<p>我使用的是yahoo天气的数据，配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">weather:</span><br><span class="line">  - platform: ywether</span><br><span class="line">    woeid: 2168257</span><br><span class="line">    name: Zibo</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>woeid</code> 需要自己去 <a target="_blank" rel="noopener" href="https://www.yahoo.com/news/weather/">https://www.yahoo.com/news/weather/</a> 查询城市天气，URL中的id即为 <code>woeid</code>。</p>
+<h2 id="个性化设置"><a href="#个性化设置" class="headerlink" title="个性化设置"></a>个性化设置</h2><p>个性化设置在 “配置” -&gt; “自定义” 里面，在这里可以修改每个接入设备的名字等参数，并且可以设置是否隐藏（这个还是挺有用的，尤其是接入了路由器的情况下，会有很多的 <strong>device_tracker</strong> 类的设备，都显示在面板上显然是很乱的）。</p>
+<p>一些可以参考的参数：<a target="_blank" rel="noopener" href="https://home-assistant.cc/system/customize/">https://home-assistant.cc/system/customize/</a></p>
+<h2 id="智能语言"><a href="#智能语言" class="headerlink" title="智能语言"></a>智能语言</h2><p>配置这个的目的是为了能通过语音合成技术进行结果输出（播报）。</p>
+<p>直接参考这里即可： <a target="_blank" rel="noopener" href="https://home-assistant.cc/component/nlp/">https://home-assistant.cc/component/nlp/</a></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>基本的配置就这些，目前家里所有的智能设备都加入到了 <strong>Home Assistant</strong> 的管理中了，之后就是配置各种智能逻辑了，等我试验过后，会在下一篇写一下。</p>
+<p>Over！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2018/12/10/raspberrypi-3b-home-assistant-mi-2.html" title="在树莓派3B上搭建Hass.io并接入米家和iOS（二）">https://blog.akawa.ink/2018/12/10/raspberrypi-3b-home-assistant-mi-2.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/HomeAssistant/" rel="tag"># HomeAssistant</a>
+              <a href="/tags/%E5%AE%B6%E5%BA%AD%E6%99%BA%E8%83%BD/" rel="tag"># 家庭智能</a>
+              <a href="/tags/%E7%B1%B3%E5%AE%B6/" rel="tag"># 米家</a>
+              <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag"># 树莓派</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html" rel="prev" title="在树莓派3B上搭建Hass.io并接入米家和iOS（一）">
+                  <i class="fa fa-angle-left"></i> 在树莓派3B上搭建Hass.io并接入米家和iOS（一）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/12/21/eth-multiple-signature.html" rel="next" title="ETH多签测试">
+                  ETH多签测试 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

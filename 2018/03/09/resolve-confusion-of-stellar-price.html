@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="这篇可能又会是一篇比较晦涩的文章了。可能也许写完了也就只有我自己能看懂了吧。。  在没有开发恒星做市机器人之前，一直都没有仔细关注过交易市场的价格单位。 由于交易市场之前都是 CNY 和具体的数字货币交易，所以交易所显示的价格都是买一个数字货币需要多少 CNY，我只需要看具体的数值即可，并不影响我判断什么时候买入，什么时候卖出。 在开发第一版的机器人的时候，由于只是在单网关下做 XLM 和 CN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="困惑我很久的价格单位终于弄明白了">
+<meta property="og:url" content="https://blog.akawa.ink/2018/03/09/resolve-confusion-of-stellar-price.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="这篇可能又会是一篇比较晦涩的文章了。可能也许写完了也就只有我自己能看懂了吧。。  在没有开发恒星做市机器人之前，一直都没有仔细关注过交易市场的价格单位。 由于交易市场之前都是 CNY 和具体的数字货币交易，所以交易所显示的价格都是买一个数字货币需要多少 CNY，我只需要看具体的数值即可，并不影响我判断什么时候买入，什么时候卖出。 在开发第一版的机器人的时候，由于只是在单网关下做 XLM 和 CN">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://steemitimages.com/DQmQw1vDLJDuF2CxznpCxenw2pkXapvEkG88yGPRf7XgdMt/image.png">
+<meta property="article:published_time" content="2018-03-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://steemitimages.com/DQmQw1vDLJDuF2CxznpCxenw2pkXapvEkG88yGPRf7XgdMt/image.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2018/03/09/resolve-confusion-of-stellar-price.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2018/03/09/resolve-confusion-of-stellar-price.html","path":"2018/03/09/resolve-confusion-of-stellar-price.html","title":"困惑我很久的价格单位终于弄明白了"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>困惑我很久的价格单位终于弄明白了 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2018/03/09/resolve-confusion-of-stellar-price.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="困惑我很久的价格单位终于弄明白了 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          困惑我很久的价格单位终于弄明白了
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-10 00:00:00" itemprop="dateCreated datePublished" datetime="2018-03-10T00:00:00+08:00">2018-03-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p>这篇可能又会是一篇比较晦涩的文章了。可能也许写完了也就只有我自己能看懂了吧。。</p>
+</blockquote>
+<p>在没有开发恒星做市机器人之前，一直都没有仔细关注过交易市场的价格单位。</p>
+<p>由于交易市场之前都是 <code>CNY</code> 和具体的数字货币交易，所以交易所显示的价格都是买一个数字货币需要多少 <code>CNY</code>，我只需要看具体的数值即可，并不影响我判断什么时候买入，什么时候卖出。</p>
+<p>在开发<a target="_blank" rel="noopener" href="https://stellar.to0l.cn/">第一版的机器人</a>的时候，由于只是在单网关下做 <code>XLM</code> 和 <code>CNY</code>这一个交易对，也就没有在意价格单位的问题。</p>
+<p>但是从开发<a target="_blank" rel="noopener" href="https://stellarbot.top/">第二版机器人</a>开始，由于加入了多网关多币种之间互相做市的功能，就不得不看看具体的单位到底代表什么意思了。</p>
+<p>之前每次扫到类似 <code>BTC/CNY </code> 这样的单位的时候，总以为这是个分数，比如 <code>60000 BTC/CNY</code> 我会以为是每一个 <code>CNY</code> 可以买到 60000 个 <code>BTC</code>，由于这个例子使用的是 <code>CNY</code> ，我们心里清楚目前 <code>BTC</code> 值多少 <code>CNY</code>，因此才知道我刚才的阅读单位的方式是错误的。</p>
+<p>目前我开发机器人过程中，会出现两个陌生币种之间的交易，这个时候，如果不能真正了解价格单位的意义，开发出来的机器人肯定会是有问题的。</p>
+<p>所以到底类似 <code>BTC/CNY</code> 这样的交易对价格单位该如何正确解读呢？</p>
+<p>在说正确方法之前，还要再插一句，就是 <code>BTS</code> 内盘的价格单位其实在很长一段时间都是给我有误导作用的。我们看一下在内盘抵押 <code>BTS</code> 的时候，出现的喂价和强平触发价的单位。</p>
+<p><img src="https://steemitimages.com/DQmQw1vDLJDuF2CxznpCxenw2pkXapvEkG88yGPRf7XgdMt/image.png"></p>
+<p><em>这里的单位就真的是分数式的解读啊！</em>比如强平触发价 <code>2.97143 BTS/bitCNY</code>，就是当 1 个 <code>bitCNY</code> 可以买到 2.97143 个 <code>BTS</code>，也就是 1 个 BTS 值大约 0.3365 <code>bitCNY</code> 的时候爆仓。</p>
+<p>下面就来说下到底该如何解读交易所的交易对的价格单位。</p>
+<p>我以 <code>base currency and counter currency</code> 作为关键词，在 <code>Google</code> 上搜索了下，发现了这个解释 <a target="_blank" rel="noopener" href="https://www.investopedia.com/terms/b/basecurrency.asp">https://www.investopedia.com/terms/b/basecurrency.asp</a>。</p>
+<p>简单来说，这是外汇市场的一个约定俗成的表示方法，而 <strong>不是</strong> 一个分数形式的表示，只是通过先后顺序来表示关注程度。一个交易对的价格使用类似 <code>base currency/counter currency</code> 的格式来表示，意味着我更关注 <code>base currency</code> 的价值是升了还是跌了，也就是我买一个 <code>base currency</code> 要花多少 <code>counter currency</code> 或者 卖一个 <code>base currency</code> 能得到多少 <code>counter currency</code>。就是这么简单的按照顺序阅读即可。</p>
+<p>举个例子，比如说 <code>BTC/CNY</code> 这个交易对，之前 <code>60000 BTC/CNY</code> 应该解读为我购买 1 个 <code>BTC</code> 需要花费 60000 个 <code>CNY</code>，如果购买一天后价格变为了 <code>70000 BTC/CNY</code>，就意味着我关注的这个 <code>base currency</code> 即 <code>BTC</code> 升值了。</p>
+<p><strong>总结一下，其实 <code>counter currency</code> 就是你手里的筹码。<code>base currency</code> 是你想持有的。</strong></p>
+<p>这样一来，你关心哪个币的涨跌，就把哪个币设置为 <code>base currency</code> 就可以轻松的了解是否升值了。</p>
+<p>以上就是完整的价格单位如何解读的内容了，下面是吐槽内容，选读：</p>
+<blockquote>
+<p>除了恶心的价格单位外，再说一下 <code>bid</code> 和 <code>ask</code>，这个也是让我头疼的东西。<br>放狗搜索了下，发现了这篇文章，<a target="_blank" rel="noopener" href="https://www.bitcoinmarketjournal.com/difference-bid-ask-buy-offer-cryptocurrency-trading/">https://www.bitcoinmarketjournal.com/difference-bid-ask-buy-offer-cryptocurrency-trading/</a>，发现老外也真是够了。<br>原来 <code>bid price</code> 代表了最高的买价，<code>ask price</code> 代表了最低的卖价，而 <code>buy price</code> 和 <code>sell price</code> 只是代表最终的成交价。。。<br>WTF，为啥要多搞出来两个名词，对于中文来说都是买价卖家，无非加上最低和最高这样的形容词罢了。。。<br>我还要吐槽的是，恒星币的接口返回的 <code>orderbook</code> 里用 <code>buy</code> 和 <code>sell</code> 来表示买单列表和卖单列表并没有不严谨吧，反而用的是 <code>asks</code> 和 <code>bids</code> 来表示卖单列表和买单列表。每次我都是要反应半天！只能说还是我的英语学的不好。<br>说到 <code>orderbook</code>，又想起了另外一个槽点，就是在恒星币的 <code>API</code> 体系里清一色的都是 <code>offer</code>，而这里却是 <code>orderbook</code>，你咋不叫 <code>offerbook</code> 呢？<br>吐槽完毕！</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2018/03/09/resolve-confusion-of-stellar-price.html" title="困惑我很久的价格单位终于弄明白了">https://blog.akawa.ink/2018/03/09/resolve-confusion-of-stellar-price.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/02/07/asterisk-tuturial.html" rel="prev" title="出国狗的福音--使用树莓派搭建跨国语音短信设备">
+                  <i class="fa fa-angle-left"></i> 出国狗的福音--使用树莓派搭建跨国语音短信设备
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/03/18/stellar-dev-summarize.html" rel="next" title="Stellar开发中关于offer相关的总结">
+                  Stellar开发中关于offer相关的总结 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

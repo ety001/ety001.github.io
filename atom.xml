@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Akawa</title>
+  
+  <subtitle>ETY001的博客</subtitle>
+  <link href="https://blog.akawa.ink/atom.xml" rel="self"/>
+  
+  <link href="https://blog.akawa.ink/"/>
+  <updated>2025-08-20T17:49:53.000Z</updated>
+  <id>https://blog.akawa.ink/</id>
+  
+  <author>
+    <name>ETY001</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Harmony Next 使用 L2TP IPSec PSK VPN</title>
+    <link href="https://blog.akawa.ink/2025/08/23/harmony-next-l2tp-ipsec-psk.html"/>
+    <id>https://blog.akawa.ink/2025/08/23/harmony-next-l2tp-ipsec-psk.html</id>
+    <published>2025-08-23T17:34:49.596Z</published>
+    <updated>2025-08-20T17:49:53.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前在我的 <a href="/2019/01/10/docker-pptp-vpn-l2tp-ipsec-vpn.html" title="用 Docker 快速部署 PPTP VPN 和 L2TP + IPSEC VPN">用 Docker 快速部署 PPTP VPN 和 L2TP + IPSEC VPN</a> 一文中，我介绍了如何使用 Docker k快速署 L2TP IPSec VPN，但是在纯血鸿蒙下一直无法成功。</p><p>发现是因为无法匹配通讯加密方法。</p><p>进入容器，如下修改一下 <code>/etc/ipsec.conf</code> 文件的通讯加密方法，</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">conn l2tp-psk</span><br><span class="line">    ...</span><br><span class="line">    ike=aes128-sha1-modp1024,aes256-sha1-modp1024  # 匹配客户端的AES-CBC + SHA1 + MODP1024</span><br><span class="line">    phase2alg=aes128-sha1  # 第二阶段算法也需匹配</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure><p>之后重启服务即可，<code>service ipsec restart</code>。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;之前在我的 &lt;a href=&quot;/2019/01/10/docker-pptp-vpn-l2tp-ipsec-vpn.html&quot; title=&quot;用 Docker 快速部署 PPTP VPN 和 L2TP + IPSEC VPN&quot;&gt;用 Docker 快速部署 PPTP VPN </summary>
+      
+    
+    
+    
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="服务器" scheme="https://blog.akawa.ink/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>hclient-cli 纯终端界面下接入懒猫网络工具</title>
+    <link href="https://blog.akawa.ink/2025/02/18/hclient-cli.html"/>
+    <id>https://blog.akawa.ink/2025/02/18/hclient-cli.html</id>
+    <published>2025-02-18T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="https://gitee.com/lazycatcloud/hclient-cli">hclient-cli</a> 是官方推出的一个面向无图形界面的机器的接入方案。</p><p>有这个工具的情况下，我们可以让我们远端的服务器接入到懒猫的网络中，访问懒猫上的数据资源。</p><h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>官方库文档有接口的使用说明，这里就不再阐述，我<a href="https://gitee.com/lazycatcloud/hclient-cli/pulls/2">提交了一个 PR</a>，对官方的接口简单的用 bash 脚本封装了一下，减少使用过程中的输入量。同时还包含了一个构建 Docker 镜像的方案，其实就是把 cli 程序加入到镜像中。</p><p>目前我的远端服务是 Docker 容器形式运行的，因此这里分享一下 Docker 使用样例。</p><p>这里的远端应用以我的远端服务器上的青龙面板为例。</p><p>首先给出一个 Docker 容器启动命令示例：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd \</span><br><span class="line">    --privileged \</span><br><span class="line">    --name lazycat \</span><br><span class="line">    --hostname lazycat_in_docker \</span><br><span class="line">    --restart always \</span><br><span class="line">    --network lnmp \</span><br><span class="line">    --ip 172.20.0.66 \</span><br><span class="line">    -p 127.0.0.1:7777:7777 \</span><br><span class="line">    -p 127.0.0.1:61090:61090 \</span><br><span class="line">    -v /data/cfg:/app/cfg \</span><br><span class="line">    ety001/lazycat-cli:latest \</span><br><span class="line">    /app/hclient-cli \</span><br><span class="line">      -api-addr &quot;172.20.0.66:7777&quot; \</span><br><span class="line">      -http-addr &quot;172.20.0.66:61090&quot;</span><br></pre></td></tr></table></figure><blockquote><ol><li>请注意不要暴露你的 7777 管理端口和 61090 代理端口给全局网络</li><li>容器启动后，所有 lnmp 网络中的容器可以通过 <code>172.20.0.66:61090</code> 代理访问懒猫资源。</li><li>宿主机可以通过 <code>127.0.0.1:7777</code> 管理，通过 <code>127.0.0.1:61090</code> 代理访问。</li></ol></blockquote><p>在宿主机中，调用 <code>cmd.sh</code> （在我的那个 PR 中）完成懒猫网络的登陆。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./cmd.sh add_box</span><br><span class="line">./cmd.sh add_tfa</span><br><span class="line">./cmd.sh client_info</span><br></pre></td></tr></table></figure><p>登陆成功后，打开远端的青龙面板，安装依赖 <code>axios</code> 和 <code>https-proxy-agent</code>。之后增加环境变量配置如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LAZYCAT_PROXY=http://172.20.0.66:61090</span><br><span class="line">INFLUXDB_TOKEN=xxxx</span><br><span class="line">INFLUXDB_URL=http://influxdb.ecat.heiyu.space:8086</span><br></pre></td></tr></table></figure><p>创建一个新的测试 js 脚本如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">const axios = require(&#x27;axios&#x27;);</span><br><span class="line">const &#123; HttpsProxyAgent &#125; = require(&#x27;https-proxy-agent&#x27;);</span><br><span class="line"></span><br><span class="line">const proxy = process.env.LAZYCAT_PROXY;</span><br><span class="line">const agent = new HttpsProxyAgent(proxy);</span><br><span class="line"></span><br><span class="line">// 自定义 HTTP 客户端，使用 axios 和代理</span><br><span class="line">const customHttpClient = axios.create(&#123;</span><br><span class="line">    httpAgent: agent,</span><br><span class="line">    httpsAgent: agent,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">const token = process.env.INFLUXDB_TOKEN;</span><br><span class="line">const url = process.env.INFLUXDB_URL;</span><br><span class="line">const org = &#x27;default&#x27;;</span><br><span class="line">const bucket = &#x27;steem&#x27;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 定义 Flux 查询</span><br><span class="line">const fluxQuery = `</span><br><span class="line">  from(bucket: &quot;$&#123;bucket&#125;&quot;)</span><br><span class="line">    |&gt; range(start: -1h)</span><br><span class="line">    |&gt; filter(fn: (r) =&gt; r._measurement == &quot;price&quot;)</span><br><span class="line">    |&gt; filter(fn: (r) =&gt; r._field == &quot;lowest_ask&quot;)</span><br><span class="line">`;</span><br><span class="line"></span><br><span class="line">// 发送查询请求</span><br><span class="line">async function queryData() &#123;</span><br><span class="line">  try &#123;</span><br><span class="line">    const response = await customHttpClient.post(</span><br><span class="line">      `$&#123;url&#125;/api/v2/query?org=$&#123;org&#125;`,</span><br><span class="line">      &#123;</span><br><span class="line">        query: fluxQuery,</span><br><span class="line">        type: &#x27;flux&#x27;,</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        headers: &#123;</span><br><span class="line">          Authorization: `Token $&#123;token&#125;`,</span><br><span class="line">          &#x27;Content-Type&#x27;: &#x27;application/json&#x27;,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line">    console.log(&#x27;查询结果:&#x27;, response.data);</span><br><span class="line">  &#125; catch (error) &#123;</span><br><span class="line">    console.error(&#x27;查询数据时出错:&#x27;, error.response ? error.response.data : error.message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">queryData();</span><br></pre></td></tr></table></figure><p>调试运行，成功获取到懒猫微服上的 <code>Influxdb</code> 中的数据。</p><p><img src="/img/2025/286002a6-e5d5-4aaa-90d8-f99d5be5a4d3.png" alt="image.png" title="image.png"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://gitee.com/lazycatcloud/hclient-cli&quot;&gt;hclient-cli&lt;/a&gt; 是</summary>
+      
+    
+    
+    
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="服务器" scheme="https://blog.akawa.ink/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>零碎脚本执行利器 -- 青龙面板</title>
+    <link href="https://blog.akawa.ink/2024/11/20/or-a-powerful-tool-for-executing-fragmented-scripts-qinglong-panel.html"/>
+    <id>https://blog.akawa.ink/2024/11/20/or-a-powerful-tool-for-executing-fragmented-scripts-qinglong-panel.html</id>
+    <published>2024-11-20T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天发现了一个有意思的工具 —— <a href="https://github.com/whyour/qinglong">青龙面板</a>。</p><p>平时经常会有一些零零碎碎的脚本需要运行，放在宿主机运行，就要安装 nodejs 的环境，如果放在 docker 里运行，就要写 Dockerfile ，太繁琐。</p><p>使用这个青龙面板，相当于直接拥有一个容器空间，自带 python, nodejs 环境。可以理解为是云服务商的那种 server less 服务。</p><h1 id="有这些特性很方便"><a href="#有这些特性很方便" class="headerlink" title="有这些特性很方便"></a>有这些特性很方便</h1><h3 id="1-按计划拉取指定的-repo-的指定分支。"><a href="#1-按计划拉取指定的-repo-的指定分支。" class="headerlink" title="1.按计划拉取指定的 repo 的指定分支。"></a>1.按计划拉取指定的 repo 的指定分支。</h3><p><img src="/img/2024/DQmNzrSTk6u7KoeXAE3rY5FQB2HAGinfGwnhfi47sAZSxHQ.png" alt="image.png"></p><p>这样我们可以把零碎的脚本放在一个独立的代码库里面，进行版本管理。</p><p>当然，如果你想要立即执行拉取任务，也提供了单独的运行按钮可以立即执行。</p><h3 id="2-共享依赖。"><a href="#2-共享依赖。" class="headerlink" title="2.共享依赖。"></a>2.共享依赖。</h3><p><img src="/img/2024/06bbe3ec9a2257829a8383ed4c432d88.jpg" alt="06bbe3ec9a2257829a8383ed4c432d88.jpg"></p><p>独立的依赖管理面板，可以只需要安装一次依赖，就可以所有脚本都使用。</p><h3 id="3-在线编辑-调试代码。"><a href="#3-在线编辑-调试代码。" class="headerlink" title="3.在线编辑&#x2F;调试代码。"></a>3.在线编辑&#x2F;调试代码。</h3><p><img src="/img/2024/DQmZePRPW5aA5yk8id71c89p7xGJ7zKoXaQEW9kLZDJPSB2.png" alt="image.png"></p><p>这是拉取下来的代码，可以在线编辑。</p><p><img src="/img/2024/DQmTCHbnWLgY7tKR68ULCvcEpJxhVyG1bMxSCFFut4UvCuF.png" alt="image.png"></p><p>这是调试界面，可以实时调试。</p><h3 id="4-核心功能——计划任务"><a href="#4-核心功能——计划任务" class="headerlink" title="4.核心功能——计划任务"></a>4.核心功能——计划任务</h3><p><img src="/img/2024/DQmTSVxe7zhGK79ah7hxYmiYZmveKnJ1KBWuY6YipGnteQv.png" alt="image.png"></p><p>编辑好的脚本，可以在这里设置计划任务，让脚本按计划运行。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;今天发现了一个有意思的工具 —— &lt;a href=&quot;https://github.com/whyour/qinglong&quot;&gt;青龙面板&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;平时经常会有一些零零碎碎的脚本需要运行，放在宿主机运行，就要安装 nodejs 的环境，如果放在 docker 里运</summary>
+      
+    
+    
+    
+    
+    <category term="配置" scheme="https://blog.akawa.ink/tags/%E9%85%8D%E7%BD%AE/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="服务器" scheme="https://blog.akawa.ink/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>React 中 useEffect 的依赖项如何理解</title>
+    <link href="https://blog.akawa.ink/2024/09/21/react-useeffect.html"/>
+    <id>https://blog.akawa.ink/2024/09/21/react-useeffect.html</id>
+    <published>2024-09-21T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 React 中，useEffect 的依赖项决定了其什么时候执行。</p><h1 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h1><p>useEffect 接受两个参数：</p><ul><li>副作用函数：在组件渲染后或依赖项发生变化时执行的函数。</li><li>依赖项数组（可选）：决定副作用函数何时重新执行。</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(() =&gt; &#123;</span><br><span class="line">  // 副作用逻辑</span><br><span class="line">&#125;, [dependency1, dependency2, ...]);</span><br></pre></td></tr></table></figure><h1 id="依赖项的常见场景与解释"><a href="#依赖项的常见场景与解释" class="headerlink" title="依赖项的常见场景与解释"></a>依赖项的常见场景与解释</h1><p>1.无依赖项数组（每次渲染都会执行）： 如果不传入依赖项数组，useEffect 中的副作用函数将在每次组件渲染后都执行。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(() =&gt; &#123;</span><br><span class="line">  console.log(&#x27;This runs after every render&#x27;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><p>场景：这种用法不常见，通常用于希望在每次渲染时执行某些逻辑，但要注意性能开销。</p><p>2.空依赖项数组（只在组件挂载和卸载时执行）： 如果传入一个空数组 []，则 useEffect 只会在组件挂载时运行一次，并在组件卸载时运行清理函数（如果提供了）。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(() =&gt; &#123;</span><br><span class="line">  console.log(&#x27;This runs only on mount&#x27;);</span><br><span class="line">  return () =&gt; &#123;</span><br><span class="line">    console.log(&#x27;This runs on unmount&#x27;);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, []);</span><br></pre></td></tr></table></figure><p>场景：通常用于初始化数据（例如组件挂载时的 API 请求），或在组件卸载时执行清理操作（例如清理定时器、取消订阅等）。</p><p>3.具有依赖项的数组（依赖项变化时执行）： 当传入特定的依赖项时，useEffect 只有在这些依赖项的值发生变化时才会重新执行。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(() =&gt; &#123;</span><br><span class="line">  console.log(&#x27;This runs when count changes&#x27;);</span><br><span class="line">&#125;, [count]); // 当 count 变化时副作用重新执行</span><br></pre></td></tr></table></figure><p>场景：用于根据某个特定状态或 prop 变化来执行副作用逻辑。例如，当 count 变化时，可能需要重新获取某些数据或触发其他副作用。</p><p>4.多个依赖项： 可以在依赖项数组中传入多个依赖项，useEffect 将会在其中任何一个依赖发生变化时重新执行。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useEffect(() =&gt; &#123;</span><br><span class="line">  console.log(&#x27;This runs when count or user changes&#x27;);</span><br><span class="line">&#125;, [count, user]);</span><br></pre></td></tr></table></figure><p>场景：用于当多个状态或 prop 变化时，重新执行某个逻辑。例如，可能需要在 count 或 user 变化时重新发起某个 API 请求。</p><h1 id="如何选择依赖项"><a href="#如何选择依赖项" class="headerlink" title="如何选择依赖项"></a>如何选择依赖项</h1><p>1.依赖项的选择要遵循以下原则：</p><ul><li>副作用函数中使用的所有外部变量：任何在 useEffect 中使用的外部变量（函数组件中的状态、props 等）都应该作为依赖项传入。这是因为这些变量在每次渲染时都可能更新，你需要确保 useEffect 在依赖的值发生变化时执行。</li><li>dispatch 和其他稳定函数：通常像 dispatch（来自 useDispatch）这样的函数引用是稳定的（即在多次渲染之间不会改变），所以可以安全地放入依赖项数组中。如果某个函数引用在不同渲染周期中保持不变，就可以把它作为依赖项。</li></ul><p>2.常见的误区与优化：</p><ul><li>忘记依赖项：如果 useEffect 中依赖的某些值没有包含在依赖项数组中，可能会导致副作用函数使用了过时的值（也称为“闭包陷阱”）。例如，依赖于某个 state 却没有将其加入依赖项数组，这样的结果是 useEffect 中的逻辑不会随着 state 的变化重新执行。</li><li>过度依赖不必要的变量：有时候不小心将不必要的变量放入依赖项数组，导致 useEffect 过于频繁地执行，浪费性能。例如，不必要地将某些稳定的变量放入依赖项。</li></ul><hr><p><strong>ET碎碎念，每周更新，欢迎订阅，点赞，转发！</strong><br><img src="https://cdn.steemitimages.com/DQmNqMmFcstxiRQqGStZSSEPEN4Z23cywF1whi91qbGTXxn/640.gif"></p><hr><h4 id="好用不贵的VPS推荐"><a href="#好用不贵的VPS推荐" class="headerlink" title="好用不贵的VPS推荐"></a>好用不贵的VPS推荐</h4><p><a href="https://1hour.win/">https://1hour.win</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;在 React 中，useEffect 的依赖项决定了其什么时候执行。&lt;/p&gt;
+&lt;h1 id=&quot;基本语法&quot;&gt;&lt;a href=&quot;#基本语法&quot; class=&quot;headerlink&quot; title=&quot;基本语法&quot;&gt;&lt;/a&gt;基本语法&lt;/h1&gt;&lt;p&gt;useEffect 接受两个参数：&lt;/</summary>
+      
+    
+    
+    
+    
+    <category term="前端" scheme="https://blog.akawa.ink/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="react" scheme="https://blog.akawa.ink/tags/react/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>redux-saga 如何与 @reduxjs/toolkit 配合使用？</title>
+    <link href="https://blog.akawa.ink/2024/09/06/redux-saga-reduxjs-toolkit.html"/>
+    <id>https://blog.akawa.ink/2024/09/06/redux-saga-reduxjs-toolkit.html</id>
+    <published>2024-09-06T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前情"><a href="#前情" class="headerlink" title="前情"></a>前情</h1><p>Steemit 的几个前端项目（<a href="https://github.com/steemit/condenser">condenser</a>, <a href="https://github.com/steemit/wallet">wallet</a>, <a href="https://github.com/steemit/faucet">faucet</a>）都使用了 redux 和 redux-saga。</p><p>这次升级 faucet 所有依赖库，发现新版本 redux 推荐使用官方的 <code>@reduxjs/toolkit</code> 工具集来实现 redux 的功能。</p><p>既然 redux 的官方推荐使用工具集，那么这次升级我们也要相对应的把原有的 redux 相关代码做改动。</p><p>其中，为了应对复杂的异步请求而引入的 <code>redux-saga</code>，我不是很确定是否与工具集兼容，因此投入了时间来研究了一下。</p><h1 id="如何将-redux-saga-与-reduxjs-toolkit-一起使用"><a href="#如何将-redux-saga-与-reduxjs-toolkit-一起使用" class="headerlink" title="如何将 redux-saga 与 @reduxjs/toolkit 一起使用"></a>如何将 <code>redux-saga</code> 与 <code>@reduxjs/toolkit</code> 一起使用</h1><ul><li><p>创建 Redux Store: <code>@reduxjs/toolkit</code> 提供了 <code>configureStore</code> 来简化 <code>store</code> 的创建过程。你可以将 <code>redux-saga</code> 中间件添加到 <code>store</code> 中。</p></li><li><p>创建并运行 Saga 中间件: 使用 <code>redux-saga</code> 的 <code>createSagaMiddleware</code> 来创建 <code>saga</code> 中间件，然后将其添加到 <code>configureStore</code> 中。</p></li><li><p>运行你的 <code>Saga</code>: 在 <code>configureStore</code> 创建 <code>store</code> 后，使用 <code>sagaMiddleware.run</code> 来启动你的 <code>saga</code>。</p></li></ul><p>下面是简单的例子。</p><p>store.js 文件</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// store.js</span><br><span class="line">import &#123; configureStore &#125; from &#x27;@reduxjs/toolkit&#x27;;</span><br><span class="line">import createSagaMiddleware from &#x27;redux-saga&#x27;;</span><br><span class="line">import rootReducer from &#x27;./reducers&#x27;; // 你的 reducer</span><br><span class="line">import rootSaga from &#x27;./sagas&#x27;; // 你的 saga</span><br><span class="line"></span><br><span class="line">// 创建 Saga 中间件</span><br><span class="line">const sagaMiddleware = createSagaMiddleware();</span><br><span class="line"></span><br><span class="line">// 配置 store 并添加 saga 中间件</span><br><span class="line">const store = configureStore(&#123;</span><br><span class="line">  reducer: rootReducer,</span><br><span class="line">  middleware: (getDefaultMiddleware) =&gt;</span><br><span class="line">    getDefaultMiddleware().concat(sagaMiddleware), // 添加 saga 中间件</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// 运行 rootSaga</span><br><span class="line">sagaMiddleware.run(rootSaga);</span><br><span class="line"></span><br><span class="line">export default store;</span><br></pre></td></tr></table></figure><p>saga.js 文件</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// sagas.js</span><br><span class="line">import &#123; call, put, takeLatest &#125; from &#x27;redux-saga/effects&#x27;;</span><br><span class="line">import axios from &#x27;axios&#x27;;</span><br><span class="line"></span><br><span class="line">// worker saga</span><br><span class="line">function* fetchUser(action) &#123;</span><br><span class="line">  try &#123;</span><br><span class="line">    const response = yield call(axios.get, `/api/user/$&#123;action.payload.userId&#125;`);</span><br><span class="line">    yield put(&#123; type: &#x27;USER_FETCH_SUCCESS&#x27;, payload: response.data &#125;);</span><br><span class="line">  &#125; catch (error) &#123;</span><br><span class="line">    yield put(&#123; type: &#x27;USER_FETCH_FAILURE&#x27;, error: error.message &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// watcher saga</span><br><span class="line">function* rootSaga() &#123;</span><br><span class="line">  yield takeLatest(&#x27;USER_FETCH_REQUEST&#x27;, fetchUser);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default rootSaga;</span><br></pre></td></tr></table></figure><hr><p><strong>ET碎碎念，每周更新，欢迎订阅，点赞，转发！</strong><br><img src="https://cdn.steemitimages.com/DQmNqMmFcstxiRQqGStZSSEPEN4Z23cywF1whi91qbGTXxn/640.gif"></p><hr><h4 id="好用不贵的VPS推荐"><a href="#好用不贵的VPS推荐" class="headerlink" title="好用不贵的VPS推荐"></a>好用不贵的VPS推荐</h4><p><a href="https://1hour.win/">https://1hour.win</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;前情&quot;&gt;&lt;a href=&quot;#前情&quot; class=&quot;headerlink&quot; title=&quot;前情&quot;&gt;&lt;/a&gt;前情&lt;/h1&gt;&lt;p&gt;Steemit 的几个前端项目（&lt;a href=&quot;https://github.com/steemit/condenser&quot;&gt;condens</summary>
+      
+    
+    
+    
+    
+    <category term="前端" scheme="https://blog.akawa.ink/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="redux" scheme="https://blog.akawa.ink/tags/redux/"/>
+    
+    <category term="redux-saga" scheme="https://blog.akawa.ink/tags/redux-saga/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 createRoot 方法，报 React is not defined 错误</title>
+    <link href="https://blog.akawa.ink/2024/08/29/createroot-react-is-not-defined.html"/>
+    <id>https://blog.akawa.ink/2024/08/29/createroot-react-is-not-defined.html</id>
+    <published>2024-08-29T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>由于 faucet 项目全部是手动搭建的环境，所以在把 react15 升级到 react18 后，</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createRoot &#125; from &#x27;react-dom/client&#x27;;</span><br><span class="line"></span><br><span class="line">const appElement = document.getElementById(&#x27;app&#x27;);</span><br><span class="line">const root = createRoot(appElement);</span><br><span class="line">root.render(&lt;h1&gt;Hello, world&lt;/h1&gt;);</span><br></pre></td></tr></table></figure><p>使用上面的代码测试环境是否搭建成功的时候，报 <code>React is not defined</code> 错误。</p><p>原因是：在 React 18 中，虽然可以使用 <code>createRoot</code> 来渲染组件，<br>但仍然需要显式地导入 React 以支持 JSX 语法。</p><p>在 JSX 中，<code>&lt;h1&gt;Hello, world&lt;/h1&gt;</code> 会被编译成 <code>React.createElement(&#39;h1&#39;, null, &#39;Hello, world&#39;)</code>。<br>因此，即使你没有直接使用 React，它仍然需要被导入。</p><p>由于 <code>babel</code> 我也升级到最新了，在 7.9 版本后，可以使用 <code>@babel/preset-react</code> 来自动引入 JSX 转换。<br>而不用去显式的导入 React 了。</p><p>具体方法就是在 <code>babel.config.js</code> 中对 <code>@babel/preset-react</code> 增加配置如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;presets&quot;: [</span><br><span class="line">    [</span><br><span class="line">      &quot;@babel/preset-env&quot;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;targets&quot;: &quot;defaults&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ],</span><br><span class="line">    [</span><br><span class="line">      &quot;@babel/preset-react&quot;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;runtime&quot;: &quot;automatic&quot;  // 使用自动引入模式</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>如此设置后，再次编译执行，报错就没有了。</p><hr><p><strong>ET碎碎念，每周更新，欢迎订阅，点赞，转发！</strong><br><img src="https://cdn.steemitimages.com/DQmNqMmFcstxiRQqGStZSSEPEN4Z23cywF1whi91qbGTXxn/640.gif"></p><hr><h4 id="好用不贵的VPS推荐"><a href="#好用不贵的VPS推荐" class="headerlink" title="好用不贵的VPS推荐"></a>好用不贵的VPS推荐</h4><p><a href="https://1hour.win/">https://1hour.win</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;由于 faucet 项目全部是手动搭建的环境，所以在把 react15 升级到 react18 后，&lt;/p&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class</summary>
+      
+    
+    
+    
+    
+    <category term="前端" scheme="https://blog.akawa.ink/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="react" scheme="https://blog.akawa.ink/tags/react/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redux 的 createStore 在编辑器中被提示弃用</title>
+    <link href="https://blog.akawa.ink/2024/08/28/redux-createstore.html"/>
+    <id>https://blog.akawa.ink/2024/08/28/redux-createstore.html</id>
+    <published>2024-08-28T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 React 18 中，<code>createStore</code> 是 <code>Redux</code> 提供的一个函数，用于创建 <code>Redux store</code>，但从 <code>Redux Toolkit v5</code> 开始，<code>createStore</code> 已被标记为弃用，并建议使用 <code>configureStore</code> 作为替代。</p><p><code>configureStore</code> 是 <code>Redux Toolkit</code> 中提供的一个函数，它简化了 <code>Redux</code> 的配置过程，内置了 <code>Redux DevTools</code>、默认的中间件配置等。</p><p>下面是如何使用 <code>configureStore</code> 替代 <code>createStore</code> 的一个简单示例：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &#123; configureStore &#125; from &#x27;@reduxjs/toolkit&#x27;;</span><br><span class="line">import rootReducer from &#x27;./reducers&#x27;;</span><br><span class="line"></span><br><span class="line">const store = configureStore(&#123;</span><br><span class="line">  reducer: rootReducer,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">export default store;</span><br></pre></td></tr></table></figure><p>这次重构 faucet 将会替换掉 <code>createStore</code> 方法。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;在 React 18 中，&lt;code&gt;createStore&lt;/code&gt; 是 &lt;code&gt;Redux&lt;/code&gt; 提供的一个函数，用于创建 &lt;code&gt;Redux store&lt;/code&gt;，但从 &lt;code&gt;Redux Toolkit v5&lt;/code&gt; 开始，&lt;cod</summary>
+      
+    
+    
+    
+    
+    <category term="前端" scheme="https://blog.akawa.ink/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="redux" scheme="https://blog.akawa.ink/tags/redux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>redux ， react-redux 和 redux-saga 什么区别</title>
+    <link href="https://blog.akawa.ink/2024/08/27/redux-react-redux-redux-saga.html"/>
+    <id>https://blog.akawa.ink/2024/08/27/redux-react-redux-redux-saga.html</id>
+    <published>2024-08-27T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Redux、React-Redux 和 Redux-Saga 是前端开发中常用的状态管理和异步数据处理工具。它们各自有不同的功能和用途。</p><h1 id="1-Redux"><a href="#1-Redux" class="headerlink" title="1. Redux"></a>1. Redux</h1><p>Redux 是一个用于 JavaScript 应用的状态管理库。它提供了一种可预测的方式来管理应用的全局状态。</p><h2 id="Redux-的核心概念包括："><a href="#Redux-的核心概念包括：" class="headerlink" title="Redux 的核心概念包括："></a>Redux 的核心概念包括：</h2><ul><li>Store: 存储应用的状态，是唯一的数据源。</li><li>Actions: 是描述状态变化的普通 JavaScript 对象。</li><li>Reducers: 是纯函数，接收当前状态和 action，返回新的状态。</li><li>Dispatch: 用于触发 action，从而引发状态的改变。</li></ul><h2 id="Redux-的特点"><a href="#Redux-的特点" class="headerlink" title="Redux 的特点:"></a>Redux 的特点:</h2><ul><li>单一数据源: 整个应用只有一个状态树（store）。</li><li>状态是只读的: 不能直接修改状态，必须通过 action 来描述状态变化。</li><li>纯函数更新状态: Reducers 必须是纯函数，不得有副作用。</li></ul><h1 id="2-React-Redux"><a href="#2-React-Redux" class="headerlink" title="2. React-Redux"></a>2. React-Redux</h1><p>React-Redux 是官方提供的 Redux 和 React 的绑定库。它允许 React 组件与 Redux store 进行连接，使得组件能够访问 Redux 的状态并分发 actions。</p><h2 id="React-Redux-的特点"><a href="#React-Redux-的特点" class="headerlink" title="React-Redux 的特点:"></a>React-Redux 的特点:</h2><ul><li><code>&lt;Provider&gt;</code> 组件: 这个组件将 Redux store 提供给应用内所有的组件。</li><li>connect() 函数: 将 React 组件连接到 Redux store，允许组件从 store 中读取状态和分发 actions。</li><li>Hooks: useSelector 和 useDispatch 是 React-Redux 提供的 hooks，用于替代 connect()，更符合函数组件的使用方式。</li></ul><h2 id="Demo-Code"><a href="#Demo-Code" class="headerlink" title="Demo Code"></a>Demo Code</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Provider &#125; from &#x27;react-redux&#x27;;</span><br><span class="line">import &#123; createStore &#125; from &#x27;redux&#x27;;</span><br><span class="line">import App from &#x27;./App&#x27;;</span><br><span class="line">import rootReducer from &#x27;./reducers&#x27;;</span><br><span class="line"></span><br><span class="line">const store = createStore(rootReducer);</span><br><span class="line"></span><br><span class="line">const Root = () =&gt; (</span><br><span class="line">  &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">    &lt;App /&gt;</span><br><span class="line">  &lt;/Provider&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">import React from &#x27;react&#x27;;</span><br><span class="line">import &#123; useSelector, useDispatch &#125; from &#x27;react-redux&#x27;;</span><br><span class="line">import &#123; increment &#125; from &#x27;./actions&#x27;;</span><br><span class="line"></span><br><span class="line">const Counter = () =&gt; &#123;</span><br><span class="line">  const count = useSelector(state =&gt; state.count);</span><br><span class="line">  const dispatch = useDispatch();</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;span&gt;&#123;count&#125;&lt;/span&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; dispatch(increment())&#125;&gt;Increment&lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><h1 id="3-Redux-Saga"><a href="#3-Redux-Saga" class="headerlink" title="3. Redux-Saga"></a>3. Redux-Saga</h1><p>Redux-Saga 是一个用于处理 Redux 应用中的异步操作的中间件。它基于 ES6 的 Generator 函数，使得处理复杂的异步逻辑（如异步 API 请求、并发请求、失败重试等）变得更直观和可管理。</p><h2 id="Redux-Saga-的特点"><a href="#Redux-Saga-的特点" class="headerlink" title="Redux-Saga 的特点:"></a>Redux-Saga 的特点:</h2><ul><li>Sagas: Generator 函数，用于定义异步操作的逻辑。</li><li>Effects: Redux-Saga 提供了一系列 effects 函数（如 take, call, put 等）用于处理副作用（例如异步调用）。</li><li>非阻塞调用: 通过 Generator 的 yield 机制，可以使异步操作的代码写起来像同步代码。</li></ul><h2 id="Demo-Code-1"><a href="#Demo-Code-1" class="headerlink" title="Demo Code"></a>Demo Code</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">import &#123; call, put, takeEvery &#125; from &#x27;redux-saga/effects&#x27;;</span><br><span class="line">import &#123; fetchDataSuccess, fetchDataFailure &#125; from &#x27;./actions&#x27;;</span><br><span class="line">import api from &#x27;./api&#x27;;</span><br><span class="line"></span><br><span class="line">// 定义 Saga</span><br><span class="line">function* fetchDataSaga(action) &#123;</span><br><span class="line">  try &#123;</span><br><span class="line">    const data = yield call(api.fetchData, action.payload);</span><br><span class="line">    yield put(fetchDataSuccess(data));</span><br><span class="line">  &#125; catch (error) &#123;</span><br><span class="line">    yield put(fetchDataFailure(error));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 监听特定的 action</span><br><span class="line">function* watchFetchData() &#123;</span><br><span class="line">  yield takeEvery(&#x27;FETCH_DATA_REQUEST&#x27;, fetchDataSaga);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export default watchFetchData;</span><br></pre></td></tr></table></figure><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul><li>Redux: 用于管理全局状态，提供一个规范化的状态管理框架。</li><li>React-Redux: 是 Redux 和 React 的连接工具，让 React 组件可以访问 Redux 的状态和 actions。</li><li>Redux-Saga: 处理复杂的异步操作，让异步逻辑的管理更加简单和可维护。</li></ul><p>这三个工具通常配合使用，以实现复杂的状态管理和异步数据处理。</p><hr><p><strong>ET碎碎念，每周更新，欢迎订阅，点赞，转发！</strong><br><img src="https://cdn.steemitimages.com/DQmNqMmFcstxiRQqGStZSSEPEN4Z23cywF1whi91qbGTXxn/640.gif"></p><hr><h4 id="好用不贵的VPS推荐"><a href="#好用不贵的VPS推荐" class="headerlink" title="好用不贵的VPS推荐"></a>好用不贵的VPS推荐</h4><p><a href="https://1hour.win/">https://1hour.win</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Redux、React-Redux 和 Redux-Saga 是前端开发中常用的状态管理和异步数据处理工具。它们各自有不同的功能和用途。&lt;/p&gt;
+&lt;h1 id=&quot;1-Redux&quot;&gt;&lt;a href=&quot;#1-Redux&quot; class=&quot;headerlink&quot; title=&quot;1.</summary>
+      
+    
+    
+    
+    
+    <category term="前端" scheme="https://blog.akawa.ink/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="redux" scheme="https://blog.akawa.ink/tags/redux/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何让 jest 在 ESM 下正常工作</title>
+    <link href="https://blog.akawa.ink/2024/08/25/jest-esm.html"/>
+    <id>https://blog.akawa.ink/2024/08/25/jest-esm.html</id>
+    <published>2024-08-25T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在弄<a href="/steem/@ety001/start-dirty-and-hard-work">faucet 的重构工作</a>，因为要全面使用新的依赖和模式，遇到了很多问题。</p><p>比如最近一周一直被 jest 无法在 ESM 模式下工作的问题卡住。</p><p>搜索引擎 + chatgpt 多方面的尝试都没有找到有效方案。</p><p>直到昨天看到<a href="https://jestjs.io/docs/ecmascript-modules"> jest 官方文档里有专门的一页</a>说这个，才搞定问题。</p><p>解决方案就是两步。</p><p>第一步是用空配置 <code>&#123;&#125;</code> 替换掉之前的 <code>jest.config.js</code> 中 <code>transform</code>，即关闭 <code>transform</code>。</p><p>第二步增加环境变量 <code>--experimental-vm-modules</code>，以启用 node 的实验 API，因为 jest 使用的 node 的实验 API 实现的 ESM 支持，这也就意味着，可以卸载掉 <code>babel-jest</code> 插件了。</p><p>启用实验 API 这里， jest 官方文档只给了两个 CLI 下的使用例子，而我们的项目使用的是 <code>package.json</code> 中的 <code>scripts</code> 方式。</p><p>因此要想在 <code>scripts</code> 里启用，可以按照下面的格式：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;jest&quot;: &quot;NODE_OPTIONS=--experimental-vm-modules jest&quot;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;最近在弄&lt;a href=&quot;/steem/@ety001/start-dirty-and-hard-work&quot;&gt;faucet 的重构工作&lt;/a&gt;，因为要全面使用新的依赖和模式，遇到了很多问题。&lt;/p&gt;
+&lt;p&gt;比如最近一周一直被 jest 无法在 ESM 模式下工作的问题卡住。</summary>
+      
+    
+    
+    
+    
+    <category term="前端" scheme="https://blog.akawa.ink/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="jest" scheme="https://blog.akawa.ink/tags/jest/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ESM 模式导入文件的一些常识</title>
+    <link href="https://blog.akawa.ink/2024/08/19/esm-knowledge.html"/>
+    <id>https://blog.akawa.ink/2024/08/19/esm-knowledge.html</id>
+    <published>2024-08-19T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>每次看完用完，因为别的项目又切换到非 js 语言，过段时间就又忘了，所以写下来总结一下，要不然每次都要现搜索。</p><h1 id="使用-import-导入的时候是否加扩展名？"><a href="#使用-import-导入的时候是否加扩展名？" class="headerlink" title="使用 import 导入的时候是否加扩展名？"></a>使用 import 导入的时候是否加扩展名？</h1><p>是的，在 ESM 模式下，使用 import 时需要包含文件的扩展名。</p><p>这是因为 ESM 模块解析严格遵循文件路径规范，不像 CommonJS 那样自动推断 .js、.json 或 .mjs 等扩展名。</p><p>假设有下面的文件结构</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">project/</span><br><span class="line">├── app.js</span><br><span class="line">└── utils/</span><br><span class="line">    └── helper.js</span><br></pre></td></tr></table></figure><p>在 app.js 中，你需要这样导入 <code>helper.js</code>：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; myHelperFunction &#125; from &#x27;./utils/helper.js&#x27;;</span><br></pre></td></tr></table></figure><h1 id="加-和不加-的区别"><a href="#加-和不加-的区别" class="headerlink" title="加 {} 和不加 {} 的区别"></a>加 {} 和不加 {} 的区别</h1><p>在 JavaScript 中，import 语句的语法有两种主要形式：具名导入和默认导入。</p><p>加 {} 和不加 {} 的区别在于你是导入模块中的一个具名导出还是默认导出。</p><h2 id="1-具名导入-Named-Import"><a href="#1-具名导入-Named-Import" class="headerlink" title="1. 具名导入 (Named Import)"></a>1. 具名导入 (Named Import)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// utils.js</span><br><span class="line">export const myFunction = () =&gt; &#123;</span><br><span class="line">  console.log(&#x27;This is myFunction&#x27;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export const anotherFunction = () =&gt; &#123;</span><br><span class="line">  console.log(&#x27;This is anotherFunction&#x27;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// main.js</span><br><span class="line">import &#123; myFunction &#125; from &#x27;./utils.js&#x27;;</span><br><span class="line"></span><br><span class="line">myFunction(); // 输出: This is myFunction</span><br></pre></td></tr></table></figure><h2 id="2-默认导入-Default-Import"><a href="#2-默认导入-Default-Import" class="headerlink" title="2. 默认导入 (Default Import)"></a>2. 默认导入 (Default Import)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// utils.js</span><br><span class="line">const myFunction = () =&gt; &#123;</span><br><span class="line">  console.log(&#x27;This is myFunction&#x27;);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export default myFunction;</span><br><span class="line"></span><br><span class="line">// main.js</span><br><span class="line">import myFunc from &#x27;./utils.js&#x27;;</span><br><span class="line"></span><br><span class="line">myFunc(); // 输出: This is myFunction</span><br></pre></td></tr></table></figure><blockquote><p>这里对我来说，如果不看文档，纯靠我自己的经验<br>我一直以为不加 {} 的时候，是把整个文件导出的<br>也就是按照例子的代码，我的直观感觉应该是 <code>myFunc.myFunction()</code></p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;每次看完用完，因为别的项目又切换到非 js 语言，过段时间就又忘了，所以写下来总结一下，要不然每次都要现搜索。&lt;/p&gt;
+&lt;h1 id=&quot;使用-import-导入的时候是否加扩展名？&quot;&gt;&lt;a href=&quot;#使用-import-导入的时候是否加扩展名？&quot; class=&quot;head</summary>
+      
+    
+    
+    
+    
+    <category term="前端" scheme="https://blog.akawa.ink/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="javascript" scheme="https://blog.akawa.ink/tags/javascript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>xmodmap 的替代方案 keyd</title>
+    <link href="https://blog.akawa.ink/2024/05/14/xmodmap-to-keyd.html"/>
+    <id>https://blog.akawa.ink/2024/05/14/xmodmap-to-keyd.html</id>
+    <published>2024-05-14T09:21:15.000Z</published>
+    <updated>2024-05-14T09:36:48.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>之前尝试过好几次，使用 <code>xmodmap</code> 来修改键位，但是都是以失败告终。</p><p>每次都是以为懂了，结果都是失败。</p><p>最近在一台 Chromebook 上装了 Archlinux，再次尝试调换键位。</p><p>想把 Search 键和 左Control 键对换位置。</p><p>下面是按键对应的信息</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">--- xev 获取到两个按键的信息 ---</span><br><span class="line">keycode 133 (keysym 0xffeb Super_L)</span><br><span class="line">keycode  37 (keysym 0xffe3 Control_L)</span><br><span class="line"></span><br><span class="line">--- xmodmap -pke | grep Control_L 和 grep Super_L 的信息---</span><br><span class="line">keycode  37 = Control_L NoSymbol Control_L</span><br><span class="line">keycode 133 = Super_L Super_L Super_L Super_L Caps_Lock Super_L Caps_Lock</span><br><span class="line">keycode 206 = NoSymbol Super_L NoSymbol Super_L</span><br><span class="line"></span><br><span class="line">--- xmodmap -pm 的信息 ---</span><br><span class="line">shift       Shift_L (0x32),  Shift_R (0x3e)</span><br><span class="line">lock        Caps_Lock (0x42)</span><br><span class="line">control     Control_L (0x25),  Control_R (0x69)</span><br><span class="line">mod1        Alt_L (0x40),  Alt_L (0xcc),  Meta_L (0xcd)</span><br><span class="line">mod2        Num_Lock (0x4d)</span><br><span class="line">mod3        ISO_Level5_Shift (0xcb)</span><br><span class="line">mod4        Super_L (0x85),  Super_R (0x86),  Super_L (0xce),  Hyper_L (0xcf)</span><br><span class="line">mod5        ISO_Level3_Shift (0x5c)</span><br></pre></td></tr></table></figure><p>尝试创建了一份 <code>.Xmodmap</code> 配置如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">remove control = Control_L</span><br><span class="line">remove mod4 = Super_L</span><br><span class="line">add mod4 = Control_L</span><br><span class="line">add control = Super_L</span><br><span class="line">keycode 37 = Super_L</span><br><span class="line">keycode 133 = Control_L</span><br></pre></td></tr></table></figure><p>结果失败了。</p><p>不过经过不懈搜索，发现了一个替代方案 – <a href="https://github.com/rvaiya/keyd">keyd</a>.</p><p>这个项目就是为了解决各种键盘问题的，非常感谢这个项目。</p><p>同时还找到了一份 <a href="https://github.com/WeirdTreeThing/cros-keyboard-map">针对 Chromebook 的 keyd 配置</a>，</p><p>通过下面的命令来获取一下按键的名字</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo keyd monitor</span><br></pre></td></tr></table></figure><p>根据得到的键位信息，在上面的那份配置的基础上，增加下面的内容</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[main]</span><br><span class="line">....</span><br><span class="line"></span><br><span class="line">leftmeta = leftcontrol</span><br><span class="line">leftcontrol = leftmeta</span><br></pre></td></tr></table></figure><p>重新载入一下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo keyd reload</span><br></pre></td></tr></table></figure><p>搞定！</p><p>咱就说，Linux 下很多东西（iptables啊，X11啊）的配置也不知道为啥搞的很反人类，明明是可以搞的这么简单的啊！</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;之前尝试过好几次，使用 &lt;code&gt;xmodmap&lt;/code&gt; 来修改键位，但是都是以失败告终。&lt;/p&gt;
+&lt;p&gt;每次都是以为懂了，结果都是失败。&lt;/p&gt;
+&lt;p&gt;最近在一台 Chromebook 上装了 Archlinux，再次尝试调换键位。&lt;/p&gt;
+&lt;p&gt;想把 Searc</summary>
+      
+    
+    
+    
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>使用 openresty 对 websocket 进行消息频次限制的尝试</title>
+    <link href="https://blog.akawa.ink/2023/12/13/openresty-websocket.html"/>
+    <id>https://blog.akawa.ink/2023/12/13/openresty-websocket.html</id>
+    <published>2023-12-13T09:21:15.000Z</published>
+    <updated>2025-02-18T15:25:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近我的 BTS 见证人总是收到丢块报警，排查了原因，大概率是因为 API 和 出块都使用同一个程序的原因。</p><p>从 Abit 那里了解到，API 请求和出块并没有做线程优先级，所以在有大量 API 请求进入或者长耗时操作的时候，都会对出块造成影响。</p><p>对于底层的 C++ 改起来太麻烦，主要我也不会改，所以思路变换一下，那么就在入口位置进行拦截。</p><p>最初尝试使用 nginx 的 limit_conn 来限流，但是没有效果。</p><p>主要原因是 Websocket 握手建立连接后，就不会再触发规则了，而所有的请求都以 Websocket 的消息形式与后端交互了。</p><p>于是换成了 openresty，通过 lua 来建立一个 Websocket 的消息转发机制，符合条件的放行，不符合的拦截。</p><p>最终代码越写越复杂，成型的规则就是在 IP 黑名单中的，且 method 也在黑名单里，那么就限流。</p><p>具体的代码实现在这里：<a href="https://github.com/ety001/openresty/blob/master/scripts/lua/bts/limit_req.lua">https://github.com/ety001/openresty/blob/master/scripts/lua/bts/limit_req.lua</a>，可以作为参考。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;最近我的 BTS 见证人总是收到丢块报警，排查了原因，大概率是因为 API 和 出块都使用同一个程序的原因。&lt;/p&gt;
+&lt;p&gt;从 Abit 那里了解到，API 请求和出块并没有做线程优先级，所以在有大量 API 请求进入或者长耗时操作的时候，都会对出块造成影响。&lt;/p&gt;
+&lt;p</summary>
+      
+    
+    
+    
+    
+    <category term="配置" scheme="https://blog.akawa.ink/tags/%E9%85%8D%E7%BD%AE/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="服务器" scheme="https://blog.akawa.ink/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+    <category term="openresty" scheme="https://blog.akawa.ink/tags/openresty/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>关于 SPS 相关总结</title>
+    <link href="https://blog.akawa.ink/2023/11/16/summary-of-steem-sps.html"/>
+    <id>https://blog.akawa.ink/2023/11/16/summary-of-steem-sps.html</id>
+    <published>2023-11-16T05:25:31.000Z</published>
+    <updated>2024-04-09T19:14:52.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="SPS的机制概述"><a href="#SPS的机制概述" class="headerlink" title="SPS的机制概述"></a>SPS的机制概述</h1><ul><li>用户提交提案，提案只要有投票就算是激活了。</li><li>提案的钱来自 steem.dao 账号，理论上每小时结算一次，按照投票数排序提案，顺次发钱，发完为止（因为每小时发放数额有限）。</li></ul><h1 id="资金来源"><a href="#资金来源" class="headerlink" title="资金来源"></a>资金来源</h1><p>steem.dao 账号的资金来源于每次出块时 10% 的 steem，按照喂价中位数转化为 SBD 后存入，同时更新 dgp.sps_interval_ledger（相关逻辑在 database::process_funds() 中）。</p><p>dgp.sps_interval_ledger 会在每小时结算的时候清零（相关逻辑在 sps_processor::record_funding() 中）。</p><h1 id="资金发放"><a href="#资金发放" class="headerlink" title="资金发放"></a>资金发放</h1><p><strong>公式一:</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">每天发放资金量 = steem.dao中的 SBD 数量 / 100 + 每日通胀</span><br></pre></td></tr></table></figure><p><strong>公式二:</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当前小时发放资金 = (当前块时间戳 - 上次发放时间戳)/(24*3600) * 每天发放资金量</span><br></pre></td></tr></table></figure><p>发放资金的时候，会按照投票数，从多到少排序所有激活的提案。</p><p>然后遍历排序好的提案，每个提案从公式二计算出的资金里发钱，直到公式二计算的资金发完为止（该逻辑在 sps_processor::transfer_payments() ）。</p><blockquote><p>备注1: 当前块时间戳，在区块浏览器的某个块的 timestamp 字段。<br>备注2: 上次发放时间戳，可以从 dgp.last_budget_time 获得。<br>备注3: SPS 中的通胀在当前的 HF23 版本还没有设计好，所有涉及到通胀的地方都是 0。<br>备注4: 公式一和公式二在 sps_processor::calculate_maintenance_budget() 中。<br>备注5: <a href="https://steemdb.io/block/79880772">https://steemdb.io/block/79880772</a> 在这个页面的 Virtual Ops 下可以看到当时那个小时的结算情况。</p></blockquote><h1 id="当前状态"><a href="#当前状态" class="headerlink" title="当前状态"></a>当前状态</h1><p>目前排名第一的提案，每小时提取 24w SBD 到 steem.dao 账号，而系统每小时发放的资金大约在 1600 SBD，所以第一名的提案把钱都花完了，相当于变相停止了 SPS 系统。</p><p><strong>但是目前排名第一的提案截止到 2029年12月31日，在其后面的还有一个截止 2030年3月1日的。这就意味着，最后这个提案可以从 2030年1月1日 到 2030年3月1日，每小时获得 1000 SBD。</strong></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;SPS的机制概述&quot;&gt;&lt;a href=&quot;#SPS的机制概述&quot; class=&quot;headerlink&quot; title=&quot;SPS的机制概述&quot;&gt;&lt;/a&gt;SPS的机制概述&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;用户提交提案，提案只要有投票就算是激活了。&lt;/li&gt;
+&lt;li&gt;提案的钱来自 st</summary>
+      
+    
+    
+    
+    
+    <category term="区块链" scheme="https://blog.akawa.ink/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="steem" scheme="https://blog.akawa.ink/tags/steem/"/>
+    
+    <category term="数字货币" scheme="https://blog.akawa.ink/tags/%E6%95%B0%E5%AD%97%E8%B4%A7%E5%B8%81/"/>
+    
+    <category term="blockchain" scheme="https://blog.akawa.ink/tags/blockchain/"/>
+    
+    <category term="steemit" scheme="https://blog.akawa.ink/tags/steemit/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决 snapcraft 安装的 Tradingview 无法登陆的问题</title>
+    <link href="https://blog.akawa.ink/2023/11/10/fix-can-not-login-tradeview-on-linux-client.html"/>
+    <id>https://blog.akawa.ink/2023/11/10/fix-can-not-login-tradeview-on-linux-client.html</id>
+    <published>2023-11-10T05:25:31.000Z</published>
+    <updated>2024-04-09T19:23:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在 Archlinux 下通过 snapcraft 安装了 Tradingview。但是登陆是通过浏览器网页登陆后，跳转回程序完成登陆。</p><p>而 Chrome 浏览器调用 xdg-open 打开 <code>tradingview://</code> 格式的 URI 时，提示找不到程序，无法打开。</p><p>解决方法就是在 <code>~/.config/mimeapps.list</code> 中，在 <code>[Default Applications]</code> 块里加入下面一行</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x-scheme-handler/tradingview=tradingview_tradingview.desktop</span><br></pre></td></tr></table></figure><p>保存退出后，可以执行下面的命令，查看是否添加成功</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xdg-mime query default x-scheme-handler/tradingview</span><br></pre></td></tr></table></figure><p>之后，再次登陆即可成功跳转到 Tradingview 程序。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;在 Archlinux 下通过 snapcraft 安装了 Tradingview。但是登陆是通过浏览器网页登陆后，跳转回程序完成登陆。&lt;/p&gt;
+&lt;p&gt;而 Chrome 浏览器调用 xdg-open 打开 &lt;code&gt;tradingview://&lt;/code&gt; 格式的 UR</summary>
+      
+    
+    
+    
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="Tradingview" scheme="https://blog.akawa.ink/tags/Tradingview/"/>
+    
+    <category term="Snapcraft" scheme="https://blog.akawa.ink/tags/Snapcraft/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>太TM坑爹的 TrueNAS 的虚拟机了</title>
+    <link href="https://blog.akawa.ink/2023/10/29/the-fuck-truenas-virtual-mechine.html"/>
+    <id>https://blog.akawa.ink/2023/10/29/the-fuck-truenas-virtual-mechine.html</id>
+    <published>2023-10-29T05:25:31.000Z</published>
+    <updated>2024-04-09T19:23:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>这两天折腾 TrueNas，然后想要在 TrueNas 的虚拟机里安装 Archlinux。</p><p>但是安装完，总是无法引导启动。</p><p>搜索了很久，终于发现了一个小哥的安装视频，<a href="https://www.youtube.com/watch?v=UgkuDVaU16c&ab_channel=aespa">https://www.youtube.com/watch?v=UgkuDVaU16c&ab_channel&#x3D;aespa</a></p><p>原来， <code>bootloader-id</code> 必须命名为 <code>boot</code>，然后 <code>.efi</code> 文件也必须从 <code>grubx64.efi</code> 手动改为 <code>bootx64.efi</code>。</p><p>这TM不是坑爹是啥？！</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;这两天折腾 TrueNas，然后想要在 TrueNas 的虚拟机里安装 Archlinux。&lt;/p&gt;
+&lt;p&gt;但是安装完，总是无法引导启动。&lt;/p&gt;
+&lt;p&gt;搜索了很久，终于发现了一个小哥的安装视频，&lt;a href=&quot;https://www.youtube.com/watch?</summary>
+      
+    
+    
+    
+    
+    <category term="Server&amp;OS" scheme="https://blog.akawa.ink/tags/Server-OS/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="服务器" scheme="https://blog.akawa.ink/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+    <category term="TrueNas" scheme="https://blog.akawa.ink/tags/TrueNas/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>ubuntu22.04 server 安装 xfce4 和 xrdp</title>
+    <link href="https://blog.akawa.ink/2023/10/26/install-xfce4-and-xrdp-on-ubuntu-22-04-server.html"/>
+    <id>https://blog.akawa.ink/2023/10/26/install-xfce4-and-xrdp-on-ubuntu-22-04-server.html</id>
+    <published>2023-10-26T05:25:31.000Z</published>
+    <updated>2024-04-09T19:23:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近需要在服务器上安装桌面。于是总结一下。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt-get upgrade -y &amp;&amp; \</span><br><span class="line">  apt install -y xubuntu-desktop &amp;&amp; \</span><br><span class="line">  apt install -y xrdp</span><br></pre></td></tr></table></figure><p>在用户家目录输出 xfce4 的 session</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;xfce4-session&quot; | tee .xsession</span><br></pre></td></tr></table></figure><p>重启 xrdp </p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart xrdp</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;最近需要在服务器上安装桌面。于是总结一下。&lt;/p&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span cla</summary>
+      
+    
+    
+    
+    
+    <category term="Server&amp;OS" scheme="https://blog.akawa.ink/tags/Server-OS/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="服务器" scheme="https://blog.akawa.ink/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>解决安卓12限制32个线程</title>
+    <link href="https://blog.akawa.ink/2023/10/14/fix-android-12-process-limited-32.html"/>
+    <id>https://blog.akawa.ink/2023/10/14/fix-android-12-process-limited-32.html</id>
+    <published>2023-10-14T05:25:31.000Z</published>
+    <updated>2024-04-09T19:23:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Android 12及以上用户在使用Termux时，有时会显示 <code>[Process completed (signal 9) - press Enter]</code>，这是因为Android 12的 <code>PhantomProcesskiller</code> 限制了应用的子进程，最大允许应用有32个子进程。</p><p>解决方案就是通过 adb 命令来修改底层的配置，命令如下：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell device_config set_sync_disabled_for_tests persistent </span><br><span class="line">adb shell device_config put activity_manager max_phantom_processes 65536</span><br></pre></td></tr></table></figure><p>这两条命令执行完，即修改最大子进程数为 65536。</p><p>补充：</p><p>可以直接在 termux 中安装 adb 工具，使用开发者工具里的无线调试来连接，并执行上面的两条指令。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pkg install android-tools</span><br><span class="line"></span><br><span class="line">adb pair ip:port</span><br><span class="line"></span><br><span class="line">adb connect ip:port</span><br></pre></td></tr></table></figure><hr><p>补充：</p><p>鸿蒙系统的话，执行下面的命令</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb shell /system/bin/device_config set_sync_disabled_for_tests persistent </span><br><span class="line">adb shell /system/bin/device_config put activity_manager max_phantom_processes 65536</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Android 12及以上用户在使用Termux时，有时会显示 &lt;code&gt;[Process completed (signal 9) - press Enter]&lt;/code&gt;，这是因为Android 12的 &lt;code&gt;PhantomProcesskiller&lt;/cod</summary>
+      
+    
+    
+    
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="Android" scheme="https://blog.akawa.ink/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>安装 termux 和 proot，并安装 archlinux 桌面</title>
+    <link href="https://blog.akawa.ink/2023/09/29/install-termux-and-proot-and-archlinux-desktop-on-android.html"/>
+    <id>https://blog.akawa.ink/2023/09/29/install-termux-and-proot-and-archlinux-desktop-on-android.html</id>
+    <published>2023-09-29T05:25:31.000Z</published>
+    <updated>2024-04-09T19:23:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-安装-termux"><a href="#1-安装-termux" class="headerlink" title="1.安装 termux"></a>1.安装 termux</h1><p>去 <a href="https://github.com/termux/termux-app">https://github.com/termux/termux-app</a> 下载并安装</p><h1 id="2-打开-termux-执行下面的命令"><a href="#2-打开-termux-执行下面的命令" class="headerlink" title="2.打开 termux 执行下面的命令"></a>2.打开 termux 执行下面的命令</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ pkg update</span><br><span class="line">$ pkg upgrade</span><br><span class="line">$ pkg install x11-repo proot-distro pulseaudio vim</span><br><span class="line">$ pkg install termux-x11-nightly virglrenderer-android</span><br><span class="line">$ proot-distro install archlinux</span><br></pre></td></tr></table></figure><p>上面的命令是更新 termux 的包管理，安装 x11 相关工具，安装 proot，安装声音相关内容，安装 3D 相关内容，安装 archlinux。</p><h1 id="3-进入-archlinux"><a href="#3-进入-archlinux" class="headerlink" title="3.进入 archlinux"></a>3.进入 archlinux</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ proot-distro login archlinux --user root --shared-tmp</span><br></pre></td></tr></table></figure><p>以 root 用户身份进入 archlinux，并且跟 termux 共享 &#x2F;tmp</p><h1 id="4-更换-archlinux-源（-etc-pacman-d-mirrorlist）"><a href="#4-更换-archlinux-源（-etc-pacman-d-mirrorlist）" class="headerlink" title="4.更换 archlinux 源（&#x2F;etc&#x2F;pacman.d&#x2F;mirrorlist）"></a>4.更换 archlinux 源（&#x2F;etc&#x2F;pacman.d&#x2F;mirrorlist）</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/$arch/$repo</span><br></pre></td></tr></table></figure><h1 id="5-更新安装archlinux相关内容"><a href="#5-更新安装archlinux相关内容" class="headerlink" title="5.更新安装archlinux相关内容"></a>5.更新安装archlinux相关内容</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># pacman -Syu</span><br><span class="line"># pacman -S vim firefox networkmanager xorg xorg-server pulseaudio noto-fonts-cjk git openssh fakeroot base-devel</span><br><span class="line"># pacman -S xfce4 xfce4-goodies lightdm tigervnc</span><br></pre></td></tr></table></figure><h1 id="6-配置密码和普通用户"><a href="#6-配置密码和普通用户" class="headerlink" title="6.配置密码和普通用户"></a>6.配置密码和普通用户</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># passwd</span><br><span class="line"># pacman -S sudo</span><br><span class="line"># useradd -m -g users -G wheel,audio,video,storage -s /bin/bash ety001</span><br><span class="line"># passwd ety001</span><br></pre></td></tr></table></figure><h1 id="7-配置-sudo"><a href="#7-配置-sudo" class="headerlink" title="7.配置 sudo"></a>7.配置 sudo</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># vim /etc/sudoers</span><br><span class="line"></span><br><span class="line">ety001  ALL=(ALL:ALL)  NOPASSWD:  ALL</span><br></pre></td></tr></table></figure><h1 id="8-安装-yay"><a href="#8-安装-yay" class="headerlink" title="8.安装 yay"></a>8.安装 yay</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># su ety001</span><br><span class="line">$ git clone https://aur.archlinux.org/yay.git &amp;&amp; cd yay &amp;&amp; makepkg -si</span><br></pre></td></tr></table></figure><h1 id="9-设置时区"><a href="#9-设置时区" class="headerlink" title="9.设置时区"></a>9.设置时区</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br></pre></td></tr></table></figure><h1 id="10-配置语言"><a href="#10-配置语言" class="headerlink" title="10.配置语言"></a>10.配置语言</h1><p>修改 <code>/etc/locale.gen</code> 中 <code>zh_CN.</code>开头的注释符，并执行 <code>locale-gen</code></p><p>配置默认语言</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># echo &quot;LANG=zh_CN.UTF-8&quot; &gt;&gt; /etc/locale.conf</span><br></pre></td></tr></table></figure><h1 id="11-配置-vncserver"><a href="#11-配置-vncserver" class="headerlink" title="11.配置 vncserver"></a>11.配置 vncserver</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vncserver -localhost</span><br></pre></td></tr></table></figure><p>如果是第一次启动 vncserver，会提示配置 vnc 的密码。</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vncserver -kill :1</span><br></pre></td></tr></table></figure><p>停止服务，然后访问 <code>~/.vnc/xstartup</code>，注释掉所有内容后，添加下面的内容</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">startxfce4 &amp;</span><br></pre></td></tr></table></figure><p>这样启动 vncserver 后，会执行启动 xfce4 桌面的命令。</p><p>这里需要注意的是，在启动 vncserver 前，还需要设置下面的环境变量</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export DISPLAY=:1</span><br></pre></td></tr></table></figure><h1 id="12-启动桌面"><a href="#12-启动桌面" class="headerlink" title="12.启动桌面"></a>12.启动桌面</h1><p>回到 termux，创建 <code>start.sh</code> 脚本</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pulseaudio --start --load=&quot;module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1&quot; --exit-idle-time=-1</span><br><span class="line"></span><br><span class="line">pacmd load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1 auth-anonymous=1</span><br><span class="line"></span><br><span class="line">virgl_test_server_android &amp;</span><br><span class="line"></span><br><span class="line">proot-distro login archlinux --user ety001 --shared-tmp -- bash -c &quot;export DISPLAY=:1 PULSE_SERVER=tcp:127.0.0.1; dbus-launch --exit-with-session vncserver :1&quot;</span><br></pre></td></tr></table></figure><p>以后，只需要打开 termux 后，执行 <code>start.sh</code> 脚本即可启动 archlinux 容器和桌面。</p><p>只需要用 vnc 软件连接 127.0.0.1:5901 即可。</p><p>另外，还需要在 xfce4 的配置面板中，关闭屏保和锁屏功能。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;1-安装-termux&quot;&gt;&lt;a href=&quot;#1-安装-termux&quot; class=&quot;headerlink&quot; title=&quot;1.安装 termux&quot;&gt;&lt;/a&gt;1.安装 termux&lt;/h1&gt;&lt;p&gt;去 &lt;a href=&quot;https://github.com/term</summary>
+      
+    
+    
+    
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="Android" scheme="https://blog.akawa.ink/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>现货网格机器人经验总结（干货）</title>
+    <link href="https://blog.akawa.ink/2023/07/12/summary-of-experience-of-spot-grid-robots.html"/>
+    <id>https://blog.akawa.ink/2023/07/12/summary-of-experience-of-spot-grid-robots.html</id>
+    <published>2023-07-12T05:25:31.000Z</published>
+    <updated>2024-04-09T19:23:15.000Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="什么是现货网格机器人"><a href="#什么是现货网格机器人" class="headerlink" title="什么是现货网格机器人"></a>什么是现货网格机器人</h1><p>网格机器人，就是在一定的价格范围内，划定指定数量的价格网格，作为买卖价格的基础。</p><p>比如币安的 STEEM &#x2F; USDT 交易对，开通一个价格范围 0.175 – 0.275 ，网格数100的机器人。那就意味着每个小网格的价格跨度是 0.001 &#x3D; (0.275-0.175)&#x2F;100，那么机器人建单就会按照 0.175, 0.176, 0.177, 0.178 这样的规律操作，这就是所谓的网格。</p><p>而具体的买单和卖单数量则是根据当前的市场价决定初始状态。</p><p>假设你目前开机器人订单的时候，当前市场价是 0.178，那么 0.178 之前的网格是买单，0.178之后的网格是卖单，空下 0.178 这个价格。（这里卖单需要的STEEM币，是机器人计算出需要多少初始数量的STEEM，然后以市场价一次性吃入）。</p><p>之后随着市场价格波动，机器人动态增加买卖单。比如按照上面的假设初始化以后，</p><table><thead><tr><th>Buy</th><th>Sell</th></tr></thead><tbody><tr><td>0.177</td><td>0.179</td></tr><tr><td>0.176</td><td>0.180</td></tr><tr><td>0.175</td><td>0.181</td></tr><tr><td></td><td>0.182</td></tr><tr><td></td><td>0.183</td></tr><tr><td></td><td>………</td></tr></tbody></table><p>价格跌到 0.176 – 0.177 之间的时候， 0.177 的买单成交，机器人自动用 0.177 成交的 STEEM 下 0.178 的卖单，等 0.178 的卖单成交，这一个网格的低买高卖就完成了。</p><h1 id="现货网格机器人的收益来源"><a href="#现货网格机器人的收益来源" class="headerlink" title="现货网格机器人的收益来源"></a>现货网格机器人的收益来源</h1><ul><li>每个网格低买高卖的差价收益</li><li>交易过程持有代币的浮盈（有浮盈就可能会有浮亏）</li></ul><h1 id="开设现货网格机器人需要注意的事情（干货来了）"><a href="#开设现货网格机器人需要注意的事情（干货来了）" class="headerlink" title="开设现货网格机器人需要注意的事情（干货来了）"></a>开设现货网格机器人需要注意的事情（干货来了）</h1><ul><li>如果想要赚得多，就<strong>需要自己能判断是否在阶段性的低点</strong>。我个人经验来看，现货网格机器人更像是左侧建仓（左侧建仓的意思就是在阶段性低点的左边建仓）。<strong>浮盈应该是我们开设机器人网格单的目标</strong>。如果你想要无脑开单，那么你就只能死扛到浮盈，甚至永远也等不到浮盈（比如在 0.175 – 0.275 开网格单后，价格飙升过 0.275 后再也不回头），只能割肉结束机器人订单。</li><li><strong>选择深度不错的交易对</strong>。因为我们在开单的时候，要一次性买入代币，如果深度不好，比如你投入资金多，那么你的平均买入代币的成本就要比你预期的要高。另外深度不错，代表交易相对活跃，那么网格成交密度也会较好。</li><li><strong>过密的网格不会带来更高的收益</strong>。可能你觉得提高网格密度能提高交易频次，但是提高网格密度的同时，单个网格的收益会降低（这个在币安，火币这样的平台上，开单的时候会有预计的单个网格的收益率估算），因此如何找到一个平衡点需要自己多看多试，每个交易对的情况都各不相同，没有固定的公式。</li><li><strong>过宽的价格区间会导致资金闲置率很高</strong>，这个也需要多看多试，自己摸索。</li><li>避免在牛市开现货网格机器人，<strong>尽量在熊市布局</strong>，除非你明确自己是要做短线。</li><li><strong>浮盈达到预期，尽快止盈</strong>，因为我们的最终目的还是要靠浮盈挣钱。所以在开单的时候，设置一个止盈价位是个好习惯。</li></ul><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>现货网格机器人并不是无脑就能赚钱的机器人，无论是价格低点的判断，还是各种参数的设置，都需要长时间的观察和尝试。</p><p><strong>网格机器人只是一个辅助工具，关键还是自我对于市场价格的判断。我们可能做不到像专业的技术流的分析师那样，但是只要能判断出一个大致范围，那么就是网格机器人一展身手的时候。</strong></p><h4 id="关键还是自身价格判断的修炼。"><a href="#关键还是自身价格判断的修炼。" class="headerlink" title="关键还是自身价格判断的修炼。"></a>关键还是自身价格判断的修炼。</h4>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;什么是现货网格机器人&quot;&gt;&lt;a href=&quot;#什么是现货网格机器人&quot; class=&quot;headerlink&quot; title=&quot;什么是现货网格机器人&quot;&gt;&lt;/a&gt;什么是现货网格机器人&lt;/h1&gt;&lt;p&gt;网格机器人，就是在一定的价格范围内，划定指定数量的价格网格，作为买卖价格的基</summary>
+      
+    
+    
+    
+    
+    <category term="区块链" scheme="https://blog.akawa.ink/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="数字货币" scheme="https://blog.akawa.ink/tags/%E6%95%B0%E5%AD%97%E8%B4%A7%E5%B8%81/"/>
+    
+    <category term="blockchain" scheme="https://blog.akawa.ink/tags/blockchain/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Chomebook 配置真文韵输入法的翻页使用逗号和句号</title>
+    <link href="https://blog.akawa.ink/2023/06/20/chromebook-input-method.html"/>
+    <id>https://blog.akawa.ink/2023/06/20/chromebook-input-method.html</id>
+    <published>2023-06-20T05:25:31.000Z</published>
+    <updated>2024-08-16T02:40:35.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://chrome.google.com/webstore/detail/%E7%9C%9F%E6%96%87%E9%9F%B5%E8%BE%93%E5%85%A5%E6%B3%95/ppgpjbgimfloenilfemmcejiiokelkni?hl=zh-CN">真文韵输入法</a> 是 fydeOS 团队开发的，基于 RIME 引擎，针对 ChromeOS 的输入法集成。</p><p>给中文用户第三方输入法选择方案。</p><p>但是目前还处于早期阶段，因此 UI 配置界面很简陋，可以自己通过 RIME的配置文件，按照自己的需求更改。</p><p>比如我习惯的翻页方法是逗号和句号，而这个默认不支持的。</p><p>需要我们自己修改一下配置。</p><p>在编辑 RIME 配置文件里，找到 <code>/root/build</code> 目录下面 yaml 配置文件，命名则是根据你安装的输入法来确定的。</p><p>打开 yaml 格式配置文件，找到 <code>key_binder: bindings</code> 选项，删除掉原来的 <code>Page_Down</code> 和 <code>Page_Up</code> 配置，增加下面两行配置：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- &#123;accept: &quot;comma&quot;, send: Page_Down, when: has_menu&#125;</span><br><span class="line">- &#123;accept: &quot;period&quot;, send: Page_Up, when: has_menu&#125;</span><br></pre></td></tr></table></figure><p>保存后，等待输入法重载即可。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://chrome.google.com/webstore/detail/%E7%9C%9F%E6%96%87%E9%9F%B5%E8%BE%93%E5%85%A5%E6%B3%95/ppgpjbgimfloenilfemmcejiiokelkn</summary>
+      
+    
+    
+    
+    
+    <category term="配置" scheme="https://blog.akawa.ink/tags/%E9%85%8D%E7%BD%AE/"/>
+    
+    <category term="经验" scheme="https://blog.akawa.ink/tags/%E7%BB%8F%E9%AA%8C/"/>
+    
+    <category term="chromebook" scheme="https://blog.akawa.ink/tags/chromebook/"/>
+    
+    <category term="fydeos" scheme="https://blog.akawa.ink/tags/fydeos/"/>
+    
+  </entry>
+  
+</feed>

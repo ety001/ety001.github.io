@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一切的一切都要从一封垃圾邮件开始。 当时还是2013年11月的某天，在我邮箱里发现了一封收XRP的邮件，于是在 V2EX 上 发了个帖子，想看看社区有知道 XRP 是啥的人没有。后来就从接触 XRP 开始，又知道了 BTC，就这样算是关注到了币圈。那个年代真的是除了 BTC 、Ripple、LTC外都是山寨币。 当时有看到过 PTS，但是并没有了解这是个啥，因为自己脑子里一直认为其他的都是山寨币。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单的谈谈 Bitshares 和 Stellar">
+<meta property="og:url" content="https://blog.akawa.ink/2018/03/19/bitshares-and-stellar.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="一切的一切都要从一封垃圾邮件开始。 当时还是2013年11月的某天，在我邮箱里发现了一封收XRP的邮件，于是在 V2EX 上 发了个帖子，想看看社区有知道 XRP 是啥的人没有。后来就从接触 XRP 开始，又知道了 BTC，就这样算是关注到了币圈。那个年代真的是除了 BTC 、Ripple、LTC外都是山寨币。 当时有看到过 PTS，但是并没有了解这是个啥，因为自己脑子里一直认为其他的都是山寨币。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://steemitimages.com/DQmceAX5WaEiPzAvLiFrVmPjEs9xvzYLktJxfq36bjkg3U6/image.png">
+<meta property="article:published_time" content="2018-03-19T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="杂七杂八">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://steemitimages.com/DQmceAX5WaEiPzAvLiFrVmPjEs9xvzYLktJxfq36bjkg3U6/image.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2018/03/19/bitshares-and-stellar.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2018/03/19/bitshares-and-stellar.html","path":"2018/03/19/bitshares-and-stellar.html","title":"简单的谈谈 Bitshares 和 Stellar"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>简单的谈谈 Bitshares 和 Stellar | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2018/03/19/bitshares-and-stellar.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="简单的谈谈 Bitshares 和 Stellar | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          简单的谈谈 Bitshares 和 Stellar
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-03-20 00:00:00" itemprop="dateCreated datePublished" datetime="2018-03-20T00:00:00+08:00">2018-03-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>一切的一切都要从一封垃圾邮件开始。</p>
+<p>当时还是2013年11月的某天，在我邮箱里发现了一封收XRP的邮件，于是在 V2EX 上 <a target="_blank" rel="noopener" href="https://www.v2ex.com/t/87855#reply2">发了个帖子</a>，想看看社区有知道 XRP 是啥的人没有。后来就从接触 XRP 开始，又知道了 BTC，就这样算是关注到了币圈。那个年代真的是除了 BTC 、Ripple、LTC外都是山寨币。</p>
+<p>当时有看到过 PTS，但是并没有了解这是个啥，因为自己脑子里一直认为其他的都是山寨币。后来也听说了 Stellar，知道 Stellar 是从 Ripple 继承过去的，所以也并不重视这个。</p>
+<p>后来是因为去年（你没看错就是去年）在比特时代上看到了比特股的简介，瞬间来了兴趣，就开始买入了一点，然后研究起来。</p>
+<p><img src="https://steemitimages.com/DQmceAX5WaEiPzAvLiFrVmPjEs9xvzYLktJxfq36bjkg3U6/image.png"></p>
+<p>所以，我对于这两者的历史了解并不多，我只把我知道的说出来，有不对的地方，还请各位指点。</p>
+<p>先说 Stellar。由于 Stellar 继承于 Ripple， 所以我认为 Stellar 也同样是中心化的，具体 Stellar 的中心是公司还是个人，我其实也不清楚。 Ripple 和 Stellar 其实只是借助于区块链来完成分布式账本，让交易数据不可逆。之所以采取中心化，我的理解是为了解决 BTC 的转账慢和手续费高的问题。BTC 转账慢和手续费高的问题由来已久，并不是这两年才有的，在我 2013年刚接触的时候，就有人提出 BTC 的转账慢是无法完成类似于支付宝这样的交易的。于是很多人都在探索这一块，其中 Ripple 就是其中之一。同时 Ripple 的目的也是为了解决跨国结算和支付的问题。既然 Stellar 是继承于 Ripple，所以 Ripple 有的特性，Stellar 也都一样存在着。</p>
+<p>Stellar 网络中可信节点数量应该是确认的，这个 P2P 网络中，部署着 API 节点、Federation Server、Bridge Server。这其中 API 节点的作用是为用户的钱包以及其他的应用提供数据服务；Federation Server我的理解就是提供一个 Stellar 网络中的 DNS服务，比如一些 Anchor 的地址可以用类似邮件地址的格式来代替，这个工作就是由可信的 Federation Server来完成解析的；关于Bridge Server 我没有接触过，所以跳过。</p>
+<p>除了以上三个类型的服务外，还有就是 Anchor 了。Stellar 网络的通用代币是 XLM（有些交易所也称作 STR ） ，就像 Bitcoin 网络里的通用代币是 BTC 一样。而为了实现其他的货币，就要靠 Anchor 来实现。Anchor 是 Stellar 网络中最关键的一环，我一般称这个为网关，因为网关可以发行和销毁代币，这就提供了资金进入的途径。</p>
+<p>比如说，我做了一个人民币的网关，那么我可以在我的网关上发行一个代币叫做 CNY，然后别人只要在钱包里设置信任我这个网关，就可以直接在钱包的交易页面，从我的网关上进行挂单，进行 XLM &#x2F; CNY 交易。如果两个人同时信任了我这个网关，那么这两个人也可以通过 Stellar 的网络进行 CNY 转账。注意这里转账的 CNY 是由我这个网关发行的。也就是说现在如果有另外一个网关也发行 CNY，那么这两个 CNY 是不通用的。（不过这里要提一点，就是在 Ripple 的网络中，有一种方法是可以置换的，比如甲在A网关有50CNY，没有信任B网关，他想转50CNY给乙，而乙没有信任A网关，只信任了B网关，此时如果丙同时信任了A和B网关，并打开了置换功能，且丙在B网关有至少50CNY，那么系统会在网络里找到这条通道完成转账，即甲把A网关的50CNY给了丙，丙把B网关的50给了乙。当年我就是这么被骗子置换了将近1w个 Ripple 币。）</p>
+<p>总结一下，其实 Stellar 只是借助了区块链来完成数据不可逆的工作，而其中的网关有些像交易所的角色，完成资金的进出。对于普通用户来说，通过 Stellar 网络进行交易和转账也很便捷，具体出块时间忘记了，但是很快。</p>
+<p>下面再简单描述下我理解中的 Bitshares。比特股在一开始打造的时候，就是按照去中心化的交易所的思路建设的，而其中重要的核心就是 DPOS 机制来保证相对的去中心化。BTS 的网络分为三种类型的节点，P2P节点、见证人节点、API节点。相对于 Stellar 来说差不太多。只是 BTS 引入外部资金的方式很不一样，通过抵押其网络中的核心代币 BTS 来获取其他法币代币，然后再由通过抵押 BTS 获得法币代币的人来做承兑商，完成资金的进出场。我觉得这样的做法无异于是增加了整个系统的运行风险，因为我认为这会让盘子里所有的货币都跟 BTS 的价值挂钩了。我个人觉得这个不应该是由抵押来实现法币代币价值锚定，而应该通过信用来实现价值锚定。也就是说，BTS 在抵押这个操作上把方向搞反了，想要试图用 BTS 的价值来决定现实中法币的价值。这个问题也是我在过去几个月内盘经历的一次次爆仓中体悟到的。</p>
+<p>但是总的来说，Bitshares 吸引我的地方还是在 DPOS 这样的机制。并且我觉得 BTS 应该是目前为数不多的，创始人团队离开后，通过社区还能维持运营的币种。随着对币圈的深入，我现在很相信相对的去中心化才是未来。一味追求去中心化，其实是盲目的。并不是所有的场景都需要去中心化。总结一下 BTS 就是哲学很牛逼，但是产品还需要再打磨，但是市场到底留给 BTS 还有多少时间允许他打磨产品，是个问号。</p>
+<p>以上是我的浅薄分析，如有错误，请指出。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2018/03/19/bitshares-and-stellar.html" title="简单的谈谈 Bitshares 和 Stellar">https://blog.akawa.ink/2018/03/19/bitshares-and-stellar.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" rel="tag"># 杂七杂八</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/03/18/stellar-dev-summarize.html" rel="prev" title="Stellar开发中关于offer相关的总结">
+                  <i class="fa fa-angle-left"></i> Stellar开发中关于offer相关的总结
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/04/08/yoyow-witness-deploy-by-docker.html" rel="next" title="YOYOW 见证人教程(docker版)">
+                  YOYOW 见证人教程(docker版) <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Linux下的网络编程分为两部分：服务器编程和客户机编程。一般服务器程序在接收客户机连接请求之前，都要创建一个守护进程。守护进程是linux&#x2F;Unix编程中一个非常重要的概念，因为在创建一个守护进程的时候，我们要接触到子进程、进程组、会晤期、信号机制以及文件、目录、控制终端等多个概念，因此详细地讨论一下守护进程，对初学者学习进程间关系是非常有帮助的。 首先看一段将普通进程转换为守护进程的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux下的c语言网络编程-将普通进程转换为守护进程">
+<meta property="og:url" content="https://blog.akawa.ink/2013/09/15/linux-c-change-normal-progress-to-daemon-progress.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="Linux下的网络编程分为两部分：服务器编程和客户机编程。一般服务器程序在接收客户机连接请求之前，都要创建一个守护进程。守护进程是linux&#x2F;Unix编程中一个非常重要的概念，因为在创建一个守护进程的时候，我们要接触到子进程、进程组、会晤期、信号机制以及文件、目录、控制终端等多个概念，因此详细地讨论一下守护进程，对初学者学习进程间关系是非常有帮助的。 首先看一段将普通进程转换为守护进程的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2013-09-15T22:43:06.000Z">
+<meta property="article:modified_time" content="2024-04-09T19:23:15.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="编程语言">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2013/09/15/linux-c-change-normal-progress-to-daemon-progress.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2013/09/15/linux-c-change-normal-progress-to-daemon-progress.html","path":"2013/09/15/linux-c-change-normal-progress-to-daemon-progress.html","title":"Linux下的c语言网络编程-将普通进程转换为守护进程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux下的c语言网络编程-将普通进程转换为守护进程 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2013/09/15/linux-c-change-normal-progress-to-daemon-progress.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux下的c语言网络编程-将普通进程转换为守护进程 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux下的c语言网络编程-将普通进程转换为守护进程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2013-09-16 06:43:06" itemprop="dateCreated datePublished" datetime="2013-09-16T06:43:06+08:00">2013-09-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-10 03:23:15" itemprop="dateModified" datetime="2024-04-10T03:23:15+08:00">2024-04-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Linux下的网络编程分为两部分：服务器编程和客户机编程。一般服务器程序在接收客户机连接请求之前，都要创建一个守护进程。守护进程是linux&#x2F;Unix编程中一个非常重要的概念，因为在创建一个守护进程的时候，我们要接触到子进程、进程组、会晤期、信号机制以及文件、目录、控制终端等多个概念，因此详细地讨论一下守护进程，对初学者学习进程间关系是非常有帮助的。</p>
+<p>首先看一段将普通进程转换为守护进程的代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">/****************************************************************</span><br><span class="line">function: 　　daemonize</span><br><span class="line">description:　detach the server process from the current context, creating a pristine, predictable 　　　　　　　environment in which it will execute.</span><br><span class="line">arguments:　　servfd file descriptor in use by server.</span><br><span class="line">return value: none.</span><br><span class="line">calls:　　　　none.</span><br><span class="line">globals:　　　none.</span><br><span class="line">****************************************************************/</span><br><span class="line">void daemonize (servfd)</span><br><span class="line">int servfd;</span><br><span class="line">&#123;</span><br><span class="line">int childpid, fd, fdtablesize;</span><br><span class="line">/* ignore terminal I/O, stop signals */</span><br><span class="line">signal(SIGTTOU,SIG_IGN);</span><br><span class="line">signal(SIGTTIN,SIG_IGN);</span><br><span class="line">signal(SIGTSTP,SIG_IGN);</span><br><span class="line">/* fork to put us in the background (whether or not the user</span><br><span class="line">specified &#x27;&amp;&#x27; on the command line */</span><br><span class="line">if ((childpid = fork()) &lt; 0) &#123;</span><br><span class="line">fputs(&quot;failed to fork first childrn&quot;,stderr);</span><br><span class="line">exit(1);</span><br><span class="line">&#125;</span><br><span class="line">else if (childpid &gt; 0)</span><br><span class="line">exit(0); /* terminate parent, continue in child */</span><br><span class="line">/* dissociate from process group */</span><br><span class="line">if (setpgrp(0,getpid())&lt;0) &#123;</span><br><span class="line">fputs(&quot;failed to become process group leaderrn&quot;,stderr);</span><br><span class="line">exit(1);</span><br><span class="line">&#125;</span><br><span class="line">/* lose controlling terminal */</span><br><span class="line">if ((fd = open(&quot;/dev/tty&quot;,O_RDWR)) &gt;= 0) &#123;</span><br><span class="line">ioctl(fd,TIOCNOTTY,NULL);</span><br><span class="line">close(fd);</span><br><span class="line">&#125;</span><br><span class="line">/* close any open file descriptors */</span><br><span class="line">for (fd = 0, fdtablesize = getdtablesize(); fd &lt; fdtablesize; fd++)</span><br><span class="line">if (fd != servfd)</span><br><span class="line">close(fd);</span><br><span class="line">/* set working directory to allow filesystems to be unmounted */</span><br><span class="line">chdir(&quot;/&quot;);</span><br><span class="line">/* clear the inherited umask */</span><br><span class="line">umask(0);</span><br><span class="line">/* setup zombie prevention */</span><br><span class="line">signal(SIGCLD,(Sigfunc *)reap_status);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在linux系统中，如果要将一个普通进程转换为守护进程，需要执行的步骤如下：</p>
+<p>1、调用fork（）函数创建子进程，然后中止父进程，保留子进程继续运行。因为，当一个进程是以前台进程的方式由shell启动时，如果中止了父进程，子进程就会自动转为后台进程。另外，在下一步时，我们需要创建一个新的会晤期，这就要求创建会晤期的进程不是一个进程组的组长进程。当父进程中止，子进程继续运行时，就保证了进程组的组ID与子进程的进程ID不会相等。<br>fork（）函数的定义为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">pid_t fork(void);</span><br></pre></td></tr></table></figure>
+
+<p>fork（）函数被调用一次，会返回两次值。这两次返回的值分别是子进程的返回值和父进程的返回值，子进程的返回值为“0”，父进程的返回值为子进程的进程ID。如果出错返回“－1”。</p>
+<p>1、保证进程不会获得任何控制终端。这是为了避免在关闭某些终端时会显示有程序正在运行而无法关闭的情况。这一步通常的做法是：调用函数setsid（）创建一个新的会晤期。<br>setsid（）函数的定义为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">pid_t setsid(void);</span><br></pre></td></tr></table></figure>
+
+<p>在第一步里我们已经保证了调用此函数的进程不是进程组的组长，那么调用此函数将创建一个新的会晤。其结果是：首先，此进程编程该会晤期的首进程（session leader，系统默认会晤期的首进程是创建该会晤期的进程）。而且，此进程是该会晤期中的唯一进程。然后，此进程将成为一个新的进程组的组长，新进程组的组ID就是该进程的进程ID。最后，保证此进程没有控制终端，即使在调用setsid（）之前此进程拥有控制终端，在创建会晤期后这种联系也将被解除。如果调用该函数的进程是一个进程组的组长，那么函数将返回出错信息“－1”。</p>
+<p>还有一个方法可以让进程无法获得控制终端，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if((fd = fopen(&quot;/dev/tty&quot;,0_RDWR)) &gt;= 0)&#123;</span><br><span class="line">ioctl(fd,TIOCNOTTY,NULL);</span><br><span class="line">close(fd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中&#x2F;dev&#x2F;tty是一个流设备，也是我们的终端映射。调用close（）函数将终端关闭。</p>
+<p>3、信号处理。一般要忽略掉某些信号。信号相当于软件中断，Linux&#x2F;Unix下的信号机制提供了一种处理异步事件的方法，终端用户键入引发中断的键，或是系统发出信号，这都会通过信号处理机制终止一个或多个程序的运行。</p>
+<p>不同情况下引发的信号不同，所有的信号都有自己的名字，这些名字都是以“SIG”开头的，只是后面有所不同。我们可以通过这些名字了解到系统中到底发生了什么事。当信号出现时，我们可以要求系统进行一下三种操作：</p>
+<p>a、忽略信号。大多数信号都采用这种处理方法，但是对SIGKILL和SIGSTOP信号不能做忽略处理。</p>
+<p>b、捕捉信号。这是一种最为灵活的操作方式。这种处理方式的意思就是：当某种信号发生时，我们可以调用一个函数对这种情况进行响应的处理。最常见的情况是：如果捕捉到SIGCHID信号，则表示子进程已经终止，然后可作此信号的捕捉函数中调用waitpid（）函数取得该子进程的进程ID已经他的终止状态。如果进程创建了临时文件，那么就要为进程终止信号SIGTERM编写一个信号捕捉函数来清除这些临时文件。</p>
+<p>c、执行系统的默认动作。对绝大多数信号而言，系统的默认动作都是终止该进程。</p>
+<p>在Linux下，信号有很多种，我在这里就不一一介绍了，如果想详细地对这些信号进行了解，可以查看头文件&lt;sigal.h&gt;，这些信号都被定义为正整数，也就是它们的信号编号。在对信号进行处理时，必须要用到函数signal()，此函数的详细描述为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;signal.h&gt;</span><br><span class="line">void (*signal (int signo, void (*func)(int)))(int);</span><br></pre></td></tr></table></figure>
+
+<p>其中参数signo为信号名，参数func的值根据我们的需要可以是以下几种情况：（1）常数SIG_DFL,表示执行系统的默认动作。（2）常数SIG_IGN，表示忽略信号。（3）收到信号后需要调用的处理函数的地址，此信号捕捉程序应该有一个整型参数但是没有返回值。signal()函数返回一个函数指针，而该指针指向的函数应该无返回值（void），这个指针其实指向以前的信号捕捉程序。</p>
+<p>下面 回到我们的daemonize()函数上来。这个函数在创建守护进程时忽略了三个信号：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">signal(SIGTTOU,SIG_IGN);</span><br><span class="line">signal(SIGTTIN,SIG_IGN);</span><br><span class="line">signal(SIGTSTP,SIG_IGN);</span><br></pre></td></tr></table></figure>
+
+<p>这三个信号的含义分别是：SIGTTOU表示后台进程写控制终端，SIGTTIN表示后台进程读控制终端，SIGTSTP表示终端挂起。</p>
+<p>4．关闭不再需要的文件描述符，并为标准输入、标准输出和标准错误输出打开新的文件描述符（也可以继承父进程的标准输入、标准输出和标准错误输出文件描述符，这个操作是可选的）。在我们这段例程中，因为是代理服务器程序，而且是在执行了listen()函数之后执行这个daemonize()的，所以要保留已经转换成功的倾听套接字，所以我们可以见到这样的语句：<br>if (fd !&#x3D; servfd)<br>close(fd);</p>
+<p>5．调用函数chdir(“&#x2F;“)将当前工作目录更改为根目录。这是为了保证我们的进程不使用任何目录。否则我们的守护进程将一直占用某个目录，这可能会造成超级用户不能卸载一个文件系统。</p>
+<p>6．调用函数umask(0)将文件方式创建屏蔽字设置为”0”。这是因为由继承得来的文件创建方式屏蔽字可能会禁止某些许可权。例如我们的守护进程需要创建一组可读可写的文件，而此守护进程从父进程那里继承来的文件创建方式屏蔽字却有可能屏蔽掉了这两种许可权，则新创建的一组文件其读或写操作就不能生效。因此要将文件方式创建屏蔽字设置为”0”。<br>在daemonize()函数的最后，我们可以看到这样的信号捕捉处理语句：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">signal(SIGCLD,(Sigfunc *)reap_status);</span><br></pre></td></tr></table></figure>
+
+<p>这不是创建守护进程过程中必须的一步，它的作用是调用我们自定义的reap_status()函数来处理僵死进程。reap_status()在例程中的定义为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/****************************************************************</span><br><span class="line">function: 　　　reap_status</span><br><span class="line">description: 　 handle a SIGCLD signal by reaping the exit status of the perished child, and 　　　　　　　　　　　discarding it.</span><br><span class="line">arguments: 　　 none.</span><br><span class="line">return value: 　none.</span><br><span class="line">calls: 　　　　 none.</span><br><span class="line">globals: 　　　 none.</span><br><span class="line">****************************************************************/</span><br><span class="line">void reap_status()</span><br><span class="line">&#123;</span><br><span class="line">int pid;</span><br><span class="line">union wait status;</span><br><span class="line">while ((pid = wait3(&amp;status,WNOHANG,NULL)) &gt; 0)</span><br><span class="line">; /* loop while there are more dead children */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面信号捕捉语句的原文为：<br>signal(SIGCLD, reap_status);<br>我们刚才说过，signal()函数的第二个参数一定要有有一个整型参数但是没有返回值。而reap_status()是没有参数的，所以原来的语句在编译时无法通过。所以我在预编译部分加入了对Sigfunc()的类型定义，在这里用做对reap_status进行强制类型转换。而且在BSD系统中通常都使用SIGCHLD信号来处理子进程终止的有关信息，SIGCLD是System V中定义的一个信号名，如果将SIGCLD信号的处理方式设定为捕捉，那么内核将马上检查系统中是否存在已经终止等待处理的子进程，如果有，则立即调用信号捕捉处理程序。<br>一般在信号捕捉处理程序中都要调用wait()、waitpid()、wait3()或是wait4()来返回子进程的终止状态。这些”等待”函数的区别是，当要求函数”等待”的子进程还没有终止时，wait()将使其调用者阻塞；而在waitpid()的参数中可以设定使调用者不发生阻塞，wait()函数不被设置为等待哪个具体的子进程，它等待调用者所有子进程中首先终止的那个，而在调用waitpid()时却必须在参数中设定被等待的子进程ID。而wait3()和wait4()的参数分别比wait()和waitpid()还要多一个”rusage”。例程中的reap_status()就调用了函数wait3()，这个函数是BSD系统支持的，我们把它和wait4()的定义一起列出来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/wait.h&gt;</span><br><span class="line">#include &lt;sys/time.h&gt;</span><br><span class="line">#include &lt;sys/resource.h&gt;</span><br><span class="line">pid_t wait3(int *statloc, int options, struct rusage *rusage);</span><br><span class="line">pid_t wait4(pid_t pid, int *statloc, int options, struct rusage *rusage);</span><br></pre></td></tr></table></figure>
+
+<p>其中指针statloc如果不为”NULL”，那么它将指向返回的子进程终止状态。参数pid是我们指定的被等待的子进程的进程ID。参数options是我们的控制选择项，一般为WNOHANG或是WUNTRACED。例程中使用了选项WNOHANG，意即如果不能立即返回子进程的终止状态（譬如由于子进程还未结束），那么等待函数不阻塞，此时返回”0”。 　　　　　WUNTRACED选项的意思是如果系统支持作业控制，如果要等待的子进程的状态已经暂停，而且其状态自从暂停以来还从未报告过，则返回其状态。参数rusage如果不为”NULL”，则它将指向内核返回的由终止进程及其所有子进程使用的资源摘要，该摘要包括用户CPU时间总量、缺页次数、接收到信号的次数等。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2013/09/15/linux-c-change-normal-progress-to-daemon-progress.html" title="Linux下的c语言网络编程-将普通进程转换为守护进程">https://blog.akawa.ink/2013/09/15/linux-c-change-normal-progress-to-daemon-progress.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag"># 编程语言</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2013/09/09/nginx-proxy-some-configures.html" rel="prev" title="nginx的proxy相关配置">
+                  <i class="fa fa-angle-left"></i> nginx的proxy相关配置
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2013/09/17/about-php-control-the-process.html" rel="next" title="关于php控制进程">
+                  关于php控制进程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Portainer is a simple UI management for docker. It’s easy to use and all your resources will show you friendly. It’s very light especially using a VPS which has only 512MB RAM. In this tutorial, we wi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Build a dockerized LNMP environment by portainer &#x2F; 通过portainer搭建docker化的LNMP环境">
+<meta property="og:url" content="https://blog.akawa.ink/2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="Portainer is a simple UI management for docker. It’s easy to use and all your resources will show you friendly. It’s very light especially using a VPS which has only 512MB RAM. In this tutorial, we wi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://steemitimages.com/DQmT9JTGErJC2n36RdZd4Lm2TLZHRDexXob8wBtqfL7yjWE/1.png">
+<meta property="og:image" content="https://steemitimages.com/DQmYPejiNcH4D2eSP5SyDFv4mV12NJ2wd8oTyHHTmGCHf4r/2.png">
+<meta property="og:image" content="https://steemitimages.com/DQmbux3arsXknHxnaFuGX2a7N9K4h7NR6VQgEo91QRo6JqA/3.png">
+<meta property="og:image" content="https://steemitimages.com/DQmQ7y7TZ9Bvik92P25aZgqi4rBgHGZG1NK5GQGfkM6t3hg/4.png">
+<meta property="og:image" content="https://steemitimages.com/DQmcr61fzmxMr56qj44oLjLntR5Hb2qp8afpntUW4xbjHr8/5.png">
+<meta property="og:image" content="https://steemitimages.com/DQmRdiSeJMQvHNDu84TAPpqP2GUuTy4cTENnfuRSMD9DddA/6.png">
+<meta property="og:image" content="https://steemitimages.com/DQmX9tReX9ism2Uj4BXVLviJrWpf6sgASivb2iet7p4mrQ5/7.png">
+<meta property="og:image" content="https://steemitimages.com/DQmTBfjkF4ArnAzH1G3NAk7Zignj8hgMc88ekZ6yr2XAR3U/8.png">
+<meta property="og:image" content="https://steemitimages.com/DQmQaLzKXbKv8HtjRPLtXHKyakF2WB6uHemhFHWX4Wb41M2/9.png">
+<meta property="og:image" content="https://steemitimages.com/DQmUVXxDHssU3dPq5eSVX6mV3dH3RBruKzWVNJFsLMewpcS/10.png">
+<meta property="og:image" content="https://steemitimages.com/DQmZ2Ffs8trHvqLtCuqBKNccZbyiPkPQzDzcPTXjvxkcX8C/11.png">
+<meta property="og:image" content="https://steemitimages.com/DQmYogHmVTx7PPR1Ecr17V6NLAQJgkrf7WMrMvYhDGQkQZq/12.png">
+<meta property="og:image" content="https://steemitimages.com/DQmbAbmCCHRNX9T9fmdpEYSH5QDUFFdGGCcZfXkuB1CH1gE/13.png">
+<meta property="og:image" content="https://steemitimages.com/DQmVUK9h2GTjj2LMFURrGC1seWCp37vy551iYQaom8B29ki/14.png">
+<meta property="og:image" content="https://steemitimages.com/DQmVurkWMPWeeyREZHrZ6LSEdrrZ8fWVN3onKFHK5vSAWq4/16.png">
+<meta property="og:image" content="https://steemitimages.com/DQmYL7XGcDgZMrRRQzoXrzt7jdfjMXdYg8kGoGFSrQ6K6Ve/17.png">
+<meta property="og:image" content="https://steemitimages.com/DQmf5LhNHxjErnCahun7yN1VCcaUHhqo45d6HJvjjcEX7LR/18.png">
+<meta property="og:image" content="https://steemitimages.com/DQmeYjkN7y2ycQvTur4JfXXmffZWc97rHwXUcYAmo8bqTCD/19.png">
+<meta property="og:image" content="https://steemitimages.com/DQmNdRgfEF7xbg7KHenVoQpVvQK3kbCQ8w2LdwXgjUdDgds/20.png">
+<meta property="og:image" content="https://steemitimages.com/DQmXRr5jjH2JiYdXXYkK5rp12uXPj3Bq7DPscUvAwtpGCub/21.png">
+<meta property="og:image" content="https://steemitimages.com/DQmTGq6FY68GDZwgYa7pe1KBA6ZDeVTnWV8sspNBnVneFXy/22.png">
+<meta property="og:image" content="https://steemitimages.com/DQmXgjisbnJK1WBKQd9cZ9T1PjZpixQ4LcvNpt3LPLENgZB/23.png">
+<meta property="og:image" content="https://steemitimages.com/DQmZRZdRXGXHYxYrLHHbHF8WWiacefJ6AfmHGSAMJA3zthD/24.png">
+<meta property="og:image" content="https://steemitimages.com/DQmTo7GRPcZzWLvdpBNhi289sFvpujVPgThhR78vzjp6VuH/25.png">
+<meta property="og:image" content="https://steemitimages.com/DQmT9JTGErJC2n36RdZd4Lm2TLZHRDexXob8wBtqfL7yjWE/1.png">
+<meta property="og:image" content="https://steemitimages.com/DQmYPejiNcH4D2eSP5SyDFv4mV12NJ2wd8oTyHHTmGCHf4r/2.png">
+<meta property="og:image" content="https://steemitimages.com/DQmbux3arsXknHxnaFuGX2a7N9K4h7NR6VQgEo91QRo6JqA/3.png">
+<meta property="og:image" content="https://steemitimages.com/DQmQ7y7TZ9Bvik92P25aZgqi4rBgHGZG1NK5GQGfkM6t3hg/4.png">
+<meta property="og:image" content="https://steemitimages.com/DQmcr61fzmxMr56qj44oLjLntR5Hb2qp8afpntUW4xbjHr8/5.png">
+<meta property="og:image" content="https://steemitimages.com/DQmRdiSeJMQvHNDu84TAPpqP2GUuTy4cTENnfuRSMD9DddA/6.png">
+<meta property="og:image" content="https://steemitimages.com/DQmX9tReX9ism2Uj4BXVLviJrWpf6sgASivb2iet7p4mrQ5/7.png">
+<meta property="og:image" content="https://steemitimages.com/DQmTBfjkF4ArnAzH1G3NAk7Zignj8hgMc88ekZ6yr2XAR3U/8.png">
+<meta property="og:image" content="https://steemitimages.com/DQmQaLzKXbKv8HtjRPLtXHKyakF2WB6uHemhFHWX4Wb41M2/9.png">
+<meta property="og:image" content="https://steemitimages.com/DQmUVXxDHssU3dPq5eSVX6mV3dH3RBruKzWVNJFsLMewpcS/10.png">
+<meta property="og:image" content="https://steemitimages.com/DQmZ2Ffs8trHvqLtCuqBKNccZbyiPkPQzDzcPTXjvxkcX8C/11.png">
+<meta property="og:image" content="https://steemitimages.com/DQmYogHmVTx7PPR1Ecr17V6NLAQJgkrf7WMrMvYhDGQkQZq/12.png">
+<meta property="og:image" content="https://steemitimages.com/DQmbAbmCCHRNX9T9fmdpEYSH5QDUFFdGGCcZfXkuB1CH1gE/13.png">
+<meta property="og:image" content="https://steemitimages.com/DQmVUK9h2GTjj2LMFURrGC1seWCp37vy551iYQaom8B29ki/14.png">
+<meta property="og:image" content="https://steemitimages.com/DQmVurkWMPWeeyREZHrZ6LSEdrrZ8fWVN3onKFHK5vSAWq4/16.png">
+<meta property="og:image" content="https://steemitimages.com/DQmYL7XGcDgZMrRRQzoXrzt7jdfjMXdYg8kGoGFSrQ6K6Ve/17.png">
+<meta property="og:image" content="https://steemitimages.com/DQmf5LhNHxjErnCahun7yN1VCcaUHhqo45d6HJvjjcEX7LR/18.png">
+<meta property="og:image" content="https://steemitimages.com/DQmeYjkN7y2ycQvTur4JfXXmffZWc97rHwXUcYAmo8bqTCD/19.png">
+<meta property="og:image" content="https://steemitimages.com/DQmNdRgfEF7xbg7KHenVoQpVvQK3kbCQ8w2LdwXgjUdDgds/20.png">
+<meta property="og:image" content="https://steemitimages.com/DQmXRr5jjH2JiYdXXYkK5rp12uXPj3Bq7DPscUvAwtpGCub/21.png">
+<meta property="og:image" content="https://steemitimages.com/DQmTGq6FY68GDZwgYa7pe1KBA6ZDeVTnWV8sspNBnVneFXy/22.png">
+<meta property="og:image" content="https://steemitimages.com/DQmXgjisbnJK1WBKQd9cZ9T1PjZpixQ4LcvNpt3LPLENgZB/23.png">
+<meta property="og:image" content="https://steemitimages.com/DQmZRZdRXGXHYxYrLHHbHF8WWiacefJ6AfmHGSAMJA3zthD/24.png">
+<meta property="og:image" content="https://steemitimages.com/DQmTo7GRPcZzWLvdpBNhi289sFvpujVPgThhR78vzjp6VuH/25.png">
+<meta property="article:published_time" content="2018-01-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://steemitimages.com/DQmT9JTGErJC2n36RdZd4Lm2TLZHRDexXob8wBtqfL7yjWE/1.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html","path":"2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html","title":"Build a dockerized LNMP environment by portainer / 通过portainer搭建docker化的LNMP环境"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Build a dockerized LNMP environment by portainer / 通过portainer搭建docker化的LNMP环境 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#What-Will-I-Learn"><span class="nav-number">1.</span> <span class="nav-text">What Will I Learn?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Requirements"><span class="nav-number">2.</span> <span class="nav-text">Requirements</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Difficulty"><span class="nav-number">3.</span> <span class="nav-text">Difficulty</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tutorial-Contents"><span class="nav-number">4.</span> <span class="nav-text">Tutorial Contents</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Setup-Portainer"><span class="nav-number">4.1.</span> <span class="nav-text">Setup Portainer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Create-a-new-network"><span class="nav-number">4.2.</span> <span class="nav-text">Create a new network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add-MariaDB-container"><span class="nav-number">4.3.</span> <span class="nav-text">Add MariaDB container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add-nginx-container"><span class="nav-number">4.4.</span> <span class="nav-text">Add nginx container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Add-a-php-fpm7-container"><span class="nav-number">4.5.</span> <span class="nav-text">Add a php-fpm7 container</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Final-Config"><span class="nav-number">4.6.</span> <span class="nav-text">Final Config</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Visit-the-test-page"><span class="nav-number">4.7.</span> <span class="nav-text">Visit the test page</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Summary"><span class="nav-number">5.</span> <span class="nav-text">Summary</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86%E4%BC%9A%E5%AD%A6%E5%88%B0"><span class="nav-number">6.</span> <span class="nav-text">将会学到?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">7.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%B0%E9%9A%BE%E5%BA%A6"><span class="nav-number">8.</span> <span class="nav-text">困难度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%99%E7%A8%8B%E5%86%85%E5%AE%B9"><span class="nav-number">9.</span> <span class="nav-text">教程内容</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Portainer"><span class="nav-number">9.1.</span> <span class="nav-text">安装 Portainer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E7%BD%91%E7%BB%9C"><span class="nav-number">9.2.</span> <span class="nav-text">创建新的网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0-MariaDB-%E5%AE%B9%E5%99%A8"><span class="nav-number">9.3.</span> <span class="nav-text">添加 MariaDB 容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-Nginx-%E5%AE%B9%E5%99%A8"><span class="nav-number">9.4.</span> <span class="nav-text">创建 Nginx 容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA-php-fpm7-%E5%AE%B9%E5%99%A8"><span class="nav-number">9.5.</span> <span class="nav-text">创建 php-fpm7 容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="nav-number">9.6.</span> <span class="nav-text">最后的配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%AD%E8%AE%BF%E9%97%AE%E6%B5%8B%E8%AF%95%E9%A1%B5%E9%9D%A2"><span class="nav-number">9.7.</span> <span class="nav-text">在浏览器中访问测试页面</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Build a dockerized LNMP environment by portainer / 通过portainer搭建docker化的LNMP环境 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Build a dockerized LNMP environment by portainer / 通过portainer搭建docker化的LNMP环境
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-16 00:00:00" itemprop="dateCreated datePublished" datetime="2018-01-16T00:00:00+08:00">2018-01-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://portainer.io/">Portainer</a> is a simple UI management for docker. It’s easy to use and all your resources will show you friendly. It’s very light especially using a VPS which has only 512MB RAM.</p>
+<p>In this tutorial, we will make a LNMP server over the docker container by Portainer.</p>
+<h1 id="What-Will-I-Learn"><a href="#What-Will-I-Learn" class="headerlink" title="What Will I Learn?"></a>What Will I Learn?</h1><ul>
+<li>You will learn how to setup <code>portainer</code></li>
+<li>You will learn how to create a custom network with the <code>docker</code></li>
+<li>You will learn how to create a <code>container</code></li>
+</ul>
+<h1 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h1><ul>
+<li>Ubuntu 16.04 (64-bit)</li>
+<li>Base bash knowledge</li>
+<li>Base docker knowledge</li>
+<li>Built a normal LNMP environment before</li>
+</ul>
+<h1 id="Difficulty"><a href="#Difficulty" class="headerlink" title="Difficulty"></a>Difficulty</h1><ul>
+<li>Intermediate</li>
+</ul>
+<h1 id="Tutorial-Contents"><a href="#Tutorial-Contents" class="headerlink" title="Tutorial Contents"></a>Tutorial Contents</h1><h2 id="Setup-Portainer"><a href="#Setup-Portainer" class="headerlink" title="Setup Portainer"></a>Setup Portainer</h2><p>1.Create a volume to save the portainer data. You also can bind a folder.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume create portainer_data</span><br></pre></td></tr></table></figure>
+
+<p>2.Run the <code>Portainer</code> docker.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 9000:9000 --name portainer -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data --restart always portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-d</code> means run as daemon</li>
+<li><code>-p 9000:9000</code> means making a port map. Portainer needs port 9000 opening.</li>
+<li><code>-v /var/run/docker.sock:/var/run/docker.sock</code> This parameter is important if you want portainer to manage your local docker.</li>
+</ul>
+<p>3.Visit <code>http://localhost:9000</code> in your browser and input your username and password to create the administrator user.</p>
+<p><img src="https://steemitimages.com/DQmT9JTGErJC2n36RdZd4Lm2TLZHRDexXob8wBtqfL7yjWE/1.png" alt="1.png"></p>
+<p>4.In next step select the <code>Local</code> option and press <code>Connect</code> button to finish setup.</p>
+<p><img src="https://steemitimages.com/DQmYPejiNcH4D2eSP5SyDFv4mV12NJ2wd8oTyHHTmGCHf4r/2.png" alt="2.png"></p>
+<p>5.When you see the main page, the installation is over.</p>
+<p><img src="https://steemitimages.com/DQmbux3arsXknHxnaFuGX2a7N9K4h7NR6VQgEo91QRo6JqA/3.png" alt="3.png"></p>
+<h2 id="Create-a-new-network"><a href="#Create-a-new-network" class="headerlink" title="Create a new network"></a>Create a new network</h2><p>The <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/">container link</a>  is out of date now. The portainer doesn’t support the container link any more. So we need to create a new bridge network and bind  static IPs to every container we create. Then each container can communicate with each other through the static IPs.</p>
+<p>1.Get in the <code>Networks</code> page and click the <code>Add network</code> button.</p>
+<p><img src="https://steemitimages.com/DQmQ7y7TZ9Bvik92P25aZgqi4rBgHGZG1NK5GQGfkM6t3hg/4.png" alt="4.png"></p>
+<p>2.Input the required information like the snapshot and then click the <code>Create the network</code> button.</p>
+<p><img src="https://steemitimages.com/DQmcr61fzmxMr56qj44oLjLntR5Hb2qp8afpntUW4xbjHr8/5.png" alt="5.png"></p>
+<h2 id="Add-MariaDB-container"><a href="#Add-MariaDB-container" class="headerlink" title="Add MariaDB container"></a>Add MariaDB container</h2><p>In this tutorial, we use the <code>App Template</code> to create the MariaDB container.</p>
+<p>1.Create a folder to storage the MariaDB database file</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir -p /data/mariadb</span><br></pre></td></tr></table></figure>
+
+<p>2.Enter the <code>App Template</code> page and select the <code>MariaDB</code> option.</p>
+<p><img src="https://steemitimages.com/DQmRdiSeJMQvHNDu84TAPpqP2GUuTy4cTENnfuRSMD9DddA/6.png" alt="6.png"></p>
+<p>3.Input required information with snapshot (When you clicked the <code>Deploy the container</code> button, you need waiting a while. Because docker is pulling the portainer image.)</p>
+<p><img src="https://steemitimages.com/DQmX9tReX9ism2Uj4BXVLviJrWpf6sgASivb2iet7p4mrQ5/7.png" alt="7.png"></p>
+<p>4.Because the <code>App Template</code> doesn’t set the static IP, we need set it with editing the container configurations manually. Open the container detail page:</p>
+<p><img src="https://steemitimages.com/DQmTBfjkF4ArnAzH1G3NAk7Zignj8hgMc88ekZ6yr2XAR3U/8.png" alt="8.png"></p>
+<p>5.Click the <code>Duplicate/Edit</code> button</p>
+<p><img src="https://steemitimages.com/DQmQaLzKXbKv8HtjRPLtXHKyakF2WB6uHemhFHWX4Wb41M2/9.png" alt="9.png"></p>
+<p>6.Find the <code>Advanced container settings</code> section, select the <code>Network</code> tab, input a static IP into the <code>IPv4 address</code>, click <code>Deploy the container</code>.</p>
+<p><img src="https://steemitimages.com/DQmUVXxDHssU3dPq5eSVX6mV3dH3RBruKzWVNJFsLMewpcS/10.png" alt="10.png"></p>
+<p>7.Portainer will mention you whether if to replace the original container. Click <code>Replace</code>.</p>
+<p><img src="https://steemitimages.com/DQmZ2Ffs8trHvqLtCuqBKNccZbyiPkPQzDzcPTXjvxkcX8C/11.png" alt="11.png"></p>
+<p>8.If we want to connect to the database on the host, we can run this command</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --rm --name mariadb_client --network mynet mariadb /usr/bin/mysql -h 172.20.0.2 -uroot -p</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>--network mynet</code> is needed. You must put the client container into your MariaDB server container’s network.</li>
+<li><code>--rm</code> will destroy this client container when it ends.</li>
+</ul>
+<p>OR</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -it mariadb /usr/bin/mysql -h 172.20.0.2 -uroot -p</span><br></pre></td></tr></table></figure>
+
+<h2 id="Add-nginx-container"><a href="#Add-nginx-container" class="headerlink" title="Add nginx container"></a>Add nginx container</h2><p>In this example, we use the <code>App Template</code> to create the nginx container.</p>
+<p>1.Deploy a nginx container from <code>App Template</code> and bind  container <code>/data</code> to host <code>/data</code>.</p>
+<p><img src="https://steemitimages.com/DQmYogHmVTx7PPR1Ecr17V6NLAQJgkrf7WMrMvYhDGQkQZq/12.png" alt="12.png"></p>
+<p>2.Open the <code>Containers</code> list and find the container you just created and click the third icon to get in the container console.</p>
+<p><img src="https://steemitimages.com/DQmbAbmCCHRNX9T9fmdpEYSH5QDUFFdGGCcZfXkuB1CH1gE/13.png" alt="13.png"></p>
+<p>3.Run this command to copy nginx configurations to your host.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cp -r /etc/nginx /data</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://steemitimages.com/DQmVUK9h2GTjj2LMFURrGC1seWCp37vy551iYQaom8B29ki/14.png" alt="14.png"></p>
+<p>4.On the host terminal run this command</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo cp -r /data/nginx /etc/nginx</span><br></pre></td></tr></table></figure>
+
+<p>5.Edit the exist nginx container with these snapshots</p>
+<p><img src="https://steemitimages.com/DQmVurkWMPWeeyREZHrZ6LSEdrrZ8fWVN3onKFHK5vSAWq4/16.png" alt="16.png"></p>
+<p><img src="https://steemitimages.com/DQmYL7XGcDgZMrRRQzoXrzt7jdfjMXdYg8kGoGFSrQ6K6Ve/17.png" alt="17.png"></p>
+<p><img src="https://steemitimages.com/DQmf5LhNHxjErnCahun7yN1VCcaUHhqo45d6HJvjjcEX7LR/18.png" alt="18.png"></p>
+<h2 id="Add-a-php-fpm7-container"><a href="#Add-a-php-fpm7-container" class="headerlink" title="Add a php-fpm7 container"></a>Add a php-fpm7 container</h2><p>1.Create a php-fpm7 image<br>I refer to this <a target="_blank" rel="noopener" href="https://github.com/Yavin/docker-alpine-php-fpm">repo</a> to create the image. This image is based on Alpine so it’s light enough.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/Yavin/docker-alpine-php-fpm.git</span><br><span class="line">$ cd docker-alpine-php-fpm</span><br></pre></td></tr></table></figure>
+
+<p>2.Edit the <code>php-fpm.conf</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[www]</span><br><span class="line">user = nobody</span><br><span class="line">group = nobody</span><br><span class="line">listen = [::]:9000</span><br><span class="line">chdir = /data/wwwroot  # Change the chdir</span><br><span class="line">pm = dynamic</span><br><span class="line">pm.max_children = 5</span><br><span class="line">pm.start_servers = 2</span><br><span class="line">pm.min_spare_servers = 1</span><br><span class="line">pm.max_spare_servers = 3</span><br><span class="line">catch_workers_output = Yes</span><br></pre></td></tr></table></figure>
+
+<p>3.Build image</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t php-fpm7:latest .</span><br></pre></td></tr></table></figure>
+
+<p>4.Add a new container</p>
+<p><img src="https://steemitimages.com/DQmeYjkN7y2ycQvTur4JfXXmffZWc97rHwXUcYAmo8bqTCD/19.png" alt="19.png"></p>
+<p>5.Configure step by step with thees snapshots:</p>
+<p><img src="https://steemitimages.com/DQmNdRgfEF7xbg7KHenVoQpVvQK3kbCQ8w2LdwXgjUdDgds/20.png" alt="20.png"></p>
+<p><img src="https://steemitimages.com/DQmXRr5jjH2JiYdXXYkK5rp12uXPj3Bq7DPscUvAwtpGCub/21.png" alt="21.png"></p>
+<p><img src="https://steemitimages.com/DQmTGq6FY68GDZwgYa7pe1KBA6ZDeVTnWV8sspNBnVneFXy/22.png" alt="22.png"></p>
+<p><img src="https://steemitimages.com/DQmXgjisbnJK1WBKQd9cZ9T1PjZpixQ4LcvNpt3LPLENgZB/23.png" alt="23.png"></p>
+<h2 id="Final-Config"><a href="#Final-Config" class="headerlink" title="Final Config"></a>Final Config</h2><p>1.At last, we need to edit the <code>/etc/nginx/conf.d/default.conf</code> on host like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/nginx/conf.d/default.conf</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        root   /data/wwwroot/default;</span><br><span class="line">        index  index.html index.htm index.php;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        root           /data/wwwroot/default;</span><br><span class="line">        fastcgi_pass   172.20.0.4:9000;</span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;</span><br><span class="line">        include        fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.Create <code>index.php</code> for testing</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir /data/wwwroot/default</span><br><span class="line">$ sudo echo &quot;&lt;?php phpinfo();?&gt;&quot; &gt; /data/wwwroot/default/index.php</span><br></pre></td></tr></table></figure>
+
+<p>3.Restart nginx container</p>
+<p><img src="https://steemitimages.com/DQmZRZdRXGXHYxYrLHHbHF8WWiacefJ6AfmHGSAMJA3zthD/24.png" alt="24.png"></p>
+<h2 id="Visit-the-test-page"><a href="#Visit-the-test-page" class="headerlink" title="Visit the test page"></a>Visit the test page</h2><p><img src="https://steemitimages.com/DQmTo7GRPcZzWLvdpBNhi289sFvpujVPgThhR78vzjp6VuH/25.png" alt="25.png"></p>
+<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p>Using dockerized apps is a trend. If you want to run dockerized apps on your personal VPS, Portainer is a good choice. It’s easy and light.</p>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://portainer.io/">Portainer</a> 是一个为  <code>Docker</code>  设计的简易 <code>UI</code> 管理界面. 通过 <code>Portainer</code> 可以轻松管理你的 <code>Docker</code> 的各种资源. 它是轻量级的, 你甚至可以在一台只有 <code>512MB</code> 内存的 <code>VPS</code> 上部署使用.</p>
+<p>在这个教程中, 我们将通过使用 <code>Portainer</code> 部署一套 <code>LNMP</code> 环境, 来学习如何使用 <code>Portainer</code>.</p>
+<h1 id="将会学到"><a href="#将会学到" class="headerlink" title="将会学到?"></a>将会学到?</h1><ul>
+<li>你将学到如何安装 <code>Portainer</code></li>
+<li>你将学到如何在 <code>Portainer</code> 中创建自定义的网络</li>
+<li>你将学到如何用 <code>Portainer</code> 创建容器</li>
+</ul>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><ul>
+<li>Ubuntu 16.04 (64-bit)</li>
+<li><code>Bash</code> 基础知识</li>
+<li><code>Docker</code> 基础知识</li>
+<li>曾搭建过普通环境的 <code>LNMP</code></li>
+</ul>
+<h1 id="困难度"><a href="#困难度" class="headerlink" title="困难度"></a>困难度</h1><ul>
+<li>中等</li>
+</ul>
+<h1 id="教程内容"><a href="#教程内容" class="headerlink" title="教程内容"></a>教程内容</h1><h2 id="安装-Portainer"><a href="#安装-Portainer" class="headerlink" title="安装 Portainer"></a>安装 Portainer</h2><p>1.创建一个卷来存储 <code>Portainer</code> 的数据, 你同样也可以使用主机的目录来存储</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume create portainer_data</span><br></pre></td></tr></table></figure>
+
+<p>2.使用 <code>Docker</code> 运行 <code>Portainer</code>.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d -p 9000:9000 --name portainer -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data --restart always portainer/portainer</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>-d</code> 已后台方式运行</li>
+<li><code>-p 9000:9000</code> 映射容器9000端口.</li>
+<li><code>-v /var/run/docker.sock:/var/run/docker.sock</code> 映射出 <code>docker socket</code> 使 <code>Portainer</code> 容器可以管理 <code>Docker</code>.</li>
+</ul>
+<p>3.使用浏览器访问 <code>http://localhost:9000</code> 进入安装界面, 输入用户名和密码完成管理员创建.</p>
+<p><img src="https://steemitimages.com/DQmT9JTGErJC2n36RdZd4Lm2TLZHRDexXob8wBtqfL7yjWE/1.png" alt="1.png"></p>
+<p>4.选择 <code>Local</code> 选项后点击 <code>Connect</code> 按钮完成安装.</p>
+<p><img src="https://steemitimages.com/DQmYPejiNcH4D2eSP5SyDFv4mV12NJ2wd8oTyHHTmGCHf4r/2.png" alt="2.png"></p>
+<p>5.当你看到管理主页的时候, 安装完成.</p>
+<p><img src="https://steemitimages.com/DQmbux3arsXknHxnaFuGX2a7N9K4h7NR6VQgEo91QRo6JqA/3.png" alt="3.png"></p>
+<h2 id="创建新的网络"><a href="#创建新的网络" class="headerlink" title="创建新的网络"></a>创建新的网络</h2><p><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/userguide/networking/default_network/dockerlinks/">container link</a>  连接容器的方法已经过时了, 并且 <code>Portainer</code> 也不支持 <code>link</code>. 因此为了让容器间可以通讯, 我们需要建立自定义网络, 并手动分配静态IP给每个容器.</p>
+<p>1.进入 <code>Networks</code> 页面并点击 <code>Add network</code> 按钮.</p>
+<p><img src="https://steemitimages.com/DQmQ7y7TZ9Bvik92P25aZgqi4rBgHGZG1NK5GQGfkM6t3hg/4.png" alt="4.png"></p>
+<p>2.按照截图提示输入必要信息并点击 <code>Create the network</code> 按钮.</p>
+<p><img src="https://steemitimages.com/DQmcr61fzmxMr56qj44oLjLntR5Hb2qp8afpntUW4xbjHr8/5.png" alt="5.png"></p>
+<h2 id="添加-MariaDB-容器"><a href="#添加-MariaDB-容器" class="headerlink" title="添加 MariaDB 容器"></a>添加 MariaDB 容器</h2><p>在这个教程中我们使用 <code>App Template</code> 来创建 <code>MariaDB</code> 容器.</p>
+<p>1.创建一个目录来存储数据库数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir -p /data/mariadb</span><br></pre></td></tr></table></figure>
+
+<p>2.进入 <code>App Template</code> 页面后选择 <code>MariaDB</code> 选项.</p>
+<p><img src="https://steemitimages.com/DQmRdiSeJMQvHNDu84TAPpqP2GUuTy4cTENnfuRSMD9DddA/6.png" alt="6.png"></p>
+<p>3.按照截图填写配置信息 (当你点击完 <code>Deploy the container</code> 按钮后, 你需要等待一段时间, 因为 <code>Docker</code> 正在后台帮你拉取镜像.)</p>
+<p><img src="https://steemitimages.com/DQmX9tReX9ism2Uj4BXVLviJrWpf6sgASivb2iet7p4mrQ5/7.png" alt="7.png"></p>
+<p>4.由于 <code>App Template</code> 没有设置静态IP, 我们需要手动配置下. 打开容器的详情页:</p>
+<p><img src="https://steemitimages.com/DQmTBfjkF4ArnAzH1G3NAk7Zignj8hgMc88ekZ6yr2XAR3U/8.png" alt="8.png"></p>
+<p>5.点击 <code>Duplicate/Edit</code> 按钮</p>
+<p><img src="https://steemitimages.com/DQmQaLzKXbKv8HtjRPLtXHKyakF2WB6uHemhFHWX4Wb41M2/9.png" alt="9.png"></p>
+<p>6.找到 <code>Advanced container settings</code> 部分, 选择 <code>Network</code> 选项卡, 在 <code>IPv4 address</code> 中输入一个静态IP, 点击 <code>Deploy the container</code> 完成.</p>
+<p><img src="https://steemitimages.com/DQmUVXxDHssU3dPq5eSVX6mV3dH3RBruKzWVNJFsLMewpcS/10.png" alt="10.png"></p>
+<p>7.<code>Portainer</code> 将会提示你是否替换原有容器. 点击 <code>Replace</code>.</p>
+<p><img src="https://steemitimages.com/DQmZ2Ffs8trHvqLtCuqBKNccZbyiPkPQzDzcPTXjvxkcX8C/11.png" alt="11.png"></p>
+<p>8.如果想在主机上连接访问数据库, 可以执行下面的命令:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --rm --name mariadb_client --network mynet mariadb /usr/bin/mysql -h 172.20.0.2 -uroot -p</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>--network mynet</code> 这个选项是必须的, 你必须把客户端容器放置在服务端容器的网络中才可以访问到.</li>
+<li><code>--rm</code> 这个配置可以使这个容器在执行完毕后立即删除.</li>
+</ul>
+<p>或者</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -it mariadb /usr/bin/mysql -h 172.20.0.2 -uroot -p</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建-Nginx-容器"><a href="#创建-Nginx-容器" class="headerlink" title="创建 Nginx 容器"></a>创建 Nginx 容器</h2><p>在本教程中我们使用 <code>App Template</code> 创建 <code>Nginx</code> 容器.</p>
+<p>1.从 <code>App Template</code> 中部署一个 <code>Nginx</code> 容器, 并把容器中的 <code>/data</code> 绑定到主机的 <code>/data</code> 上.</p>
+<p><img src="https://steemitimages.com/DQmYogHmVTx7PPR1Ecr17V6NLAQJgkrf7WMrMvYhDGQkQZq/12.png" alt="12.png"></p>
+<p>2.打开 <code>Containers</code> 列表, 找到你刚才创建的容器并点击第三个图标, 进入容器的 <code>console</code> 界面.</p>
+<p><img src="https://steemitimages.com/DQmbAbmCCHRNX9T9fmdpEYSH5QDUFFdGGCcZfXkuB1CH1gE/13.png" alt="13.png"></p>
+<p>3.执行下面的命令, 把容器中 <code>Nginx</code> 的配置文件复制到主机下.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># cp -r /etc/nginx /data</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://steemitimages.com/DQmVUK9h2GTjj2LMFURrGC1seWCp37vy551iYQaom8B29ki/14.png" alt="14.png"></p>
+<p>5.在主机上执行下面的命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo cp -r /data/nginx /etc/nginx</span><br></pre></td></tr></table></figure>
+
+<p>6.按照截图的指示修改容器配置, 完成 <code>Nginx</code> 容器部署</p>
+<p><img src="https://steemitimages.com/DQmVurkWMPWeeyREZHrZ6LSEdrrZ8fWVN3onKFHK5vSAWq4/16.png" alt="16.png"></p>
+<p><img src="https://steemitimages.com/DQmYL7XGcDgZMrRRQzoXrzt7jdfjMXdYg8kGoGFSrQ6K6Ve/17.png" alt="17.png"></p>
+<p><img src="https://steemitimages.com/DQmf5LhNHxjErnCahun7yN1VCcaUHhqo45d6HJvjjcEX7LR/18.png" alt="18.png"></p>
+<h2 id="创建-php-fpm7-容器"><a href="#创建-php-fpm7-容器" class="headerlink" title="创建 php-fpm7 容器"></a>创建 php-fpm7 容器</h2><p>1.创建一个 <code>php-fpm7</code> 的镜像<br>我参考了这个 <a target="_blank" rel="noopener" href="https://github.com/Yavin/docker-alpine-php-fpm">repo</a> 来创建镜像. 这个镜像的好处是基于 <code>Alpine</code> 创建, 非常轻量.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/Yavin/docker-alpine-php-fpm.git</span><br><span class="line">$ cd docker-alpine-php-fpm</span><br></pre></td></tr></table></figure>
+
+<p>2.修改 <code>php-fpm.conf</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[www]</span><br><span class="line">user = nobody</span><br><span class="line">group = nobody</span><br><span class="line">listen = [::]:9000</span><br><span class="line">chdir = /data/wwwroot  # 修改 chdir</span><br><span class="line">pm = dynamic</span><br><span class="line">pm.max_children = 5</span><br><span class="line">pm.start_servers = 2</span><br><span class="line">pm.min_spare_servers = 1</span><br><span class="line">pm.max_spare_servers = 3</span><br><span class="line">catch_workers_output = Yes</span><br></pre></td></tr></table></figure>
+
+<p>3.构建镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t php-fpm7:latest .</span><br></pre></td></tr></table></figure>
+
+<p>4.创建新容器</p>
+<p><img src="https://steemitimages.com/DQmeYjkN7y2ycQvTur4JfXXmffZWc97rHwXUcYAmo8bqTCD/19.png" alt="19.png"></p>
+<p>5.按照截图一步一步操作, 完成容器创建:</p>
+<p><img src="https://steemitimages.com/DQmNdRgfEF7xbg7KHenVoQpVvQK3kbCQ8w2LdwXgjUdDgds/20.png" alt="20.png"></p>
+<p><img src="https://steemitimages.com/DQmXRr5jjH2JiYdXXYkK5rp12uXPj3Bq7DPscUvAwtpGCub/21.png" alt="21.png"></p>
+<p><img src="https://steemitimages.com/DQmTGq6FY68GDZwgYa7pe1KBA6ZDeVTnWV8sspNBnVneFXy/22.png" alt="22.png"></p>
+<p><img src="https://steemitimages.com/DQmXgjisbnJK1WBKQd9cZ9T1PjZpixQ4LcvNpt3LPLENgZB/23.png" alt="23.png"></p>
+<h2 id="最后的配置"><a href="#最后的配置" class="headerlink" title="最后的配置"></a>最后的配置</h2><p>1.最后我们需要修改下主机上的 <code>Nginx</code> 配置文件 <code>/etc/nginx/conf.d/default.conf</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/nginx/conf.d/default.conf</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        root   /data/wwwroot/default;</span><br><span class="line">        index  index.html index.htm index.php;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000</span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        root           /data/wwwroot/default;</span><br><span class="line">        fastcgi_pass   172.20.0.4:9000;</span><br><span class="line">        fastcgi_index  index.php;</span><br><span class="line">        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;</span><br><span class="line">        include        fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.创建一个测试首页 <code>index.php</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir /data/wwwroot/default</span><br><span class="line">$ sudo echo &quot;&lt;?php phpinfo();?&gt;&quot; &gt; /data/wwwroot/default/index.php</span><br></pre></td></tr></table></figure>
+
+<p>3.重启 <code>Nginx</code> 容器</p>
+<p><img src="https://steemitimages.com/DQmZRZdRXGXHYxYrLHHbHF8WWiacefJ6AfmHGSAMJA3zthD/24.png" alt="24.png"></p>
+<h2 id="在浏览器中访问测试页面"><a href="#在浏览器中访问测试页面" class="headerlink" title="在浏览器中访问测试页面"></a>在浏览器中访问测试页面</h2><p><img src="https://steemitimages.com/DQmTo7GRPcZzWLvdpBNhi289sFvpujVPgThhR78vzjp6VuH/25.png" alt="25.png"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>使用 <code>Docker</code> 化应用是一个趋势. 如果你想在你的个人 <code>VPS</code> 上运行 <code>Docker</code> 化的应用, <code>Portainer</code> 是一个不错的选择, 因为它使用简单并且轻量.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html" title="Build a dockerized LNMP environment by portainer &#x2F; 通过portainer搭建docker化的LNMP环境">https://blog.akawa.ink/2018/01/15/build-a-dockerized-lnmp-environment-by-portainer.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/01/13/vundle-tutorial.html" rel="prev" title="Vundle使用教程">
+                  <i class="fa fa-angle-left"></i> Vundle使用教程
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/01/20/use-rsync-to-transfer-files.html" rel="next" title="服务器间大文件传输还是要用Rsync">
+                  服务器间大文件传输还是要用Rsync <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

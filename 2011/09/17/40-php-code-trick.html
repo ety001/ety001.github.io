@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="1、如果一个方法能被静态，那就声明他为静态的，速度可提高1&#x2F;4； 2、echo的效率高于print,因为echo没有返回值，print返回一个整型； 3、在循环之前设置循环的最大次数，而非在在循环中； 4、销毁变量去释放内存，特别是大的数组； 5、避免使用像__get, __set, __autoload等魔术方法； 6、requiere_once()比较耗资源；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="40条优化php代码的小实例">
+<meta property="og:url" content="https://blog.akawa.ink/2011/09/17/40-php-code-trick.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="1、如果一个方法能被静态，那就声明他为静态的，速度可提高1&#x2F;4； 2、echo的效率高于print,因为echo没有返回值，print返回一个整型； 3、在循环之前设置循环的最大次数，而非在在循环中； 4、销毁变量去释放内存，特别是大的数组； 5、避免使用像__get, __set, __autoload等魔术方法； 6、requiere_once()比较耗资源；">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2011-09-17T00:28:55.000Z">
+<meta property="article:modified_time" content="2024-04-09T19:23:15.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="编程语言">
+<meta property="article:tag" content="后端">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2011/09/17/40-php-code-trick.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2011/09/17/40-php-code-trick.html","path":"2011/09/17/40-php-code-trick.html","title":"40条优化php代码的小实例"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>40条优化php代码的小实例 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2011/09/17/40-php-code-trick.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="40条优化php代码的小实例 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          40条优化php代码的小实例
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2011-09-17 08:28:55" itemprop="dateCreated datePublished" datetime="2011-09-17T08:28:55+08:00">2011-09-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-10 03:23:15" itemprop="dateModified" datetime="2024-04-10T03:23:15+08:00">2024-04-10</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>1、如果一个方法能被静态，那就声明他为静态的，速度可提高1&#x2F;4；</p>
+<p>2、echo的效率高于print,因为echo没有返回值，print返回一个整型；</p>
+<p>3、在循环之前设置循环的最大次数，而非在在循环中；</p>
+<p>4、销毁变量去释放内存，特别是大的数组；</p>
+<p>5、避免使用像<code>__get</code>, <code>__set</code>, <code>__autoload</code>等魔术方法；</p>
+<p>6、requiere_once()比较耗资源；</p>
+<span id="more"></span>
+<p>7、在includes和requires中使用绝对路径，这样在分析路径花的时间更少；</p>
+<p>8、如果你需要得到脚本执行时的时间，<code>$_SERVER[&#39;REQUSET_TIME&#39;]</code>优于time()；</p>
+<p>9、能使用字符处理函数的，尽量用他们，因为效率高于正则；</p>
+<p>10、str_replace字符替换比正则替换preg_replace快，但strtr比str_replace又快1&#x2F;4；</p>
+<p>11、如果一个函数既能接受数组又能接受简单字符做为参数，例如字符替换，并且参数列表不是太长，可以考虑多用一些简洁的替换语句，一次只替换一个字符，而不是接受数组做为查找和替换参数。大事化小，1+1&gt;2；</p>
+<p>12、用@掩盖错误会降低脚本运行速度；</p>
+<p>13、$row[‘id’]比$row[id]速度快7倍，建议养成数组键加引号的习惯；</p>
+<p>14、错误信息很有用；</p>
+<p>15、在循环里别用函数，例如For($x&#x3D;0； $x &lt; count($array)； $x), count()函数在外面先计算；</p>
+<p>16、在方法里建立局部变量速度最快，几乎和在方法里调用局部变量一样快；</p>
+<p>17、建立一个全局变量要比局部变量要慢2倍；</p>
+<p>18、建立一个对象属性（类里面的变量）例如（$this-&gt;prop++）比局部变量要慢3倍；</p>
+<p>19、建立一个未声明的局部变量要比一个初始化的局部变量慢9-10倍；</p>
+<p>20、声明一个未被任何一个函数使用过的全局变量也会使性能降低（和声明相同数量的局部变量一样），PHP可能去检查这个全局变量是否存在；</p>
+<p>21、方法的性能和在一个类里面定义的方法的数目没有关系，因为我添加10个或多个方法到测试的类里面（这些方法在测试方法的前后）后性能没什么差异；</p>
+<p>22、在子类里方法的性能优于在基类中；</p>
+<p>23、只调用一个参数并且函数体为空的函数运行花费的时间等于7-8次$localvar++运算，而一个类似的方法（类里的函数）运行等于大约15次$localvar++运算；</p>
+<p>24、Surrounding your string by ‘ instead of ” will make things interpret a little faster since php looks for variables inside “…” but not inside ‘…’. Of course you can only do this when you don’t need to have variables in the string.</p>
+<p>25、当输出字符串时用逗号代替点分割更快些。注意：这只对echo起作用，这个函数能接受一些字符串作为参数；</p>
+<p>26、在apache服务器里一个php脚本页面比相应的HTML静态页面生成至少要多花2-10倍的时间，建议多用些静态HTML页面和少量的脚步；</p>
+<p>27、除非你的安装了缓存，不然你的php脚本每次被访问都需要被重编译。建议安装个php缓存程序，这样通过去除一些重复的编译来很明显的提高你20-100%的性能；</p>
+<p>28、建议用memcached，高性能的分布式内存对象缓存系统，提高动态网络应用程序性能，减轻数据库的负担；</p>
+<p>29、使用ip2long()和long2ip()函数把IP地址转成整型存放进数据库而非字符型。这几乎能降低1&#x2F;4的存储空间。同时可以很容易对地址进行排序和快速查找；</p>
+<p>30、使用checkdnsrr()通过域名存在性来确认部分email地址的有效性，这个内置函数能保证每一个的域名对应一个IP地址；</p>
+<p>31、如果你在使用php5和mysql4.1以上的版本，考虑使用mysql_*的改良函数mysqli_*；</p>
+<p>32、试着喜欢使用三元运算符（？：）；</p>
+<p>33、在你想在彻底重做你的项目前，看看PEAR有没有你需要的。PEAR是个巨大的资源库，很多php开发者都知道；</p>
+<p>34、使用highlight_file()能自动打印一份很好格式化的页面源代码的副本；</p>
+<p>35、使用error_reporting(0)函数来预防潜在的敏感信息显示给用户。理想的错误报告应该被完全禁用在php.ini文件里。可是 如果你在用一个共享的虚拟主机，php.ini你不能修改，那么你最好添加error_reporting(0)函数，放在每个脚本文件的第一行（或用 require_once()来加载）这能有效的保护敏感的SQL查询和路径在出错时不被显示；</p>
+<p>36、使用 gzcompress() 和gzuncompress()对容量大的字符串进行压缩（解压）在存进（取出）数据库时。这种内置的函数使用gzip算法能压缩到90%；</p>
+<p>37、通过参数变量地址得引用来使一个函数有多个返回值。你可以在变量前加个“&amp;”来表示按地址传递而非按值传递；</p>
+<p>38、Fully understand “magic quotes” and the dangers of SQL injection. I’m hoping that most developers reading this are already familiar with SQL injection. However, I list it here because it’s absolutely critical to understand. If you’ve never heard the term before, spend the entire rest of the day googling and reading.</p>
+<p>39、使用strlen()因为要调用一些其他操作例如lowercase和hash表查询所以速度不是太好，我们可以用isset()来实现相似的功能，isset()速度优于strlen()；</p>
+<p>40、When incrementing or decrementing the value of the variable $i++ happens to be a tad slower then ++$i. This is something PHP specific and does not apply to other languages, so don’t go modifying your C or Java code thinking it’ll suddenly become faster, it won’t. ++$i happens to be faster in PHP because instead of 4 opcodes used for $i++ you only need 3. Post incrementation actually causes in the creation of a temporary var that is then incremented. While pre-incrementation increases the original value directly. This is one of the optimization that opcode optimized like Zend’s PHP optimizer. It is a still a good idea to keep in mind since not all opcode optimizers perform this optimization and there are plenty of ISPs and servers running without an opcode optimizer.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2011/09/17/40-php-code-trick.html" title="40条优化php代码的小实例">https://blog.akawa.ink/2011/09/17/40-php-code-trick.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag"># 编程语言</a>
+              <a href="/tags/%E5%90%8E%E7%AB%AF/" rel="tag"># 后端</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2011/09/14/php-fsockopen.html" rel="prev" title="使用PHP的fsockopen方法post提交数据">
+                  <i class="fa fa-angle-left"></i> 使用PHP的fsockopen方法post提交数据
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2011/09/21/jquery-tutorial.html" rel="next" title="jQuery入门教程笔记6">
+                  jQuery入门教程笔记6 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

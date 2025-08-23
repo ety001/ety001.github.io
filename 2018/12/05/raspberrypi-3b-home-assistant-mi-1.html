@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本来今天应该是写（二）的，但是昨晚配置的过程中发现了很多问题，比如声音、蓝牙之类的配置，以及最关键的是发现原来 Hass.io 已经不被官方推荐了，现在官方推荐他们自己做的 HassOS，WTF，这都是啥跟啥？！所以今天就是把昨天写的(一)推翻掉，重新写。 先来说说刚才提到的 Hass.io 和 HassOS 。 按照目前我的理解，这个项目的演化历程是这样的，最早的 Home Assistant">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在树莓派3B上搭建Hass.io并接入米家和iOS（一）">
+<meta property="og:url" content="https://blog.akawa.ink/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="本来今天应该是写（二）的，但是昨晚配置的过程中发现了很多问题，比如声音、蓝牙之类的配置，以及最关键的是发现原来 Hass.io 已经不被官方推荐了，现在官方推荐他们自己做的 HassOS，WTF，这都是啥跟啥？！所以今天就是把昨天写的(一)推翻掉，重新写。 先来说说刚才提到的 Hass.io 和 HassOS 。 按照目前我的理解，这个项目的演化历程是这样的，最早的 Home Assistant">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181206/XERIGA49irRbHDpStCCTkJWuj7mz4xwymhv0C86N.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181206/gsOSk9x1aXds3uLtOMtFq4UWzQetIWokbJaGKqDR.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181206/WlBcqLD97OTqxEtLyMgXmxSSAiDUgrQ1Clkn8tMy.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181206/kbLzSsoKiFIbEVxjphTruFHG3DtrdXtuCltbDFTa.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181206/BUHkhtk3LUHmQKwEy28ImqELyIG4IjBnKLbDjYCA.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181206/pIBImO28p50Bsk4jd0f79NhKAXYhLTVw0pET2bm0.png">
+<meta property="og:image" content="https://blog.akawa.ink/upload/20181206/eBX8GzKodKV7FRzFIX9Jl9w8PjLSkNuwDF0BD53D.png">
+<meta property="article:published_time" content="2018-12-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="HomeAssistant">
+<meta property="article:tag" content="家庭智能">
+<meta property="article:tag" content="米家">
+<meta property="article:tag" content="树莓派">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.akawa.ink/upload/20181206/XERIGA49irRbHDpStCCTkJWuj7mz4xwymhv0C86N.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html","path":"2018/12/05/raspberrypi-3b-home-assistant-mi-1.html","title":"在树莓派3B上搭建Hass.io并接入米家和iOS（一）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>在树莓派3B上搭建Hass.io并接入米家和iOS（一） | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A5%E4%B8%8A%E6%BB%A1%E6%BB%A1%E7%9A%84%E9%83%BD%E6%98%AF%E5%9D%91%EF%BC%81"><span class="nav-number">1.</span> <span class="nav-text">以上满满的都是坑！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OK%EF%BC%8C%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%85%88%E5%88%B0%E8%BF%99%E9%87%8C%EF%BC%8C%E4%B8%8B%E4%B8%80%E7%AF%87%E7%9C%9F%E7%9A%84%E8%A6%81%E8%AE%B2%E8%AE%B2%E5%85%B6%E4%BB%96%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BA%86%E3%80%82"><span class="nav-number">2.</span> <span class="nav-text">OK，这一篇就先到这里，下一篇真的要讲讲其他的配置了。</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="在树莓派3B上搭建Hass.io并接入米家和iOS（一） | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在树莓派3B上搭建Hass.io并接入米家和iOS（一）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-12-06 00:00:00" itemprop="dateCreated datePublished" datetime="2018-12-06T00:00:00+08:00">2018-12-06</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本来今天应该是写（二）的，但是昨晚配置的过程中发现了很多问题，比如声音、蓝牙之类的配置，以及最关键的是发现原来 <strong>Hass.io</strong> 已经不被官方推荐了，现在官方推荐他们自己做的 <strong>HassOS</strong>，WTF，这都是啥跟啥？！所以今天就是把昨天写的(一)推翻掉，重新写。</p>
+<p>先来说说刚才提到的 <strong>Hass.io</strong> 和 <strong>HassOS</strong> 。</p>
+<p>按照目前我的理解，这个项目的演化历程是这样的，最早的 <strong>Home Assistant</strong> 是一堆脚本构成的，系统是基于 <strong>Respbian</strong> 的，所以起名叫做 <strong>Hassbian</strong>，之后基于 <strong>ResinOS</strong>(一个面向嵌入式系统的docker系统平台)，把整个的核心代码封装进了两个镜像中，一个是 **<a target="_blank" rel="noopener" href="https://hub.docker.com/r/homeassistant/raspberrypi3-homeassistant/">homeassistant&#x2F;raspberrypi3-homeassistant</a>**，一个是 **<a href="">homeassistant&#x2F;armhf-hassio-supervisor</a>**，其余的插件都各自独立成为一个镜像，这样整个系统运行起来就是一个 <strong>ResinOS</strong> 加上一堆容器，对于整体的稳定性和可维护性提升了不少，这也就是 <strong>Hass.io</strong>。再之后不知道什么原因，又基于 <strong>buildroot</strong> 系统（另外一个面向嵌入式的系统平台）做了 <strong>HassOS</strong>，这款比起上一款来说，感觉加入了一些新的驱动，比如声卡和蓝牙，另外就是宿主机做的更加的封闭了，可能是处于安全考虑，也可能是处于以后的商业考虑。</p>
+<p>由于不想覆盖掉昨天的那篇，所以开始这篇作为第一篇，然后开始我们的重做系统之旅吧。。。。。</p>
+<p>目前 <strong>HassOS</strong> 的稳定版本是 <em>1.13</em>，最新版本是 <em>2.3</em>，这个在 <strong>HassOS</strong> 项目的 <strong>Release</strong> 页面可以看到，<a target="_blank" rel="noopener" href="https://github.com/home-assistant/hassos/releases">https://github.com/home-assistant/hassos/releases</a> 。我选择了 <em>2.3</em> 这个版本，由于我是树莓派3B，所以下载了 <strong>hassos_rpi3-2.3.img.gz</strong> 这个包（这里之所以不下载64位的是因为树莓派官方推出64位的系统时间也不长，稳定性有待观察）。</p>
+<p>下载后解压得到 <strong>img</strong> 文件，依旧用 <strong>etcher</strong> 来写入到 <strong>TF</strong> 卡中。</p>
+<p>这里需要注意，如果你是 <strong>Mac</strong> 电脑，那么写完后，会提示 <strong>TF</strong> 卡无法识别，你直接推出就好。这是因为 <strong>HassOS</strong> 使用的 <strong>GPT</strong> 分区格式，而 <strong>Mac</strong> 默认不支持这个格式。</p>
+<p>那么这里就有意思了，往常都是 <strong>boot</strong> 分区是 <strong>FAT</strong> 格式，然后挂载，放入各种位置文件，比如wifi联网的配置，然后把卡插回树莓派，启动就能用了，但现在 <strong>TF</strong> 卡的 <strong>boot</strong> 分区无法挂载，这咋整？</p>
+<p>官方给出了方案：<a target="_blank" rel="noopener" href="https://github.com/home-assistant/hassos/blob/dev/Documentation/configuration.md">https://github.com/home-assistant/hassos/blob/dev/Documentation/configuration.md</a> ，思路就是再找一个U盘，格式化成 <strong>FAT32</strong> &#x2F; <strong>EXT4</strong> &#x2F; <strong>NTFS</strong> 任意格式，格式化的时候把U盘命名为 <strong>CONFIG</strong>（全大写）。</p>
+<p><img src="/upload/20181206/XERIGA49irRbHDpStCCTkJWuj7mz4xwymhv0C86N.png"></p>
+<p>之后需要加入的配置文件，按照文档要求的格式放在U盘根目录下即可。启动树莓派的时候，先把U盘插好，系统会自动读取U盘的配置文件并生效。</p>
+<p><img src="/upload/20181206/gsOSk9x1aXds3uLtOMtFq4UWzQetIWokbJaGKqDR.png"></p>
+<p><strong>另外注意就是配置network的时候，文件名必须是my-network。</strong></p>
+<p><strong>除了网络配置以外，timesyncd.conf也要配置，否则系统启动起来时间不对，然后更新就会卡住，因为更新访问的是 HTTPS 加密链接，时间不对，签名就有问题，进而就无法访问更新镜像的链接（下面的截图就是这个坑了）。timesyncd.conf中的NTP服务器网上找下亚洲区的就好。</strong></p>
+<p><img src="/upload/20181206/WlBcqLD97OTqxEtLyMgXmxSSAiDUgrQ1Clkn8tMy.png"></p>
+<p><strong>另外建议把 authorized_keys 也配置了吧，这样可以远程直接SSH到宿主机。authorized_keys 文件里的内容其实就是你电脑 ~&#x2F;.ssh&#x2F;id_rsa.pub 文件的内容，如果没有这个目录，就执行下 ssh-keygen 生成下。</strong></p>
+<p><strong>还有就是一定记住，初始化结束后，要在UI界面上把U盘的配置再导入一次，这个之后会再提到，切记切记啊！！！</strong></p>
+<h3 id="以上满满的都是坑！"><a href="#以上满满的都是坑！" class="headerlink" title="以上满满的都是坑！"></a>以上满满的都是坑！</h3><p>所有工作做完，启动树莓派，来看看显示器最后输出的内容，<strong>默认登陆用户是root，不需要密码。</strong></p>
+<p><img src="/upload/20181206/kbLzSsoKiFIbEVxjphTruFHG3DtrdXtuCltbDFTa.png"></p>
+<p>恩，你没有看错，登陆后是官方实现的一个 <strong>cli</strong>，用于便捷管理各种服务，屏蔽掉操作系统的存在。虽然现在允许你使用 <strong>login</strong> 命令进入宿主机，但是我觉得早晚会屏蔽掉这个命令，做的跟路由器似的。</p>
+<p>这时候，你执行 <strong>login</strong> 进入宿主机，然后执行 <code>docker ps</code>，看看是不是一个 <strong>supervisor</strong> 的容器，一个 <strong>homeassistant&#x2F;raspberrypi3-homeassistant</strong> 生成的容器。</p>
+<p>如果没问题，那么在浏览器里访问 <strong><a target="_blank" rel="noopener" href="http://hassio.local:8123/">http://hassio.local:8123</a></strong> 就能看到创建新用户的界面了（如果你路由器不支持mDNS，那么就只能用 <strong>http:&#x2F;&#x2F;树莓派IP:8123</strong> 的形式访问了。</p>
+<p><img src="/upload/20181206/BUHkhtk3LUHmQKwEy28ImqELyIG4IjBnKLbDjYCA.png"></p>
+<p>登陆之后，就能看到主界面了。去左边栏 <strong>Hass.io</strong> 中，选择 <strong>ADD-ON STORE</strong>，然后找到 <strong>SSH &amp; Web Terminal</strong>，点进去安装，如下图</p>
+<p><img src="/upload/20181206/pIBImO28p50Bsk4jd0f79NhKAXYhLTVw0pET2bm0.png"></p>
+<p>这个插件其实是让你 <strong>SSH</strong> 登陆进一个容器，然后把一些配置文件从宿主机映射进容器，这样相对安全一些。</p>
+<p>安装完，在下面的配置中，把你的登陆用户名和密码加入进去，另外配置下 <strong>Web Terminal</strong> 的证书，证书是放在 <strong>&#x2F;root&#x2F;ssl</strong> 目录下的。你可以先关闭 <strong>Web Terminal</strong>，启动 <strong>SSH</strong> 成功后，用 <strong>SCP</strong> 把证书传上去，或者去插件中心安装 <strong>Samba Share</strong> 插件，用共享的方法传上去。</p>
+<p>最关键的一步来了，在 <strong>Hass.io</strong> 中，选择 <strong>SYSTEM</strong> ，点击 <strong>IMPORT FROM USB</strong> 完成配置写入。</p>
+<p><img src="/upload/20181206/eBX8GzKodKV7FRzFIX9Jl9w8PjLSkNuwDF0BD53D.png"></p>
+<h3 id="OK，这一篇就先到这里，下一篇真的要讲讲其他的配置了。"><a href="#OK，这一篇就先到这里，下一篇真的要讲讲其他的配置了。" class="headerlink" title="OK，这一篇就先到这里，下一篇真的要讲讲其他的配置了。"></a>OK，这一篇就先到这里，下一篇真的要讲讲其他的配置了。</h3>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html" title="在树莓派3B上搭建Hass.io并接入米家和iOS（一）">https://blog.akawa.ink/2018/12/05/raspberrypi-3b-home-assistant-mi-1.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/HomeAssistant/" rel="tag"># HomeAssistant</a>
+              <a href="/tags/%E5%AE%B6%E5%BA%AD%E6%99%BA%E8%83%BD/" rel="tag"># 家庭智能</a>
+              <a href="/tags/%E7%B1%B3%E5%AE%B6/" rel="tag"># 米家</a>
+              <a href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/" rel="tag"># 树莓派</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/12/04/raspberrypi-3b-home-assistant-mi.html" rel="prev" title="在树莓派3B上搭建Hass.io并接入米家和iOS（一）">
+                  <i class="fa fa-angle-left"></i> 在树莓派3B上搭建Hass.io并接入米家和iOS（一）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/12/10/raspberrypi-3b-home-assistant-mi-2.html" rel="next" title="在树莓派3B上搭建Hass.io并接入米家和iOS（二）">
+                  在树莓派3B上搭建Hass.io并接入米家和iOS（二） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

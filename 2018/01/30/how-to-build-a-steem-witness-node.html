@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon.ico">
+  <link rel="mask-icon" href="/img/favicon.ico" color="#222">
+  <link rel="manifest" href="/site.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha256-wiz7ZSCn/btzhjKDQBms9Hx4sSeUYsDrTLg7roPstac=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.akawa.ink","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.19.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="最近运行了一个见证人节点，并且发布了 见证人公告，欢迎各位给我投上一票，投票链接：https:&#x2F;&#x2F;v2.steemconnect.com&#x2F;sign&#x2F;account-witness-vote?witness&#x3D;ety001&amp;approve&#x3D;1 为了成为 见证人，我搜索了很多的资料，中文资料目前应该是没有，基本上都是英文的，并且每一篇都只是介绍了某一点，尤其是如何把自己的账号升级为见证人，这方面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何搭建Steem见证人节点">
+<meta property="og:url" content="https://blog.akawa.ink/2018/01/30/how-to-build-a-steem-witness-node.html">
+<meta property="og:site_name" content="Akawa">
+<meta property="og:description" content="最近运行了一个见证人节点，并且发布了 见证人公告，欢迎各位给我投上一票，投票链接：https:&#x2F;&#x2F;v2.steemconnect.com&#x2F;sign&#x2F;account-witness-vote?witness&#x3D;ety001&amp;approve&#x3D;1 为了成为 见证人，我搜索了很多的资料，中文资料目前应该是没有，基本上都是英文的，并且每一篇都只是介绍了某一点，尤其是如何把自己的账号升级为见证人，这方面">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://steemitimages.com/DQmT1CM9yF1i7fvi3RbrmT7aBFu8fKGGTPg3hwreNBrfKPx/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmYDAniAE6xLunbYjNsetgMY8JCx3C5okTFu5mLo3U1i7B/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmUUfm46LPZackRezNLkHEzGkTEo6Z3qsmj72cbCrWVCek/image.png">
+<meta property="og:image" content="https://steemitimages.com/DQmbjAJzkUDvwBtMQapfs1aWfYdQNvngt7VzvJoFyTMcC2N/image.png">
+<meta property="article:published_time" content="2018-01-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-08T10:20:06.000Z">
+<meta property="article:author" content="ETY001">
+<meta property="article:tag" content="教程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://steemitimages.com/DQmT1CM9yF1i7fvi3RbrmT7aBFu8fKGGTPg3hwreNBrfKPx/image.png">
+
+
+<link rel="canonical" href="https://blog.akawa.ink/2018/01/30/how-to-build-a-steem-witness-node.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.akawa.ink/2018/01/30/how-to-build-a-steem-witness-node.html","path":"2018/01/30/how-to-build-a-steem-witness-node.html","title":"如何搭建Steem见证人节点"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>如何搭建Steem见证人节点 | Akawa</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-60YZJHHP9K"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-60YZJHHP9K","only_pageview":false,"measure_protocol_api_secret":null}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7536831447654223" crossorigin="anonymous"></script>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="Akawa" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Akawa</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">ETY001的博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-生活"><a href="/life" rel="section"><i class="fa fa-bicycle fa-fw"></i>生活</a></li><li class="menu-item menu-item-关于"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-dm实验室"><a href="/lab/" rel="section"><i class="fa fa-gear fa-fw"></i>DM实验室</a></li><li class="menu-item menu-item-捐助"><a href="/donate/" rel="section"><i class="fa fa-star fa-fw"></i>捐助</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-标签云"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签云</a></li><li class="menu-item menu-item-归档"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-友链"><a href="/friendsblog/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%8A%E8%B4%A6%E5%8F%B7%E5%8D%87%E7%BA%A7%E4%B8%BA%E8%A7%81%E8%AF%81%E4%BA%BA"><span class="nav-number">1.</span> <span class="nav-text">把账号升级为见证人</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E8%A7%81%E8%AF%81%E4%BA%BA%E8%8A%82%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">部署见证人节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E5%96%82%E4%BB%B7"><span class="nav-number">3.</span> <span class="nav-text">关于喂价</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="ETY001"
+      src="/img/logo.jpg">
+  <p class="site-author-name" itemprop="name">ETY001</p>
+  <div class="site-description" itemprop="description">ETY001的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">482</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">68</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ety001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:work@akawa.ink" title="E-Mail → mailto:work@akawa.ink" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/ety001" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/ety001" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;ety001" rel="noopener me" target="_blank"><i class="twitter fa-fw"></i>Twitter</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.akawa.ink/2018/01/30/how-to-build-a-steem-witness-node.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/img/logo.jpg">
+      <meta itemprop="name" content="ETY001">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Akawa">
+      <meta itemprop="description" content="ETY001的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="如何搭建Steem见证人节点 | Akawa">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何搭建Steem见证人节点
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2018-01-31 00:00:00" itemprop="dateCreated datePublished" datetime="2018-01-31T00:00:00+08:00">2018-01-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2024-04-08 18:20:06" itemprop="dateModified" datetime="2024-04-08T18:20:06+08:00">2024-04-08</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>最近运行了一个见证人节点，并且发布了 <a target="_blank" rel="noopener" href="https://steemit.com/witness-category/@ety001/to-be-a-witness-i-need-your-vote">见证人公告</a>，欢迎各位给我投上一票，投票链接：<a target="_blank" rel="noopener" href="https://v2.steemconnect.com/sign/account-witness-vote?witness=ety001&amp;approve=1">https://v2.steemconnect.com/sign/account-witness-vote?witness=ety001&amp;approve=1</a></p>
+<p>为了成为 <a target="_blank" rel="noopener" href="https://steemit.com/cn/@oflyhigh/6dbdqm">见证人</a>，我搜索了很多的资料，中文资料目前应该是没有，基本上都是英文的，并且每一篇都只是介绍了某一点，尤其是如何把自己的账号升级为见证人，这方面的资料几乎就没有。这里我将介绍下如何快速搭建成为见证人。（为了重现这个过程，我拿我的另外一个账号 <code>liuye</code> 来重新走一遍流程）</p>
+<p><strong>注意1：教程将以Ubuntu16.04作为操作环境，如果你用其他的Linux系统，需要自己解决各种依赖等问题。</strong></p>
+<p><strong>注意2：目前网上建议最小内存 32GB，最小硬盘 100GB（当前时间：2018.01.30）为了写这个教程，现买了几个小时的 VPS 用来测试。小内存似乎也可以跑，文末总结有彩蛋。</strong><br><img src="https://steemitimages.com/DQmT1CM9yF1i7fvi3RbrmT7aBFu8fKGGTPg3hwreNBrfKPx/image.png"></p>
+<h3 id="把账号升级为见证人"><a href="#把账号升级为见证人" class="headerlink" title="把账号升级为见证人"></a>把账号升级为见证人</h3><p>目前最便利的方法就是使用 <a target="_blank" rel="noopener" href="https://github.com/Netherdrake/conductor">Conductor</a> 了。建议把 <code>Conductor</code> 安装在本地，毕竟这一步需要导入你的账号信息，如果在服务器操作，可能安全度不高。另外，确保你的本地安装了 <code>Python3</code>。</p>
+<p>1.安装必要的依赖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install libffi-dev libssl-dev python3 python3-dev python3-pip</span><br></pre></td></tr></table></figure>
+
+
+<p>2.安装 <code>steem-python</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install -U git+git://github.com/Netherdrake/steem-python</span><br></pre></td></tr></table></figure>
+
+
+<p>3.安装 <code>conductor</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install -U git+https://github.com/Netherdrake/conductor</span><br></pre></td></tr></table></figure>
+
+
+<p>4.使用 <code>steem-python</code> 创建本地钱包，并导入你的账号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ steempy addkey</span><br></pre></td></tr></table></figure>
+
+<p>弹出下面的提示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Private Key (wif) [Enter to quit]:</span><br></pre></td></tr></table></figure>
+
+<p>在这里输入你账号的活跃权限的私钥，在你的 <code>steemit</code> 的网站钱包页面的权限中可以找到。<br>输入完，回车，会提示下面的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Please provide a password for the new wallet</span><br></pre></td></tr></table></figure>
+
+<p>这里输入一个你自己的密码，用于加密你本地的钱包，假如这里我们设置的是 <code>123456</code>。<br>当再次弹出 <code>Private Key (wif) [Enter to quit]:</code> 时表明添加成功，直接回车退出。</p>
+<p>5.初始化见证人</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conductor init</span><br></pre></td></tr></table></figure>
+
+<p>回车后会依次让你输入下面的内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">What is your witness account name?: liuye</span><br><span class="line">Witness liuye does not exist. Would you like to create it? [y/N]: y</span><br><span class="line">What should be your witness URL? [https://steemdb.com/witnesses]: https://steemit.com/@liuye</span><br><span class="line">How much do you want the account creation fee to be (STEEM)? [0.500 STEEM]: 0.200 STEEM</span><br><span class="line">What should be the maximum block size? [65536]: </span><br><span class="line">What should be the SBD interest rate? [0]: </span><br><span class="line">BIP38 Wallet Password: </span><br><span class="line">Witness liuye created!</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>account creation fee</code>，<code>maximum block size</code>，<code>SBD interest rate</code>这几个参数我也不清楚具体干什么的，<br>我是按照多数见证人的设置来配置的，其中注意 <code>account creation fee</code> 的格式。另外那个 <code>BIP38 Wallet Password</code> 就是上一步里设置的钱包密码，即那个 <code>123456</code>。</p>
+<p>6.生成打包区块所要用的公私钥对</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conductor keygen</span><br></pre></td></tr></table></figure>
+
+<p>这一步生成的公钥将用来激活你的见证人，生成的私钥将配置在服务器节点的 <code>config.ini</code> 文件中。<br>比如这里我生成的是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+-----------------------------------------------------+-------------------------------------------------------+</span><br><span class="line">| Private (install on your witness node)              | Public (publish with &#x27;conductor enable&#x27; command)      |</span><br><span class="line">+-----------------------------------------------------+-------------------------------------------------------+</span><br><span class="line">| 5JEREu41d6zdBsFHjKx3PumyHMhydUH5DCPFejRiBTyQLg3rGgt | STM6fhWKaF4okgbjeAZrQg7mc7fNUKT7BtyevHAF9Qtfe666RDaEp |</span><br><span class="line">+-----------------------------------------------------+-------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+
+
+<p>7.激活见证人</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conductor enable STM6fhWKaF4okgbjeAZrQg7mc7fNUKT7BtyevHAF9Qtfe666RDaEp</span><br></pre></td></tr></table></figure>
+
+<p>回车后会要求输入钱包密码，等看到一堆信息后，如果 <code>block_signing_key</code> 里是你设置的公钥，<br>那么就激活成功了。</p>
+<p>8.临时关闭见证人</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conductor disable</span><br></pre></td></tr></table></figure>
+
+<p>按照提示输入完信息后，当看到一堆信息后，其中的 <code>block_signing_key</code> 变为 <code>STM1111111111111111111111111111111114T1Anm</code> 则表明见证人临时关闭成功。</p>
+<p>如果目前你的节点不在运行，则需要临时关闭见证人，否则如果轮到你出块了，而你不在线，则将记录一次你丢块。（PS: 通过我这一周的观察，目前我的这些票数，完全轮不到我出块，所以关不关掉都是一个样。。。😂）</p>
+<h3 id="部署见证人节点"><a href="#部署见证人节点" class="headerlink" title="部署见证人节点"></a>部署见证人节点</h3><p>我自己搭建见证人节点的时候，是使用的官方的 <code>Docker</code> 镜像。<br>本教程则使用更傻瓜化的一个 <code>Docker</code> <a target="_blank" rel="noopener" href="https://github.com/Someguy123/steem-docker">镜像</a> 来完成。</p>
+<p><strong>再次注意：服务器环境是ubuntu16.04</strong></p>
+<p>1.更新系统，安装依赖，获取 <a target="_blank" rel="noopener" href="https://github.com/Someguy123/steem-docker">steem-docker</a> 的安装脚本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line">sudo apt install git curl wget</span><br><span class="line">git clone https://github.com/Someguy123/steem-docker.git</span><br><span class="line">cd steem-docker</span><br></pre></td></tr></table></figure>
+
+<p>2.安装 <code>Docker</code>，如果你的系统目前已经安装，则跳过该步</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./run.sh install_docker</span><br></pre></td></tr></table></figure>
+
+<p>3.拉取 <code>steem-docker</code> 镜像</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./run.sh install</span><br></pre></td></tr></table></figure>
+
+<p>4.同步区块数据，目前区块数据大约23GB，该步是从大佬@gtg 维护的节点下载已经打包好的区块数据（同步和解压都需要很久，尤其是解压）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./run.sh dlblocks</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果你想跳过下载这一步，而是想直接通过 <code>P2P</code> 网络来同步区块数据，那么在执行第7步之前，可以修改一下 <code>run.sh</code> 的 170 行，<br><img src="https://steemitimages.com/DQmYDAniAE6xLunbYjNsetgMY8JCx3C5okTFu5mLo3U1i7B/image.png"><br>我们删除掉，最后的那个 <code>--replay</code> 参数，然后执行 <code>./run.sh replay</code>。<br>通过读取日志，看到有区块数据同步后，再次修改 <code>run.sh</code> 的 170 行，把刚才去掉的参数再加回来，加回参数后，再执行 <code>./run.sh replay</code> 即可。<br>如果提示类似下面的错误</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error response from daemon: You cannot remove a running container c083355ec3960722bee080cff5c1bb13c225f5b9a3e0ae8ea63b4f73ce531992. Stop the container before attempting removal or force remove</span><br></pre></td></tr></table></figure>
+<p>执行下面的命令后再执行 <code>./run.sh deplay</code>，其中 <code>c08</code> 是报错中提到的那个 <code>container id</code> 的头几位</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop c08</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>5.调整内存。由于要使用 <code>/dev/shm</code> 来作为 <code>shared-file-dir</code>，而默认 <code>/dev/shm</code> 是机器内存的一半，为了更好的利用内存，我们需要把这个内存调大，我的服务器是32GB的，因此我调到30GB，留下2GB给系统自己。(<a target="_blank" rel="noopener" href="http://www.361way.com/dev-shm/4029.html">啥是 shm</a>。)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ./run.sh shm_size 30G</span><br></pre></td></tr></table></figure>
+
+<p>6.修改 <code>config.ini</code> 配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim data/witness_node_data_dir/config.ini</span><br></pre></td></tr></table></figure>
+
+<p>只需要参照下面的内容修改几项即可，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p2p-endpoint = 0.0.0.0:2001 # 做种子</span><br><span class="line">shared-file-size = 30G</span><br><span class="line">shared-file-dir = /shm # 如果注释掉这行，在小内存机器上也可以跑</span><br><span class="line">witness = &quot;liuye&quot;  # 这里填写你的 steem 账号，注意要加双引号！！</span><br><span class="line">private-key = 5JEREu41d6zdBsFHjKx3PumyHMhydUH5DCPFejRiBTyQLg3rGgt # 这里填写 conductor 生成的私钥，不需要引号</span><br></pre></td></tr></table></figure>
+
+<p>7.启动见证人节点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./run.sh replay</span><br></pre></td></tr></table></figure>
+
+<p>运行成功后，可以通过 <code>./run.sh logs</code> 命令，查看 <code>Docker容器</code> 的运行情况，如图</p>
+<p><img src="https://steemitimages.com/DQmUUfm46LPZackRezNLkHEzGkTEo6Z3qsmj72cbCrWVCek/image.png"></p>
+<p><code>Log</code> 信息中出现见证人信息了，就代表配置成功了。等待区块链同步到最新后，显示类似下面的内容时，就一切正常了，这时别忘了用 <code>conductor</code> 激活见证人。</p>
+<p><img src="https://steemitimages.com/DQmbjAJzkUDvwBtMQapfs1aWfYdQNvngt7VzvJoFyTMcC2N/image.png"></p>
+<p>8.发布见证人公告到 <code>witness-category</code> 下面，以表示你开始了见证人之旅。写一写你能为社区做啥，为啥大家要给你投票之类的。</p>
+<h3 id="关于喂价"><a href="#关于喂价" class="headerlink" title="关于喂价"></a>关于喂价</h3><p>见证人除了打包这个工作外，还有一个重要的工作就是给系统提供喂价。<br>目前有好几个版本的喂价脚本， 这里我们使用 <code>conductor</code> 提供的喂价功能即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conductor feed</span><br></pre></td></tr></table></figure>
+
+<p>第一次运行会出现类似的错误提示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">BIP38 Wallet Password: </span><br><span class="line">Tue Jan 30 21:18:48 2018</span><br><span class="line">Old Price: 0.000</span><br><span class="line">New Price: 5.165</span><br><span class="line"></span><br><span class="line">Current STEEM price: 5.165 USD</span><br><span class="line">Current SBD price: 5.767 USD</span><br><span class="line">Quote: 1.000 STEEM</span><br><span class="line"></span><br><span class="line">Spread between prices: 100.000%</span><br><span class="line">Possibly invalid spread (100.00%), ignoring...</span><br></pre></td></tr></table></figure>
+
+<p>查看源代码发现，之所以 <code>ignoring</code> 是因为我们目前在区块上存储的喂价是0，也就是我们还没有提供过喂价，这就导致新旧价格差价过大，即 <code>Spread between prices</code> 过大，超过了代码中设置的 <code>20%</code>，因此被忽略了。这应该是这个喂价程序的一个缺陷，没有考虑第一次喂价更新。</p>
+<p>所以我们需要手动使用 <code>Python</code> 完成第一次喂价更新。在终端中打开 <code>Python3</code>，然后按照下面的命令进行输入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Python 3.6.3 (default, Oct 24 2017, 14:48:20) </span><br><span class="line">[GCC 7.2.0] on linux</span><br><span class="line">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.</span><br><span class="line">&gt;&gt;&gt; from steem import Steem</span><br><span class="line">&gt;&gt;&gt; steem = Steem()</span><br><span class="line">&gt;&gt;&gt; steem.commit.witness_feed_publish(5.165, quote=1.000, account=&quot;liuye&quot;)</span><br><span class="line">Passphrase: </span><br><span class="line">&#123;&#x27;ref_block_num&#x27;: 33686, &#x27;ref_block_prefix&#x27;: 2156333139, &#x27;expiration&#x27;: &#x27;2018-01-30T13:37:05&#x27;, &#x27;operations&#x27;: [[&#x27;feed_publish&#x27;, &#123;&#x27;publisher&#x27;: &#x27;liuye&#x27;, &#x27;exchange_rate&#x27;: &#123;&#x27;base&#x27;: &#x27;5.165 SBD&#x27;, &#x27;quote&#x27;: &#x27;1.000 STEEM&#x27;&#125;&#125;]], &#x27;extensions&#x27;: [], &#x27;signatures&#x27;: [&#x27;202c413bf800c51e583a30687954fa5e77b052bd90e3e4834d5fa82a817121ebb40677fbf1351abcd70e656eb7fc97e16e236aa5092960ec87e6f0a0531ba982b6&#x27;]&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>witness_feed_publish</code> 的参数中，<code>5.165</code> 是 <code>Current STEEM price: 5.165 USD</code>，<code>quote</code> 是 <code>Quote: 1.000 STEEM</code>。</p>
+<p>完成手动更新后，再次使用 <code>conductor feed</code> 执行就成功了。</p>
+<p>如果想要使用 <code>Docker</code> 化的 <code>conductor</code>，可以参考 <a target="_blank" rel="noopener" href="https://github.com/ety001/docker-steem-conductor">这里</a>，我自己封装了一个。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>前前后后连写加调试，完成这篇教程花了有那么几个小时，这应该是目前中文版教程里最全的了，没有之一。</p>
+<p><strong>这里有个小技巧</strong>，如果你内存不够，在配置文件中不要用 <code>/dev/shm</code> 作为 <code>shared-file-dir</code>，节点依然可以运行，也就是说可以注释掉 <code>shared-file-dir = /shm</code>。之所以把这个放在最后说，是因为我并没有完全测试这种情况。其他人貌似都是用 <code>/dev/shm</code> 来作为 <code>shared-file-dir</code> 的。</p>
+<p>总的来说，搭建见证人节点就是会者不难，难者不会。虽然见证人节点的资源消耗不及全节点，但是也是够费资源的。我目前并不理解，为何见证人节点需要同步全量数据，难道只获取目前区块链全部数据的最近25%的数据，不能完成打包工作吗？看来这个还有待等到进一步去看源代码的时候思考。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="reward-container">
+  <div>请我一杯咖啡吧！</div>
+  <button>
+    赞赏
+  </button>
+  <div class="post-reward">
+      <div>
+        <img src="/img/wepay.jpg" alt="ETY001 微信">
+        <span>微信</span>
+      </div>
+      <div>
+        <img src="/img/alipay.png" alt="ETY001 支付宝">
+        <span>支付宝</span>
+      </div>
+      <div>
+        <img src="/img/btc.png" alt="ETY001 比特币">
+        <span>比特币</span>
+      </div>
+
+  </div>
+</div>
+
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>原作者： </strong>ety001
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://blog.akawa.ink/2018/01/30/how-to-build-a-steem-witness-node.html" title="如何搭建Steem见证人节点">https://blog.akawa.ink/2018/01/30/how-to-build-a-steem-witness-node.html</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%95%99%E7%A8%8B/" rel="tag"># 教程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/01/20/use-rsync-to-transfer-files.html" rel="prev" title="服务器间大文件传输还是要用Rsync">
+                  <i class="fa fa-angle-left"></i> 服务器间大文件传输还是要用Rsync
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/02/07/asterisk-tuturial.html" rel="next" title="出国狗的福音--使用树莓派搭建跨国语音短信设备">
+                  出国狗的福音--使用树莓派搭建跨国语音短信设备 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2009 – 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">ETY001</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/ety001" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
